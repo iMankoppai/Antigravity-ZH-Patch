@@ -4,9 +4,9 @@
 
 ## 下载
 
-**[下载完整汉化包](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/download/v26/Antigravity-%E4%B8%AD%E6%96%87%E8%A1%A5%E4%B8%81-v26-%E8%B7%A8%E7%94%B5%E8%84%91%E4%BD%BF%E7%94%A8%E5%8C%85.zip)** · [查看发布页](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v26)
+**[下载完整汉化包](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/download/v26/Antigravity-ZH-v26-Windows-x64.zip)** · [查看发布页](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v26)
 
-完整 ZIP 附带 Node.js 24.21.0 运行环境和中文使用说明，不需要另外安装 Node.js 或 PowerShell 7。下载文件与原先桌面上验证过的使用包完全一致。
+完整 ZIP 附带 Node.js 24.21.0 运行环境和中文使用说明，不需要另外安装 Node.js 或 PowerShell 7。下载文件的内容与桌面上验证过的 `Antigravity-中文补丁-v26-跨电脑使用包.zip` 完全一致；下载附件名使用英文以兼容 GitHub。
 
 ## 安装和使用
 
