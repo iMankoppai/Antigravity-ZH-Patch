@@ -3,6 +3,7 @@
   "Aborted due to condition callback returning false.": "因条件回调返回 false 而中止。",
   "Any error messages": "相关错误消息",
   "Cannot parse folder URI.": "无法解析文件夹 URI。",
+  "Conversation unavailable": "对话不可用",
   "Dismiss error": "关闭错误",
   "Error Loading Models": "加载模型出错",
   "Error occurred during import.": "导入时发生错误。",
@@ -51,7 +52,9 @@
   "Something went wrong!": "出现错误！",
   "Something went wrong.": "出现错误。",
   "This notebook has no renderable cells.": "此笔记本没有可渲染的单元格。",
+  "The conversation could not be loaded because its data was not found.": "未找到对话数据，无法加载此对话。",
   "Unable to load PDF:": "无法加载 PDF：",
   "Unable to resolve PDF source URL": "无法解析 PDF 源文件网址",
-  "Unable to resolve audio source URL": "无法解析音频源文件网址"
+  "Unable to resolve audio source URL": "无法解析音频源文件网址",
+  "No folders added yet.": "尚未添加文件夹"
 }

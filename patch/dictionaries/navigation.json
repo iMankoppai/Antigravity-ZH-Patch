@@ -407,5 +407,13 @@
   "single edit": "单次修改",
   "staged": "已暂存的更改",
   "uncommitted": "未提交的更改",
-  "when working in this project.": "（在此项目中工作时）。"
+  "when working in this project.": "（在此项目中工作时）。",
+  "Permissions and Sandbox Updates": "权限与沙盒更新",
+  "Terminal commands can now run in a secure sandbox by default without needing user approval, and have a single unified permissions list. Your existing settings have been migrated.": "终端命令现在默认在安全沙盒中运行，无需用户批准，并使用统一的权限列表。你原有的设置已完成迁移。",
+  "Got it": "知道了",
+  "Review permissions": "查看权限设置",
+  "Creating a Project": "创建项目",
+  "Projects serve as your workspace where your agents work. Each project has its own file scope and permissions. Get started by creating your first project.": "项目是代理执行任务的工作区。每个项目都有独立的文件范围和权限。创建你的第一个项目，开始使用吧。",
+  "Not now": "暂不",
+  "Create a Project": "创建项目"
 }

@@ -168,5 +168,12 @@
   "official documentation": "官方文档",
   "tokens (": "Token (",
   "tokens)": "Token)",
-  "work with Google developer products. You can always change your choices in Settings.": "中的代理提供 Google 开发产品支持。你可以随时在设置中更改选择。"
+  "work with Google developer products. You can always change your choices in Settings.": "中的代理提供 Google 开发产品支持。你可以随时在设置中更改选择。",
+  "Awaiting Authentication...": "等待身份验证…",
+  "Success, Continuing...": "验证成功，正在继续…",
+  "Select Antigravity Theme": "选择 Antigravity 主题",
+  "Select Theme": "选择主题",
+  "Use theme to be imported with settings": "使用随设置导入的主题",
+  "Light preview": "浅色主题预览",
+  "Dark preview": "深色主题预览"
 }

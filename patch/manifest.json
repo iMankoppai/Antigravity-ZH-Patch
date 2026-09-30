@@ -1,10 +1,10 @@
 {
-  "package": "Antigravity-ZH-v26-Windows-x64",
+  "package": "Antigravity-ZH-v26.1-Windows-x64",
   "patchVersion": 26,
   "appVersion": "2.18.1",
-  "terms": 1444,
+  "terms": 1462,
   "nodeVersion": "24.21.0",
-  "created": "2026-09-30",
+  "created": "2026-10-01",
   "files": [
     {
       "path": "安装汉化.cmd",
@@ -23,8 +23,8 @@
     },
     {
       "path": "先读我-使用说明.txt",
-      "bytes": 8671,
-      "sha256": "e1916a566dd09602a285258d974ec89946ec026c8279bc158be2a56225ad5747"
+      "bytes": 9514,
+      "sha256": "d7e90a414b7e411e67d1d629dd7743cfe2cf3af8b2bdc4d0d6da3b5c3c3cdd11"
     },
     {
       "path": "common.ps1",
@@ -38,8 +38,8 @@
     },
     {
       "path": "dictionaries/errors.json",
-      "bytes": 3389,
-      "sha256": "987a24e4c90554cd84e6a75189f5bba3b661fc5ce12736d2ea3da3c0e06dc084"
+      "bytes": 3616,
+      "sha256": "aae112208e803b189462f166be6fd2727a5c51f743726ca2c85f1bb3e1d75633"
     },
     {
       "path": "dictionaries/mcp-catalog.json",
@@ -48,8 +48,8 @@
     },
     {
       "path": "dictionaries/navigation.json",
-      "bytes": 24478,
-      "sha256": "c5e80f1f1a474e8e6c6192b1d2d1495be765e3034bf144d1dfbbc1b1d13c44e4"
+      "bytes": 25345,
+      "sha256": "b96d95343fe89ef9790cc38dc4e02aafd216f08f01d03c40718d41f5c545a66e"
     },
     {
       "path": "dictionaries/permissions.json",
@@ -58,8 +58,8 @@
     },
     {
       "path": "dictionaries/settings.json",
-      "bytes": 14445,
-      "sha256": "6f0ea1a26a27cf6da43ef388f4b8c961620a97d637127b523d6b9f7f60bf9b1d"
+      "bytes": 14816,
+      "sha256": "a20a4d5d925e61abafab61c399b898abaf3c6bc33f48b8b2b74a0aa898d4a41f"
     },
     {
       "path": "dictionaries/skills.json",
@@ -108,8 +108,10 @@
     },
     {
       "path": "translate.js",
-      "bytes": 34408,
-      "sha256": "1325902ff0d73b0cf0e5c29dd7fb0585abc3597b6b4413062e024312680d7d18"
+      "bytes": 40231,
+      "sha256": "aac6d81f8cae03161f1a98fd20a03dbec95697b88ea43c04140b222534ceddb5"
     }
-  ]
+  ],
+  "localRevision": "v26-onboarding-fix-20261001",
+  "releaseVersion": "26.1"
 }

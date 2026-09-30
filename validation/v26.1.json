@@ -1,0 +1,11 @@
+{
+  "release": "v26.1",
+  "appVersion": "2.18.1",
+  "platform": "Windows x64",
+  "terms": 1462,
+  "browserRegressionChecks": 84,
+  "portableInstallRestoreChecks": 9,
+  "verifiedPayloadFiles": 22,
+  "sha256": "3e4b8f720021e7861fc8be05948612b5c6ca78af3534deb12b118d22193c9d95",
+  "bytes": 35064543
+}

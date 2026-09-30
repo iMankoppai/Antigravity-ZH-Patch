@@ -28,6 +28,7 @@
   }
 
   const regexTranslations = [
+    [/^Select (.+) Theme$/, m => `选择 ${m[1]} 主题`],
     [/^Invalid notebook JSON: ([\s\S]+)$/, m => `笔记本 JSON 格式无效：${m[1]}`],
     [/^Unable to load PDF: ([\s\S]+)$/, m => `无法加载 PDF：${m[1]}`],
     [/^Failed to load PDF: ([\s\S]+)$/, m => `PDF 加载失败：${m[1]}`],
@@ -151,12 +152,15 @@
   function translateTextNode(node) {
     if (shouldSkipTextNode(node)) return;
     const parent = node.parentElement;
+    translateOnboardingContainer(parent);
+    if (translateArchivedNotification(parent)) return;
     if (parent.childNodes.length > 1 && translateSplitNoPhrase(parent)) return;
     const original = originalText(node);
     // A bare "No" inside a split sentence is not a yes/no response.
     if (original?.trim() === "No" && !parent.closest("button, label, [role='button'], [role='option']")) return;
     let translated = translateValue(original);
     const core = original?.trim();
+    translated = translateOnboardingFragment(parent, original, translated);
     translated = translateScheduledText(parent, original, translated);
     if ((core === 'project' || core === 'workspace') && isDeleteConfirmation(parent)) translated = original.replace(core, core === 'project' ? '项目' : '工作区');
     if (core === 'Artifact' && parent.closest('[aria-label="Artifact Viewer header"], [aria-label="成果查看器标题栏"]')) translated = original.replace(core, translations.get(core) || core);
@@ -190,6 +194,72 @@
     let text = '', node;
     while ((node = walker.nextNode())) text += originalText(node);
     return text.trim();
+  }
+  function translateOnboardingFragment(parent, original, translated) {
+    const core = original.trim();
+    if (parent.matches('p') && originalText(parent.firstChild)?.trim().startsWith('Plugins are packaged collections')) {
+      const raw = originalElementText(parent).replace(/\s+/g, ' ');
+      if (raw === 'Plugins are packaged collections of skills and MCPs to help the Agent in Antigravity work with Google developer products. You can always change your choices in Settings.') {
+        const parts = {
+          'Plugins are packaged collections of skills and MCPs to help the Agent': '插件将技能与 MCP 工具打包，帮助代理',
+          'in Antigravity': '在 Antigravity 中',
+          'Plugins are packaged collections of skills and MCPs to help the Agent in': '插件将技能与 MCP 工具打包，帮助',
+          'Antigravity': 'Antigravity 中的代理',
+          'work with Google developer products. You can always change your choices in Settings.': '使用 Google 开发者产品。你可以随时在设置中更改选择。',
+        };
+        if (parts[core]) return original.replace(core, parts[core]);
+      }
+    }
+    if (parent.matches('span') && parent.querySelector('a[href="https://antigravity.google/terms"]') &&
+        parent.querySelector('a[href="https://policies.google.com/privacy"]') &&
+        originalElementText(parent).startsWith('Yes, I agree to help improve Antigravity by allowing Google')) {
+      const parts = {
+        'Yes, I agree to help improve': '是的，我同意帮助改进',
+        'by allowing Google to collect and use my Interactions data, subject to the': '，允许 Google 收集和使用我的交互数据，并遵守',
+        'and': '和',
+        '. I understand I can choose to opt out later whenever I want via my settings.': '。我了解以后可以随时在设置中选择退出。',
+      };
+      if (parts[core]) return original.replace(core, parts[core]);
+    }
+    return translated;
+  }
+  function translateOnboardingContainer(element) {
+    const paragraph = element.closest('p');
+    let consent = element.closest('span');
+    while (consent && !consent.querySelector('a[href="https://antigravity.google/terms"]')) consent = consent.parentElement?.closest('span');
+    for (const parent of [paragraph, consent]) {
+      if (!parent || isOpaque(parent) || isConversationContent(parent) || parent.isContentEditable) continue;
+      // Rescan only these known split UI sentences when a later fragment arrives.
+      const prefix = parent.firstChild?.nodeType === Node.TEXT_NODE ? originalText(parent.firstChild).trim() : '';
+      if (!prefix.startsWith('Plugins are packaged collections') && !prefix.startsWith('Yes, I agree to help improve')) continue;
+      for (const node of parent.childNodes) if (node.nodeType === Node.TEXT_NODE) {
+        const original = originalText(node);
+        writeText(node, translateOnboardingFragment(parent, original, translateValue(original)), original);
+      }
+    }
+  }
+  function localizeProjectTutorial(element) {
+    const card = element.closest('[data-testid="nux-card"]');
+    if (!card || card.querySelector('[data-antigravity-zh-project-guide]') || isConversationContent(card) || isOpaque(card)) return;
+    const title = card.querySelector('.text-base.font-medium.text-foreground');
+    if (originalElementText(title) !== 'Creating a Project') return;
+    const media = Array.from(card.children).find(child => child.matches('img, video'));
+    if (!media) return;
+    const guide = document.createElement('div');
+    guide.setAttribute('data-antigravity-zh-project-guide', 'true');
+    guide.setAttribute('role', 'img');
+    guide.setAttribute('aria-label', '创建项目：在项目列表中点击加号，选择新建项目，然后填写项目信息。');
+    guide.style.cssText = 'padding:24px 20px;background:var(--secondary);color:var(--foreground);font:14px/1.6 system-ui,sans-serif;';
+    const heading = document.createElement('div'); heading.textContent = '创建你的第一个项目';
+    heading.style.cssText = 'font-size:18px;font-weight:600;margin-bottom:16px;'; guide.append(heading);
+    for (const text of ['① 在侧边栏找到“项目”，点击旁边的 ＋', '② 选择“新建项目”', '③ 填写项目信息，点击“创建项目”']) {
+      const step = document.createElement('div'); step.textContent = text;
+      step.style.cssText = 'padding:8px 12px;margin-top:8px;border:1px solid var(--border);border-radius:8px;background:var(--background);';
+      guide.append(step);
+    }
+    const original = originalAttribute(media, 'style'); media.style.display = 'none';
+    writeAttribute(media, 'style', media.getAttribute('style'), original);
+    card.insertBefore(guide, media); controller.removables.add(guide);
   }
   function originalAttribute(element, attribute) {
     const current = element?.getAttribute(attribute);
@@ -291,6 +361,24 @@
       if (!saved.size) elementOriginals.delete(element);
     }
   }
+  function translateArchivedNotification(element) {
+    const paragraph = element.closest('p');
+    const toast = paragraph?.closest('[data-testid="toast-notification"][data-notification-tag^="archive-conversation-"]');
+    if (!toast || isOpaque(paragraph) || isConversationContent(paragraph)) return false;
+    const link = paragraph.querySelector('a[href="notification://history"]');
+    if (!link) return false;
+    const walker = document.createTreeWalker(paragraph, NodeFilter.SHOW_TEXT);
+    const nodes = []; let node;
+    while ((node = walker.nextNode())) nodes.push(node);
+    if (nodes.map(originalText).join('').replace(/\s+/g, ' ').trim() !== 'View archived conversations in history.') return false;
+    const start = nodes.findIndex(node => link.contains(node));
+    const end = nodes.findLastIndex(node => link.contains(node));
+    if (start <= 0 || end >= nodes.length - 1) return false;
+    // Preserve the existing anchor and React nodes, including its click handler.
+    nodes.forEach((node, index) => writeText(node,
+      index === 0 ? '已归档的对话可在' : index === start ? '历史记录' : index === end + 1 ? '中查看。' : '', originalText(node)));
+    return true;
+  }
   function translateSplitNoPhrase(element) {
     if (element.childElementCount || !element.firstChild ||
         shouldSkipTextNode(element.firstChild)) return false;
@@ -332,6 +420,8 @@
       return;
     }
     if (!(element instanceof Element) || isOpaque(element)) return;
+    translateOnboardingContainer(element);
+    localizeProjectTutorial(element);
     if (element.matches(identitySelector)) return;
     if (element.matches('[data-testid="fastpick-prefix-trigger"]')) {
       const current = element.getAttribute('style');
@@ -345,15 +435,7 @@
     }
     if (!isConversationContent(element)) {
       translateSplitNoPhrase(element);
-      // Preserve the original text nodes and link rather than replacing children.
-      if (element.matches("p") && element.textContent?.trim() === "View archived conversations in history.") {
-        const link = element.querySelector('a[href="notification://history"]');
-        if (link) {
-          if (link.previousSibling?.nodeType === Node.TEXT_NODE) writeText(link.previousSibling, "已归档的对话可在");
-          for (const text of link.childNodes) if (text.nodeType === Node.TEXT_NODE) writeText(text, "历史记录");
-          if (link.nextSibling?.nodeType === Node.TEXT_NODE) writeText(link.nextSibling, "中查看。");
-        }
-      }
+      translateArchivedNotification(element);
     }
     // Translate UI metadata on editable controls, without touching their value or
     // editable descendants. Authored titles/alt text inside messages stay intact.
@@ -428,7 +510,7 @@
   }
 
   const controller = {
-    stopped: false, observer: null, timers: new Set(), frames: new Set(), badge: null, settingsClick: null,
+    stopped: false, observer: null, timers: new Set(), frames: new Set(), removables: new Set(), badge: null, settingsClick: null,
     stop() {
       this.stopped = true;
       this.observer?.disconnect();
@@ -436,6 +518,8 @@
       for (const id of this.timers) clearTimeout(id);
       for (const id of this.frames) cancelAnimationFrame(id);
       this.timers.clear(); this.frames.clear(); this.badge?.remove();
+      for (const element of this.removables) element.remove();
+      this.removables.clear();
     },
   };
   window.__antigravityZhPatchController = controller;
