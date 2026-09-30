@@ -1,0 +1,115 @@
+{
+  "package": "Antigravity-ZH-v26-Windows-x64",
+  "patchVersion": 26,
+  "appVersion": "2.18.1",
+  "terms": 1444,
+  "nodeVersion": "24.21.0",
+  "created": "2026-09-30",
+  "files": [
+    {
+      "path": "安装汉化.cmd",
+      "bytes": 170,
+      "sha256": "720735bdac981cdb2e22911ca277fcb7f38a496aa97733dff7c79d9a990a33a9"
+    },
+    {
+      "path": "恢复英文.cmd",
+      "bytes": 165,
+      "sha256": "46f619903465f012c0a15338ffa5faf028ae92ca35d3df67c14cc35f57b173af"
+    },
+    {
+      "path": "启动中文版.cmd",
+      "bytes": 75,
+      "sha256": "555445b98adb237675107a9b3bf0c17f89f51bb9c1165d891ca4794280ed38d2"
+    },
+    {
+      "path": "先读我-使用说明.txt",
+      "bytes": 8671,
+      "sha256": "e1916a566dd09602a285258d974ec89946ec026c8279bc158be2a56225ad5747"
+    },
+    {
+      "path": "common.ps1",
+      "bytes": 4166,
+      "sha256": "7668124772351138491111068af567eeba6ab3948f2346f5a6ca904deb4e166e"
+    },
+    {
+      "path": "dictionaries/common.json",
+      "bytes": 33876,
+      "sha256": "2c4fcc0e748ce4b31a1e5f404811a486c2d78f950afa1c08fa1ec97a0e2a9c46"
+    },
+    {
+      "path": "dictionaries/errors.json",
+      "bytes": 3389,
+      "sha256": "987a24e4c90554cd84e6a75189f5bba3b661fc5ce12736d2ea3da3c0e06dc084"
+    },
+    {
+      "path": "dictionaries/mcp-catalog.json",
+      "bytes": 40223,
+      "sha256": "b0cf79d58f6d385bcb141280112ba5de387f218750caac42f0a42f25b5076384"
+    },
+    {
+      "path": "dictionaries/navigation.json",
+      "bytes": 24478,
+      "sha256": "c5e80f1f1a474e8e6c6192b1d2d1495be765e3034bf144d1dfbbc1b1d13c44e4"
+    },
+    {
+      "path": "dictionaries/permissions.json",
+      "bytes": 342,
+      "sha256": "70428683b3ce5461a7804aca1e6e3ebe5c824875a04cd1eff0b9ed645ca847af"
+    },
+    {
+      "path": "dictionaries/settings.json",
+      "bytes": 14445,
+      "sha256": "6f0ea1a26a27cf6da43ef388f4b8c961620a97d637127b523d6b9f7f60bf9b1d"
+    },
+    {
+      "path": "dictionaries/skills.json",
+      "bytes": 8242,
+      "sha256": "7347ee2c232759209afe14ce7ae866db5ff1ebec7065a6f36fd0ee3112219c1a"
+    },
+    {
+      "path": "injector.js",
+      "bytes": 15844,
+      "sha256": "7f4340ea33944c0dbfbe97172e982679384db937bf1090e0fef3c7b93fdcc834"
+    },
+    {
+      "path": "install.ps1",
+      "bytes": 4659,
+      "sha256": "051a5b0702deaab5935655dd4b14bada266fd11148bc284cf8b08ecaf4292e60"
+    },
+    {
+      "path": "launch.ps1",
+      "bytes": 2922,
+      "sha256": "e7b40c497a55a0ba52cd45ee96c4bd59653865b98120b8c81650d3db9eaba45d"
+    },
+    {
+      "path": "launch.vbs",
+      "bytes": 459,
+      "sha256": "a6e409ddac022911896c589f7ad083eca3a7a50989a88edc70deecb269f940ef"
+    },
+    {
+      "path": "native-patch.js",
+      "bytes": 5043,
+      "sha256": "bf009bf708fb01576e5ecb29171bd25fff6123c0296f4bef5936f5fbabd7398b"
+    },
+    {
+      "path": "restore.ps1",
+      "bytes": 1307,
+      "sha256": "5d34de972732fe7ba4b07fa8c760d02df8999602dc9369fc34094530fff634ed"
+    },
+    {
+      "path": "runtime/NODE-LICENSE.txt",
+      "bytes": 157609,
+      "sha256": "5888dbb9a1d2b18f2c3e6c5f6af1b39de658372b402a0577b002777f14c62ace"
+    },
+    {
+      "path": "runtime/node.exe",
+      "bytes": 93580104,
+      "sha256": "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32"
+    },
+    {
+      "path": "translate.js",
+      "bytes": 34408,
+      "sha256": "1325902ff0d73b0cf0e5c29dd7fb0585abc3597b6b4413062e024312680d7d18"
+    }
+  ]
+}
