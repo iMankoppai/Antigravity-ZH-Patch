@@ -1,69 +1,80 @@
-﻿param([string]$AppPath, [string]$DesktopDir)
+﻿param([string]$AppPath)
 . (Join-Path $PSScriptRoot 'common.ps1')
 Test-PackageIntegrity
-$nodePath = Join-Path $PSScriptRoot 'runtime\node.exe'
+$sourceRoot = $PSScriptRoot
+$nodePath = Join-Path $sourceRoot 'runtime\node.exe'
 $runtime = & $nodePath -p 'JSON.stringify({arch:process.arch,fetch:typeof fetch,webSocket:typeof WebSocket})'
-if ($LASTEXITCODE -ne 0) { throw '随包运行环境无法启动；本包适用于 Windows x64 电脑。' }
+if ($LASTEXITCODE -ne 0) { throw '随包运行环境无法启动。' }
 $runtime = $runtime | ConvertFrom-Json
-if ($runtime.arch -ne 'x64' -or $runtime.fetch -ne 'function' -or $runtime.webSocket -ne 'function') { throw '随包运行环境不符合要求，请重新解压完整压缩包。' }
+if ($runtime.arch -ne 'x64' -or $runtime.fetch -ne 'function' -or $runtime.webSocket -ne 'function') { throw '本包适用于 Windows x64，请重新解压完整压缩包。' }
 if (-not $AppPath) {
     Add-Type -AssemblyName System.Windows.Forms
     $picker = New-Object System.Windows.Forms.OpenFileDialog
-    $picker.Title = '请选择另一台电脑上已安装的 Antigravity.exe'
+    $picker.Title = '请选择已安装的 Antigravity.exe'
     $picker.Filter = 'Antigravity.exe|Antigravity.exe'
-    $picker.CheckFileExists = $true
-    $candidates = @('D:\Antigravity', (Join-Path $env:LOCALAPPDATA 'Programs\Antigravity'), (Join-Path $env:ProgramFiles 'Antigravity'))
-    foreach ($candidate in $candidates) { if (Test-Path -LiteralPath (Join-Path $candidate 'Antigravity.exe')) { $picker.InitialDirectory = $candidate; break } }
-    if ($picker.ShowDialog() -ne [System.Windows.Forms.DialogResult]::OK) { Write-Host '安装已取消，应用没有改动。'; exit 0 }
+    if ($picker.ShowDialog() -ne [System.Windows.Forms.DialogResult]::OK) { Write-Host '安装已取消。'; exit 0 }
     $AppPath = $picker.FileName
 }
-$AppPath = [System.IO.Path]::GetFullPath($AppPath)
-if (-not (Test-Path -LiteralPath $AppPath) -or [System.IO.Path]::GetFileName($AppPath) -ne 'Antigravity.exe') { throw '请选择已安装软件的 Antigravity.exe。' }
+$AppPath = [IO.Path]::GetFullPath($AppPath)
+if (-not (Test-Path -LiteralPath $AppPath) -or [IO.Path]::GetFileName($AppPath) -ne 'Antigravity.exe') { throw '请选择已安装软件的 Antigravity.exe。' }
 Assert-AppClosed $AppPath
-$asar = Join-Path ([System.IO.Path]::GetDirectoryName($AppPath)) 'resources\app.asar'
-$inspection = Invoke-PatchNative 'inspect' $asar
-if ($inspection.code -ne 0) { throw '无法读取 Antigravity 版本；请选择正确的安装位置。' }
+$appDirectory = [IO.Path]::GetDirectoryName($AppPath)
+$archive = Join-Path $appDirectory 'resources\app.asar'
+$deploymentRoot = [IO.Path]::GetFullPath((Join-Path $appDirectory '中文补丁'))
+$backupRoot = Join-Path $deploymentRoot 'backups'
+$inspection = Invoke-PatchNative 'inspect' $archive
+if ($inspection.code -ne 0) { throw $inspection.error }
 $info = $inspection.text | ConvertFrom-Json
-if ($info.version -ne '2.18.1') { throw "本包已验证 Antigravity 2.18.1；当前是 $($info.version)，安装已停止，未修改应用。" }
+if ($info.version -ne '2.18.1' -or -not $info.nativeSupported) { throw '本包只适配已验证的 Antigravity 2.18.1 资源；请先用旧补丁恢复英文，其他版本需重新适配。' }
+$preflight = Invoke-PatchNative 'preflight' $archive $backupRoot $AppPath
+if ($preflight.code -ne 0) { throw $preflight.error }
+if ($sourceRoot -ne $deploymentRoot -and (Test-Path -LiteralPath $deploymentRoot)) {
+    $existingConfig = Join-Path $deploymentRoot 'config.json'
+    if (-not (Test-Path -LiteralPath $existingConfig)) { throw '软件目录下的“中文补丁”已有其他内容，请先换名或移开，再安装。' }
+    $existing = [IO.File]::ReadAllText($existingConfig) | ConvertFrom-Json
+    if ($existing.appPath -ne $AppPath) { throw '现有“中文补丁”属于另一份应用，停止安装。' }
+}
 Stop-OwnInjector
-if (-not $DesktopDir) { $DesktopDir = [Environment]::GetFolderPath('DesktopDirectory') }
-$DesktopDir = [System.IO.Path]::GetFullPath($DesktopDir)
-if (-not (Test-Path -LiteralPath $DesktopDir -PathType Container)) { throw '桌面目录不存在。' }
-$shortcutPath = Join-Path $DesktopDir 'Antigravity 中文版 v26.lnk'
-$shell = New-Object -ComObject WScript.Shell
-if (Test-Path -LiteralPath $shortcutPath) {
-    $existing = $shell.CreateShortcut($shortcutPath)
-    if ($existing.Arguments -ne ('"' + (Join-Path $PSScriptRoot 'launch.vbs') + '"')) { throw '桌面上已有同名的其他快捷方式，请先换名或移开后重新安装。' }
+$manifest = [IO.File]::ReadAllText((Join-Path $sourceRoot 'manifest.json')) | ConvertFrom-Json
+$names = @($manifest.files | ForEach-Object {$_.path}) + @('manifest.json','config.json')
+New-Item -ItemType Directory -Path $backupRoot -Force | Out-Null
+$transaction = Join-Path $backupRoot ('install-1.0.2-' + [Guid]::NewGuid().ToString('N'))
+New-Item -ItemType Directory -Path $transaction | Out-Null
+Copy-Item -LiteralPath $archive -Destination (Join-Path $transaction 'app-before.asar')
+$oldFiles = @()
+$createdFiles = @()
+try {
+    foreach ($name in $names) {
+        $destination = [IO.Path]::GetFullPath((Join-Path $deploymentRoot $name))
+        if (-not $destination.StartsWith($deploymentRoot.TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)) { throw '发布文件路径无效。' }
+        if (Test-Path -LiteralPath $destination) {
+            $saved = Join-Path $transaction $name
+            New-Item -ItemType Directory -Path ([IO.Path]::GetDirectoryName($saved)) -Force | Out-Null
+            Copy-Item -LiteralPath $destination -Destination $saved
+            $oldFiles += $name
+        } else { $createdFiles += $destination }
+        if ($name -eq 'config.json') { continue }
+        if ($sourceRoot -ne $deploymentRoot) {
+            New-Item -ItemType Directory -Path ([IO.Path]::GetDirectoryName($destination)) -Force | Out-Null
+            Copy-Item -LiteralPath (Join-Path $sourceRoot $name) -Destination $destination -Force
+        }
+    }
+    $call = Invoke-PatchNative 'apply' $archive $backupRoot $AppPath
+    if ($call.code -ne 0) { throw $call.error }
+    $config = [ordered]@{appPath=$AppPath;version='2.18.1';enabled=$true;nativeOwned=$true;nativeStatus='autoload';desktopShortcut=$null;releaseVersion='1.0.2';installedAt=(Get-Date -Format o)}
+    [IO.File]::WriteAllText((Join-Path $deploymentRoot 'config.json'),($config|ConvertTo-Json -Depth 5),(New-Object System.Text.UTF8Encoding($false)))
+    foreach ($item in $manifest.files) { if ((Get-PackageFileHash (Join-Path $deploymentRoot $item.path)).ToLower() -ne $item.sha256) { throw ('安装后文件校验失败：'+$item.path) } }
+    if ($sourceRoot -ne $deploymentRoot) {
+        $config.nativeOwned = $false
+        $config.installationRoot = $deploymentRoot
+        Save-PatchConfig $config
+    }
+} catch {
+    foreach ($name in $oldFiles) { Copy-Item -LiteralPath (Join-Path $transaction $name) -Destination (Join-Path $deploymentRoot $name) -Force }
+    foreach ($created in $createdFiles) { if (Test-Path -LiteralPath $created -PathType Leaf) { Remove-Item -LiteralPath $created } }
+    Copy-Item -LiteralPath (Join-Path $transaction 'app-before.asar') -Destination $archive -Force
+    throw
 }
-$configPath = Join-Path $PSScriptRoot 'config.json'
-$nativeOwned = $false
-if (Test-Path -LiteralPath $configPath) {
-    $old = Get-PatchConfig
-    if ($old.nativeOwned -and $old.appPath -ne $AppPath) { throw '本文件夹已适配另一份安装，请先对旧位置执行“恢复英文.cmd”，再选择新位置。' }
-    $nativeOwned = [bool]$old.nativeOwned
-}
-$backupDir = Join-Path $PSScriptRoot 'backups'
-$config = [ordered]@{ appPath = $AppPath; version = $info.version; enabled = $true; nativeOwned = $nativeOwned; nativeStatus = 'pending'; desktopShortcut = $shortcutPath; installedAt = (Get-Date -Format o) }
-Save-PatchConfig $config
-$shortcut = $shell.CreateShortcut($shortcutPath)
-$shortcut.TargetPath = Join-Path $env:SystemRoot 'System32\wscript.exe'
-$shortcut.Arguments = '"' + (Join-Path $PSScriptRoot 'launch.vbs') + '"'
-$shortcut.WorkingDirectory = $PSScriptRoot
-$shortcut.IconLocation = $AppPath + ',0'
-$shortcut.Description = 'Antigravity 2.18.1 中文补丁 v26'
-$shortcut.Save()
-$nativeStatus = 'skipped'
-if ($info.nativeSupported) {
-    $nativeCall = Invoke-PatchNative 'apply' $asar $backupDir $AppPath
-    if ($nativeCall.code -eq 0) {
-        $nativeResult = $nativeCall.text | ConvertFrom-Json
-        $nativeStatus = $nativeResult.status
-        if ($nativeStatus -eq 'applied') { $config.nativeOwned = $true }
-    } else { Write-Host '原生标题适配已跳过，页面汉化仍可使用。'; Write-Host $nativeCall.error }
-} else { Write-Host '应用资源与已验证版本不同，已跳过原生标题；页面汉化仍可使用。' }
-$config.nativeStatus = $nativeStatus
-Save-PatchConfig $config
-Write-Host ''
-Write-Host '安装完成。以后双击桌面“Antigravity 中文版 v26”启动。'
-Write-Host '请保留这个解压文件夹，不要只复制其中的快捷方式。'
-Write-Host "原生标题状态：$nativeStatus"
+Write-Host ('安装完成：'+$deploymentRoot)
+Write-Host '现在从开始菜单、任务栏或程序本体打开，都会自动加载汉化。'
+Write-Host '未创建桌面快捷方式；请保留软件目录下的“中文补丁”文件夹。'

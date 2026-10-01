@@ -1,5 +1,6 @@
 {
-  "package": "Antigravity-ZH-v26.1-Windows-x64",
+  "package": "Antigravity-ZH-1.0.2-Windows-x64",
+  "releaseVersion": "1.0.2",
   "patchVersion": 26,
   "appVersion": "2.18.1",
   "terms": 1462,
@@ -17,14 +18,29 @@
       "sha256": "46f619903465f012c0a15338ffa5faf028ae92ca35d3df67c14cc35f57b173af"
     },
     {
+      "path": "恢复原关闭方式.cmd",
+      "bytes": 162,
+      "sha256": "1d5f633c5c04d2294376b094eda9b14453073f0b776e1b102bcf1deb44d05ff2"
+    },
+    {
+      "path": "恢复原汉化加载方式.cmd",
+      "bytes": 103,
+      "sha256": "2f38472131d4b0c560a1ae1eea6988d69b2511100be17a40c861951b4c037fec"
+    },
+    {
+      "path": "恢复原托盘行为.cmd",
+      "bytes": 161,
+      "sha256": "6195d9be010d304f8f664373fe75eb60c0399d1979eddea8c0db032e2b4f5072"
+    },
+    {
       "path": "启动中文版.cmd",
       "bytes": 75,
       "sha256": "555445b98adb237675107a9b3bf0c17f89f51bb9c1165d891ca4794280ed38d2"
     },
     {
       "path": "先读我-使用说明.txt",
-      "bytes": 9514,
-      "sha256": "d7e90a414b7e411e67d1d629dd7743cfe2cf3af8b2bdc4d0d6da3b5c3c3cdd11"
+      "bytes": 3339,
+      "sha256": "9e5569f1280977eb8d24ecc49bc51aa67f050261dd332bea92e503544bc90f82"
     },
     {
       "path": "common.ps1",
@@ -73,13 +89,13 @@
     },
     {
       "path": "install.ps1",
-      "bytes": 4659,
-      "sha256": "051a5b0702deaab5935655dd4b14bada266fd11148bc284cf8b08ecaf4292e60"
+      "bytes": 5451,
+      "sha256": "668305e9d81d18e1c0f0710ee5fe95414ffede0f43eec52e5fd6ced38da291d8"
     },
     {
       "path": "launch.ps1",
-      "bytes": 2922,
-      "sha256": "e7b40c497a55a0ba52cd45ee96c4bd59653865b98120b8c81650d3db9eaba45d"
+      "bytes": 3688,
+      "sha256": "5529a106176481edcb6577fa255afd7b61597e1ad4ad6293517a56dda828eb46"
     },
     {
       "path": "launch.vbs",
@@ -87,14 +103,39 @@
       "sha256": "a6e409ddac022911896c589f7ad083eca3a7a50989a88edc70deecb269f940ef"
     },
     {
+      "path": "native-autoload.js",
+      "bytes": 5700,
+      "sha256": "8c378ef118479fcb743fece6d5e3a9170bba4b11b3f8504e18a8927900a10533"
+    },
+    {
+      "path": "native-changes.json",
+      "bytes": 5954,
+      "sha256": "5e5f1788d75d745bf873686d73d898fd96f87746344a47dd484450dc72dc5299"
+    },
+    {
       "path": "native-patch.js",
-      "bytes": 5043,
-      "sha256": "bf009bf708fb01576e5ecb29171bd25fff6123c0296f4bef5936f5fbabd7398b"
+      "bytes": 8819,
+      "sha256": "1d1e19cfd59ed6cc9052d6adf81921406343cc30da90d60bf0aabda85ae8a5f7"
+    },
+    {
+      "path": "restore-autoload.ps1",
+      "bytes": 856,
+      "sha256": "193cbe3a802af45549b3c61981c3218b46d16332d4cf71d3d088314028afeb49"
+    },
+    {
+      "path": "restore-close.ps1",
+      "bytes": 856,
+      "sha256": "8747ab92f04af335bf0ef9c5ef9a347d06d6763cb985c272579db30feca149ee"
+    },
+    {
+      "path": "restore-tray.ps1",
+      "bytes": 865,
+      "sha256": "614c63ce1c399f53b07b34357b62204e99fba66807ed72b8d126e980d1b90c99"
     },
     {
       "path": "restore.ps1",
-      "bytes": 1307,
-      "sha256": "5d34de972732fe7ba4b07fa8c760d02df8999602dc9369fc34094530fff634ed"
+      "bytes": 1041,
+      "sha256": "43335d8882839c9ccfe029e6273a16a150c5a6cc5c3a54913f26b190fedb745a"
     },
     {
       "path": "runtime/NODE-LICENSE.txt",
@@ -111,7 +152,5 @@
       "bytes": 40231,
       "sha256": "aac6d81f8cae03161f1a98fd20a03dbec95697b88ea43c04140b222534ceddb5"
     }
-  ],
-  "localRevision": "v26-onboarding-fix-20261001",
-  "releaseVersion": "26.1"
+  ]
 }

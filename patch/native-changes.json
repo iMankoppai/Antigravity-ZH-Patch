@@ -1,0 +1,70 @@
+{
+  "titles": [
+    {
+      "file": "dist/ipcHandlers.js",
+      "oldText": "title: 'Open workspace'",
+      "newText": "title: '打开工作区'"
+    },
+    {
+      "file": "dist/ipcHandlers.js",
+      "oldText": "title: 'Open workspaces'",
+      "newText": "title: '选择多个工作区'"
+    },
+    {
+      "file": "dist/main.js",
+      "oldText": "const electron_1 = require(\"electron\");",
+      "newText": "const electron_1 = require(\"electron\");\nif (process.platform === 'win32') electron_1.app.setAppUserModelId('electron.app.Antigravity');"
+    },
+    {
+      "file": "dist/utils.js",
+      "oldText": "    // Prevent the menu dropdown from being very wide due to long page titles",
+      "newText": "    if (process.platform === 'win32') win.setAppDetails({ appId: 'electron.app.Antigravity' });\n    // Prevent the menu dropdown from being very wide due to long page titles"
+    }
+  ],
+  "close": [
+    {
+      "file": "dist/main.js",
+      "oldText": "    settingsService = new settingsService_1.SettingsService(storageManager);\n    // Handle deep link URL from command line arguments (All platforms)\n",
+      "newText": "    settingsService = new settingsService_1.SettingsService(storageManager);\n    utils_1.closeWindowToBackground = () => settingsService.getSetting(settingsService_1.SettingKey.RUN_IN_BACKGROUND);\n    // Handle deep link URL from command line arguments (All platforms)\n"
+    },
+    {
+      "file": "dist/utils.js",
+      "oldText": "exports.showQuitConfirmation = false;\nfunction setShowQuitConfirmation(value) {\n",
+      "newText": "exports.showQuitConfirmation = false;\n// The main process supplies the existing background setting; the window keeps\n// its renderer alive only when the user has enabled that setting.\nexports.closeWindowToBackground = null;\nfunction setShowQuitConfirmation(value) {\n"
+    },
+    {
+      "file": "dist/utils.js",
+      "oldText": "    }\n    void win.loadURL(url);\n",
+      "newText": "    }\n    let closePending = false;\n    let allowNormalClose = false;\n    win.on('close', (event) => {\n        if (process.platform !== 'win32' || allowNormalClose || !exports.closeWindowToBackground) return;\n        event.preventDefault();\n        if (closePending) return;\n        closePending = true;\n        Promise.resolve().then(() => exports.closeWindowToBackground()).then((enabled) => {\n            if (win.isDestroyed()) return;\n            if (enabled) win.hide();\n            else { allowNormalClose = true; win.close(); }\n        }).catch((error) => {\n            // Leave the window alive on a settings read failure; explicit Quit\n            // continues to use the app's original cleanup and destroy path.\n            console.error('Unable to read background setting for window close:', error);\n        }).finally(() => { closePending = false; });\n    });\n    void win.loadURL(url);\n"
+    }
+  ],
+  "tray": [
+    {
+      "file": "dist/tray.js",
+      "oldText": "let contextMenu = null;\n/**\n",
+      "newText": "let contextMenu = null;\nfunction localizedMenuOptions(options) {\n    const result = { ...options };\n    const labels = {\n        'No agents running': '暂无运行中的代理',\n        'Quit': '退出',\n        'Connect to WSL': '连接到 WSL',\n        'Reopen Locally': '在本机重新打开',\n    };\n    if (result.label === `Open ${electron_1.app.getName()}`) result.label = `打开 ${electron_1.app.getName()}`;\n    else if (Object.hasOwn(labels, result.label)) result.label = labels[result.label];\n    // WSL submenu labels are user-owned distro names, including names that may\n    // happen to equal an English menu command.\n    if (Array.isArray(result.submenu)) result.submenu = result.submenu.map(item => ({ ...item }));\n    return result;\n}\n/**\n"
+    },
+    {
+      "file": "dist/tray.js",
+      "oldText": "    tray.setToolTip(electron_1.app.getName());\n    contextMenu = electron_1.Menu.buildFromTemplate(actions);\n    tray.setContextMenu(contextMenu);\n}\n",
+      "newText": "    tray.setToolTip(electron_1.app.getName());\n    contextMenu = electron_1.Menu.buildFromTemplate(actions.map(localizedMenuOptions));\n    tray.setContextMenu(contextMenu);\n    if (process.platform === 'win32') {\n        const openAction = actions.find(action => action.label === `Open ${electron_1.app.getName()}` && typeof action.click === 'function');\n        if (openAction) tray.on('double-click', () => openAction.click());\n    }\n}\n"
+    },
+    {
+      "file": "dist/tray.js",
+      "oldText": "    }\n    contextMenu.insert(Math.min(position, contextMenu.items.length), new electron_1.MenuItem(options));\n    // Re-set the menu so the tray picks up the change.\n",
+      "newText": "    }\n    contextMenu.insert(Math.min(position, contextMenu.items.length), new electron_1.MenuItem(localizedMenuOptions(options)));\n    // Re-set the menu so the tray picks up the change.\n"
+    },
+    {
+      "file": "dist/tray.js",
+      "oldText": "        if (countItem) {\n            countItem.label =\n                (count > 0 ? `${count}` : 'No') +\n                    ' agent' +\n                    (count === 1 ? '' : 's') +\n                    ' running';\n            tray.setContextMenu(contextMenu);\n",
+      "newText": "        if (countItem) {\n            countItem.label = count > 0 ? `${count} 个代理正在运行` : '暂无运行中的代理';\n            tray.setContextMenu(contextMenu);\n"
+    }
+  ],
+  "autoload": [
+    {
+      "file": "dist/utils.js",
+      "oldText": "    void win.loadURL(url);",
+      "newText": "    // Load the local Chinese patch for every app-owned window, regardless of launcher.\n    try {\n        require(path_1.default.join(process.resourcesPath, '..', '中文补丁', 'native-autoload.js')).attach(win, url);\n    } catch (error) {\n        console.error('Optional Chinese patch unavailable:', error.message);\n    }\n    void win.loadURL(url);"
+    }
+  ]
+}

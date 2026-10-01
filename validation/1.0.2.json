@@ -1,0 +1,67 @@
+{
+  "releaseVersion": "1.0.2",
+  "appVersion": "2.18.1",
+  "terms": 1462,
+  "zipFiles": 30,
+  "zipSha256": "5ad8cd1390f7d7bdb3ef31581f73a3605b24da9f5bbf54f9f964dd8ab4f87f3a",
+  "portable": {
+    "passed": 13,
+    "checks": [
+      "new recipient native patch includes all verified features and taskbar identity",
+      "PowerShell 5.1 installs into recipient app folder with Unicode and spaces, without desktop shortcut",
+      "deployed payload matches the complete published manifest",
+      "repeat installation preserves original recipient backup and ownership",
+      "native autoload launcher opens the recipient app directly without injector or fixed-port arguments",
+      "source recovery delegates to installed folder and removes only tray changes",
+      "close recovery preserves automatic Chinese loading",
+      "autoload recovery leaves baseline translation support and is repeatable",
+      "reinstall restores every feature after separate recovery",
+      "full English recovery disables runtime and restores recipient original resource",
+      "updated or unknown archive is not overwritten",
+      "archive-integrity protection remains enabled and prevents installation",
+      "tampered or incomplete publication files fail integrity check before app writes"
+    ],
+    "productionUntouched": true
+  },
+  "nativeAutoload": {
+    "passed": 13,
+    "checks": [
+      "a directly launched window loads Chinese once without debug port or helper",
+      "repeated restore and attach retain one window and one patch",
+      "a new document in the same window is automatically patched",
+      "dictionary hot update reaches all original windows",
+      "invalid dictionaries retain the last valid snapshot and recover on repair",
+      "conflicting dictionaries never replace working translations",
+      "external navigation is excluded and guarded again inside the script",
+      "disabled patch does not load",
+      "invalid startup dictionary can recover without restarting the app",
+      "only explicitly attached local app windows are eligible",
+      "temporary script failures retry at document completion",
+      "destroyed windows are removed from hot updates",
+      "full English restoration accepts and restores the combined archive"
+    ]
+  },
+  "tray": {
+    "passed": 9,
+    "checks": [
+      "Windows double-click restores the original hidden window and renderer",
+      "repeated double-click does not create duplicate windows or reload",
+      "native menu labels translate without mutating original actions or disabled status",
+      "right-click Open and Quit retain their original callbacks",
+      "running agent counts stay Chinese after dynamic updates",
+      "late WSL menus translate while preserving distro names, checkmarks and actions",
+      "custom distro names are preserved even when matching menu words or object properties",
+      "double-click change is limited to Windows",
+      "tray creation without an Open action remains safe"
+    ]
+  },
+  "live": {
+    "directExe": true,
+    "startMenu": true,
+    "taskbarShortcut": true,
+    "userConfirmedTrayDoubleClick": true,
+    "userConfirmedChineseTrayMenu": true,
+    "userConfirmedSingleTaskbarIcon": true
+  },
+  "translationCodeUnchanged": true
+}

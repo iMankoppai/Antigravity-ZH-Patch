@@ -1,10 +1,23 @@
 ﻿. (Join-Path $PSScriptRoot 'common.ps1')
 try {
     $config = Get-PatchConfig
+    if ($config.installationRoot -and [IO.Path]::GetFullPath($config.installationRoot) -ne [IO.Path]::GetFullPath($PSScriptRoot)) {
+        $expected = [IO.Path]::GetFullPath((Join-Path ([IO.Path]::GetDirectoryName($config.appPath)) '中文补丁'))
+        if ([IO.Path]::GetFullPath($config.installationRoot) -ne $expected) { throw '安装记录路径无效。' }
+        & (Join-Path $expected 'launch.ps1')
+        return
+    }
     if (-not $config.enabled) { throw '这份补丁已停用。需要重新启用时，请再次运行“安装汉化.cmd”。' }
     $appPath = $config.appPath
     if (-not (Test-Path -LiteralPath $appPath)) { throw '找不到软件；安装位置变化后请重新运行“安装汉化.cmd”。' }
     foreach ($name in @('ELECTRON_RUN_AS_NODE','NODE_OPTIONS')) { if (Test-Path -LiteralPath ('Env:' + $name)) { Remove-Item -LiteralPath ('Env:' + $name) } }
+    $archive = Join-Path ([IO.Path]::GetDirectoryName($appPath)) 'resources\app.asar'
+    $native = Invoke-PatchNative 'inspect' $archive $null $null
+    if ($native.code -eq 0 -and ($native.text | ConvertFrom-Json).nativeAutoload) {
+        Stop-OwnInjector
+        Start-Process -FilePath $appPath
+        return
+    }
     $nodePath = Join-Path $PSScriptRoot 'runtime\node.exe'
     $injector = Join-Path $PSScriptRoot 'injector.js'
     if (Test-LocalPort 19229) {
