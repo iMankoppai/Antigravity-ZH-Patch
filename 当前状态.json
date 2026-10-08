@@ -1,0 +1,14 @@
+{
+  "project": "Antigravity-ZH",
+  "version": "1.0.0",
+  "adaptedAppVersion": "2.21.1",
+  "termsCount": 2423,
+  "architecture": "C# .NET 8 WPF Single-File Self-Contained EXE",
+  "cleanMode": true,
+  "zeroExternalFolder": true,
+  "mainExecutable": "Antigravity汉化管理器.exe",
+  "sourcePath": "src/AntigravityZhManager",
+  "officialBackup": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar.bak",
+  "officialAsarSha256": "d075e5d9ff01f8806016aa88c39bf1429f068a941fdbe46147d8409843e62113",
+  "updatedAt": "2026-10-08T22:07:00+08:00"
+}

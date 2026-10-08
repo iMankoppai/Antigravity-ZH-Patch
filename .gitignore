@@ -1,0 +1,27 @@
+# .NET Build artifacts
+bin/
+obj/
+publish_compressed/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Executables & Large Binaries
+*.exe
+*.dll
+*.wasm
+*.tflite
+*.crx
+*.crdownload
+*.zip
+
+# Work and dump directories (contains upstream dumps & caches)
+work/
+
+# Research and history archives
+资料/
+
+# Local backups
+本机备份/
+

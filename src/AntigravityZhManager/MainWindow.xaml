@@ -1,0 +1,377 @@
+<Window x:Class="AntigravityZhManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Antigravity 汉化管理器"
+        Height="750" Width="980"
+        MinHeight="600" MinWidth="880"
+        Icon="Assets/app.ico"
+        WindowStartupLocation="CenterScreen"
+        Background="#0F1117"
+        Foreground="#E2E8F0"
+        FontFamily="Microsoft YaHei UI, Segoe UI, sans-serif">
+
+    <Window.Resources>
+        <!-- 现代深色极简滚动条滑块样式 -->
+        <Style x:Key="ModernScrollThumb" TargetType="{x:Type Thumb}">
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="thumbBorder" Background="#2E3446" CornerRadius="3" Margin="1,0"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="thumbBorder" Property="Background" Value="#4B5568"/>
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="True">
+                                <Setter TargetName="thumbBorder" Property="Background" Value="#6366F1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 全局覆盖 ScrollBar：暗黑无边框流线型风格，彻底消除刺眼白底 -->
+        <Style TargetType="{x:Type ScrollBar}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Width" Value="7"/>
+            <Setter Property="MinWidth" Value="7"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid Background="Transparent">
+                            <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static ScrollBar.LineUpCommand}" Opacity="0" Focusable="False" Height="0"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource ModernScrollThumb}"/>
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static ScrollBar.LineDownCommand}" Opacity="0" Focusable="False" Height="0"/>
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 基础扁平按钮样式 -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#2D3748"/>
+            <Setter Property="Foreground" Value="#F7FAFC"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Opacity" Value="0.88"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Opacity" Value="0.75"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 强调渐变主按钮 -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#6366F1" Offset="0"/>
+                        <GradientStop Color="#4F46E5" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 绿色成功按钮 -->
+        <Style x:Key="SuccessButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#10B981" Offset="0"/>
+                        <GradientStop Color="#059669" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 红色实底关闭按钮 (鲜明亮眼，用于关闭实时中文) -->
+        <Style x:Key="DangerSolidButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#EF4444" Offset="0"/>
+                        <GradientStop Color="#DC2626" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+        </Style>
+
+        <!-- 恢复/警告红色按钮 -->
+        <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#3F2D34"/>
+            <Setter Property="Foreground" Value="#FCA5A5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#7F1D1D"/>
+        </Style>
+
+        <!-- 卡片边框样式 -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#181B24"/>
+            <Setter Property="BorderBrush" Value="#252A38"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="14,12"/>
+        </Style>
+
+        <!-- CheckBox 样式 -->
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#CBD5E1"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,2,12,2"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- 0. 顶部标题栏 -->
+            <RowDefinition Height="Auto"/>
+            <!-- 1. 运行与路径状态横幅 -->
+            <RowDefinition Height="Auto"/>
+            <!-- 2. 功能操作区（2x2网格对齐） -->
+            <RowDefinition Height="*"/>
+            <!-- 3. 控制台日志（自适应填满剩余空间） -->
+        </Grid.RowDefinitions>
+
+        <!-- 0. 顶部 Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Border Width="38" Height="38" CornerRadius="10" Background="#4F46E5" Margin="0,0,12,0">
+                    <TextBlock Text="文" Foreground="White" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Antigravity 汉化管理器" FontSize="19" FontWeight="Bold" Foreground="#FFFFFF"/>
+                        <Border Background="#1E293B" CornerRadius="4" Padding="7,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="v1.0.0" Foreground="#94A3B8" FontSize="11"/>
+                        </Border>
+                    </StackPanel>
+                    <TextBlock Text="纯净 ASAR 原生内嵌架构 · 支持免重启临时汉化与一键恢复默认" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- 右侧检查更新 -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="BtnCheckUpdate" Content="🔄 检查更新" Style="{StaticResource ModernButtonStyle}" Click="BtnCheckUpdate_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- 1. 状态信息横幅（包含完整路径显示与自动扫描） -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,12" Padding="14,10">
+            <StackPanel>
+                <!-- 第一行：运行状态 -->
+                <Grid Margin="0,0,0,8">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Ellipse x:Name="StatusDot" Width="9" Height="9" Fill="#10B981" Margin="0,0,8,0"/>
+                        <TextBlock x:Name="TxtAppRunningStatus" Text="Antigravity 运行中 (v2.21.1)" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- 分割线 -->
+                <Border Height="1" Background="#232838" Margin="0,0,0,8"/>
+
+                <!-- 第二行：安装目录与操作按钮组（自动扫描、打开目录、浏览） -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="安装目录：" FontSize="12" Foreground="#64748B" VerticalAlignment="Center" Margin="0,0,6,0"/>
+
+                    <TextBox Grid.Column="1" x:Name="TxtInstallPath" Text="正在检测..." FontSize="12" Foreground="#CBD5E1" 
+                             Background="#10121A" BorderBrush="#252A38" BorderThickness="1" Padding="8,4" 
+                             IsReadOnly="True" VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="BtnAutoScan" Content="🔍 自动扫描" Style="{StaticResource ModernButtonStyle}" 
+                                Padding="9,4" FontSize="12" Margin="0,0,6,0" Click="BtnAutoScan_Click"/>
+                        <Button x:Name="BtnOpenFolder" Content="📂 打开目录" Style="{StaticResource ModernButtonStyle}" 
+                                Padding="9,4" FontSize="12" Margin="0,0,6,0" Click="BtnOpenFolder_Click"/>
+                        <Button x:Name="BtnBrowsePath" Content="📁 手动选择..." Style="{StaticResource ModernButtonStyle}" 
+                                Padding="9,4" FontSize="12" Click="BtnBrowsePath_Click"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <!-- 2. 核心功能操作区：采用 2x2 网格布局，强制左右严格水平对齐 -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,0,0,10" Focusable="False">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- 第一排：左右严格统一高度对齐 -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- 第二排：左右严格统一高度对齐 -->
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- 第一排左侧：卡片 1 (临时汉化开关) -->
+                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,6,10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,6">
+                            <TextBlock Text="⚡ 临时汉化开关" FontSize="14" FontWeight="Bold" Foreground="#F8FAFC"/>
+                            <Border x:Name="BadgeHotStatus" Background="#1E293B" CornerRadius="4" Padding="5,1" Margin="8,0,0,0">
+                                <TextBlock x:Name="TxtHotStatusBadge" Text="汉化已关闭" Foreground="#94A3B8" FontSize="11"/>
+                            </Border>
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="1" Text="一键切换当前前台窗口语言：点一下开启汉化，再点一下恢复英文。免重启软件，AI 会话不断连！（仅当前运行窗口生效，退出或重启后自动复原为英文）" 
+                                   FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,0,0,12" LineHeight="17" VerticalAlignment="Top"/>
+
+                        <Button Grid.Row="2" x:Name="BtnHotInject" Content="⚡ 开启汉化" 
+                                Style="{StaticResource SuccessButtonStyle}" Height="36" FontSize="13" VerticalAlignment="Bottom" Click="BtnHotInject_Click"/>
+                    </Grid>
+                </Border>
+
+                <!-- 第一排右侧：卡片 3 (运行环境健康体检) -->
+                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardStyle}" Margin="6,0,0,10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,6">
+                            <TextBlock Text="🛡️ 运行环境健康体检" FontSize="14" FontWeight="Bold" Foreground="#F8FAFC"/>
+                            <Border x:Name="BadgeHealthStatus" Background="#1E293B" CornerRadius="4" Padding="5,1" Margin="8,0,0,0">
+                                <TextBlock x:Name="TxtHealthStatusBadge" Text="状态就绪" Foreground="#38BDF8" FontSize="11"/>
+                            </Border>
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="1" Text="深度检测 ASAR 内核完整性、官方原版备份、通信链路及读写权限。若遇官方更新覆盖或汉化失效，可一键排查与智能修复！" 
+                                   FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,0,0,12" LineHeight="17" VerticalAlignment="Top"/>
+
+                        <Button Grid.Row="2" x:Name="BtnHealthCheck" Content="🛡️ 一键全面体检与智能修复" 
+                                Style="{StaticResource ModernButtonStyle}" Height="36" FontSize="13" VerticalAlignment="Bottom" Click="BtnHealthCheck_Click"/>
+                    </Grid>
+                </Border>
+
+                <!-- 第二排左侧：卡片 2 (永久固化安装) -->
+                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,6,10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,6">
+                            <TextBlock Text="📦 永久固化安装" FontSize="14" FontWeight="Bold" Foreground="#F8FAFC"/>
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="1" Text="将翻译引擎与词条直接打包嵌入 app.asar，不再需要外部补丁文件！开机或任意启动方式自动生效。" 
+                                   FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,0,0,8" LineHeight="17"/>
+
+                        <!-- 选项勾选 -->
+                        <WrapPanel Grid.Row="2" Margin="0,0,0,10" VerticalAlignment="Center">
+                            <CheckBox x:Name="ChkCloseToTray" Content="关闭窗口时最小化到托盘 (后台运行)" IsChecked="True"/>
+                            <CheckBox x:Name="ChkTrayMenu" Content="托盘双击唤醒窗口 &amp; 中文右键菜单" IsChecked="True"/>
+                        </WrapPanel>
+
+                        <Button Grid.Row="3" x:Name="BtnInstallClean" Content="📦 一键嵌入汉化 (ASAR 内嵌封装)" 
+                                Style="{StaticResource PrimaryButtonStyle}" Height="36" FontSize="13" VerticalAlignment="Bottom" Click="BtnInstallClean_Click"/>
+                    </Grid>
+                </Border>
+
+                <!-- 第二排右侧：卡片 4 (恢复官方英文默认状态) -->
+                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardStyle}" Margin="6,0,0,10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,6">
+                            <TextBlock Text="↩️ 恢复官方英文默认状态" FontSize="14" FontWeight="Bold" Foreground="#F8FAFC"/>
+                            <Border Background="#2E1065" CornerRadius="4" Padding="5,1" Margin="8,0,0,0">
+                                <TextBlock Text="终极总重置" Foreground="#C084FC" FontSize="11"/>
+                            </Border>
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="1" Text="终极总重置：清除前台内存中的临时汉化，并将磁盘 resources\app.asar 彻底恢复为官方纯净原版。" 
+                                   FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,0,0,12" LineHeight="17" VerticalAlignment="Top"/>
+
+                        <Button Grid.Row="2" x:Name="BtnRestoreEnglish" Content="↩️ 恢复官方英文默认状态" 
+                                Style="{StaticResource DangerButtonStyle}" Height="36" FontSize="13" VerticalAlignment="Bottom" Click="BtnRestoreEnglish_Click"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- 3. 底部自适应日志控制台（自动填满下方所有剩余高度，无尴尬留白） -->
+        <Border Grid.Row="3" Background="#0A0C10" BorderBrush="#1E232F" BorderThickness="1" CornerRadius="8" Padding="12,10" MinHeight="130">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,6">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="📝 操作日志 &amp; 状态反馈" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
+                    </StackPanel>
+                    <Button HorizontalAlignment="Right" Content="清空日志" Style="{StaticResource ModernButtonStyle}" 
+                            Padding="8,2" FontSize="11" Click="BtnClearLogs_Click"/>
+                </Grid>
+
+                <ScrollViewer Grid.Row="1" x:Name="LogScrollViewer" VerticalScrollBarVisibility="Auto">
+                    <TextBox x:Name="TxtLogs" Background="Transparent" Foreground="#94A3B8" 
+                             BorderThickness="0" IsReadOnly="True" TextWrapping="Wrap"
+                             FontFamily="Consolas, Cascadia Code, Courier New" FontSize="12"/>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
