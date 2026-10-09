@@ -2,6 +2,7 @@
 bin/
 obj/
 publish_compressed/
+publish/
 *.user
 *.suo
 *.userosscache

@@ -1,5 +1,5 @@
 (() => {
-  const patchVersion = 30;
+  const patchVersion = 31;
   const dictionary = window.__antigravityZhPatchDictionary || {};
   const identity = window.__antigravityZhPatchDictionarySignature || JSON.stringify(dictionary);
   const guard = `${patchVersion}:${identity}`;
@@ -52,6 +52,11 @@
   }
 
   const regexTranslations = [
+    [/^(\d+) demoted$/, m => `${m[1]} 项已降级`],
+    [/^(\d+) excluded$/, m => `${m[1]} 项已排除`],
+    [/^(\d+) rules? exceeded the rules budget and (?:was|were) demoted from full inline content to a file-path pointer\.$/, m => `${m[1]} 条规则超出规则预算，已从完整内嵌内容降级为文件路径引用。`],
+    [/^(\d+) items? in (.+) exceeded the customization budget and (?:was|were) excluded from context\.$/, m => `${m[2]} 中的 ${m[1]} 项超出自定义项预算，已从上下文中排除。`],
+    [/^Failed to save project branch: ([\s\S]+)$/, m => `保存项目分支失败：${m[1]}`],
     // 浏览器动作元素点击标题 (带动态目标) (§5.1 规则)
     [/^(Clicking|Clicked)\s+element\s+(.+)$/, (m) => `${m[1] === "Clicking" ? "正在点击元素" : "已点击元素"} ${m[2]}`],
     // Built-in skills descriptions fuzzy & robust matching
@@ -112,19 +117,19 @@
     [/^(Thought|Thinking)\s+for\s+((?:\d+(?:\.\d+)?\s*(?:h|hr|hrs|m|min|mins|s|sec|secs)\s*)+)[\s›❯>⌄▾▼\u203A\u2304]*$/i, (m) => {
       const isThinking = m[1].toLowerCase() === 'thinking';
       const time = m[2]
-        .replace(/([\d.]+)\s*(?:h|hr|hrs)/gi, '$1 小时 ')
-        .replace(/([\d.]+)\s*(?:m|min|mins)/gi, '$1 分钟 ')
-        .replace(/([\d.]+)\s*(?:s|sec|secs)/gi, '$1 秒 ')
-        .trim();
+        .replace(/([\d.]+)\s*(?:hrs|hr|h)/gi, '$1 小时 ')
+        .replace(/([\d.]+)\s*(?:mins|min|m)/gi, '$1 分钟 ')
+        .replace(/([\d.]+)\s*(?:secs|sec|s)/gi, '$1 秒 ')
+        .replace(/\s+/g, ' ').trim();
       return `${isThinking ? '正在思考' : '已思考'} ${time}`;
     }],
     [/^(Worked\s+for|Stopped\s+after)\s+((?:\d+(?:\.\d+)?\s*(?:h|hr|hrs|m|min|mins|s|sec|secs)\s*)+)[\s›❯>⌄▾▼\u203A\u2304]*$/i, (m) => {
       const isStopped = m[1].toLowerCase().startsWith('stopped');
       const time = m[2]
-        .replace(/([\d.]+)\s*(?:h|hr|hrs)/gi, '$1 小时 ')
-        .replace(/([\d.]+)\s*(?:m|min|mins)/gi, '$1 分钟 ')
-        .replace(/([\d.]+)\s*(?:s|sec|secs)/gi, '$1 秒 ')
-        .trim();
+        .replace(/([\d.]+)\s*(?:hrs|hr|h)/gi, '$1 小时 ')
+        .replace(/([\d.]+)\s*(?:mins|min|m)/gi, '$1 分钟 ')
+        .replace(/([\d.]+)\s*(?:secs|sec|s)/gi, '$1 秒 ')
+        .replace(/\s+/g, ' ').trim();
       return isStopped ? `已于 ${time} 后停止` : `已处理 ${time}`;
     }],
     // 命令运行具体步骤标题（优先匹配反引号与详细命令）
@@ -134,7 +139,7 @@
     [/^Running\s+command[\s›❯>⌄▾▼\u203A\u2304]*$/i, () => '正在运行命令'],
 
     // 复合动作汇总解析器（覆盖 pqb 生成的所有多动词或单动词+折叠角标组合）
-    [/^(?:Exploring|Explored|Editing|Edited|Running|Ran|Analyzing|Analyzed|Searching|Searched|Reading|Read|Checking|Checked|Creating|Created|Viewing|Viewed|Writing|Wrote|Browsing|Browsed)(?:,\s*|[\s\w\d\-_./\\])+[\s›❯>⌄▾▼\u203A\u2304]*$/i, (m) => {
+    [/^(?:Exploring|Explored|Editing|Edited|Running|Ran|Analyzing|Analyzed|Searching|Searched|Reading|Read|Checking|Checked|Creating|Created|Viewing|Viewed|Writing|Wrote|Browsing|Browsed)[,\s\w\d\-_./\\]+[\s›❯>⌄▾▼\u203A\u2304]*$/i, (m) => {
       const raw = m[0];
       const clean = raw.replace(/[\s›❯>⌄▾▼\u203A\u2304]+$/, '').trim();
       const segments = clean.split(',').map(s => s.trim()).filter(Boolean);
@@ -315,7 +320,7 @@
     [/^Allow running this command\?$/i, () => '允许运行此命令吗？'],
     [/^Allow reading this file\?$/i, () => '允许读取此文件吗？'],
     [/^Allow editing this file\?$/i, () => '允许编辑此文件吗？'],
-    [/^Allow\s+([\s\S]+)\?$/i, (match) => `允许执行“${match[1]}”吗？`],
+    [/^Allow\s+([\s\S]+)\?$/i, (match) => `允许“${match[1]}”吗？`],
     // 优先匹配带具体目标的权限规则 (R1 修复，保留动态命令/路径/工具名)
     [/^Yes,\s*(?:and\s+)?always\s+allow(?:\s+for)?\s+(['"].+?['"]|.+?)\s+in\s+this\s+conversation$/i, (m) => `在本次对话中始终允许${formatRuleTarget(m[1])}`],
     [/^Yes,\s*save\s+rule(?:\s+for)?\s+(['"].+?['"]|.+?)\s+in\s+this\s+conversation$/i, (m) => `在本次对话中保存${formatRuleTarget(m[1])}的规则`],
@@ -404,7 +409,8 @@
     ".rounded-xl.border.overflow-hidden.p-4.font-mono.text-sm.leading-relaxed, " +
     "[data-testid='breadcrumb-segment'], [data-testid='settings-nav-item-Account'], " +
     "[data-testid='commentable-content'] .leading-relaxed.select-text, " +
-    "[data-testid='setup-script-output'], [data-testid='agent-embed']";
+    "[data-testid='setup-script-output'], [data-testid='agent-embed'], " +
+    ".cursor-edit.group.relative.text-secondary-foreground.pl-2, [data-testid='run-command-step'] .font-mono";
   // These identifiers come from Antigravity 2.18.1's renderer. UI buttons inside
   // a message stay translatable; authored prose, names and tool output do not.
   const conversationSelector = "[data-testid='user-input-step'], [data-testid='planner-response-text'], " +
@@ -418,13 +424,16 @@
     ".group.flex.w-full.min-w-0.items-center, [class*='select-none'][class*='min-h-8']";
   const identitySelector = 'a[href^="/c/"], [data-testid="conversation-row-history"] span.truncate.inline-block.text-left';
 
+  const conversationUiSelector = "[data-antigravity-ui='true'], .user-input-buttons-container button";
   function isOpaque(element) {
     if (isProjectIdentity(element)) return true;
     const root = element?.closest(opaqueSelector);
     // 日志空状态占位提示并非真实日志，特例放行 (R4 修复)
-    if (root?.matches("pre") && /^No logs available\.?$/i.test(root.textContent?.trim() || "")) return false;
+    // Empty-state exceptions require an app-owned marker, never content equality.
+    if (root?.matches('pre[data-antigravity-ui="true"]')) return false;
     // Code block action buttons (like Copy code) are UI controls, not code characters.
-    if (root?.matches('pre, code') && element?.closest(uiSelector)) return false;
+    const codeControl = element?.closest('[data-antigravity-ui="true"]');
+    if (root?.matches('pre, code') && codeControl && root.contains(codeControl)) return false;
     // Only the application's gutter control is UI; every code character stays opaque.
     if (root?.matches('.line-content') && root.closest('.file-viewer-root') &&
         !root.closest('pre, code, [data-antigravity-user-content], [data-testid="agent-embed"]') &&
@@ -436,8 +445,8 @@
   function isConversationContent(element) {
     const root = element?.closest(conversationSelector);
     if (!root) return false;
-    const control = element.closest(uiSelector);
-    return !(control && root.contains(control));
+    const control = element.closest(conversationUiSelector);
+    return !(control && control !== root && root.contains(control));
   }
   function shouldSkipTextNode(node) {
     const parent = node.parentElement;
@@ -457,7 +466,7 @@
     const normalizedCore = core.replace(/\s+/g, " ");
     if (translations.has(core)) result = leading + translations.get(core) + trailing;
     else if (translations.has(normalizedCore)) result = leading + translations.get(normalizedCore) + trailing;
-    else for (const [pattern, replacement] of regexTranslations) {
+    else if (core.length <= 2048 && !(/^(?:Thought|Thinking|Worked|Stopped)\b/i.test(core) && core.length > 256)) for (const [pattern, replacement] of regexTranslations) {
       const match = core.match(pattern);
       if (match) { result = leading + replacement(match) + trailing; break; }
     }
@@ -476,7 +485,7 @@
     if (node.nodeValue !== value) node.nodeValue = value;
   }
   function translateTextNode(node) {
-    if (shouldSkipTextNode(node)) return;
+    if (shouldSkipTextNode(node)) { restoreNode(node); return; }
     const parent = node.parentElement;
     translateOnboardingContainer(parent);
     if (translateArchivedNotification(parent)) return;
@@ -488,6 +497,8 @@
     const core = original?.trim();
     translated = translateOnboardingFragment(parent, original, translated);
     translated = translateScheduledText(parent, original, translated);
+    if (core === 's' && parent.closest('button[data-testid="thinking-collapsible-trigger"]') &&
+        /^Thinking for \d+s$/.test(originalElementText(parent))) translated = original.replace('s', ' 秒');
     // 侧边面板入口前后片段翻译 (R6 修复)
     if (core === "Stream and control") translated = original.replace(core, "在侧边面板中实时查看和控制");
     if (core === "directly in the side pane.") translated = original.replace(core, "。");
@@ -923,6 +934,7 @@
       for (const node of nodesIn(document.documentElement)) yield { node, restore: false };
     }
     function* translationJob(root) {
+      for (const node of nodesIn(root, false)) yield { node, restore: true };
       for (const node of nodesIn(root)) yield { node, restore: false };
     }
     function completeInitial() {

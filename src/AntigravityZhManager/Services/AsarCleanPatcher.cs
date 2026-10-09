@@ -69,12 +69,16 @@ namespace AntigravityZhManager.Services
                 log?.Invoke("📖 正在读取并解构 ASAR 归档...");
                 byte[] asarBytes = await File.ReadAllBytesAsync(asarPath);
 
+                if (asarBytes.Length < 16) throw new InvalidDataException("ASAR 文件头不足 16 字节。");
                 uint magic = BitConverter.ToUInt32(asarBytes, 0);
                 uint totalHeaderSize = BitConverter.ToUInt32(asarBytes, 4);
                 uint headerDescSize = BitConverter.ToUInt32(asarBytes, 8);
                 uint jsonLength = BitConverter.ToUInt32(asarBytes, 12);
 
-                int payloadBase = 8 + (int)totalHeaderSize;
+                if (magic != 4 || totalHeaderSize < 8 || totalHeaderSize > asarBytes.Length - 8 ||
+                    headerDescSize != totalHeaderSize - 4 || jsonLength > totalHeaderSize - 8)
+                    throw new InvalidDataException("ASAR pickle 长度或边界不合法。");
+                int payloadBase = checked(8 + (int)totalHeaderSize);
                 string jsonString = Encoding.UTF8.GetString(asarBytes, 16, (int)jsonLength);
 
                 var headerNode = JsonNode.Parse(jsonString) as JsonObject;
@@ -115,12 +119,17 @@ namespace AntigravityZhManager.Services
                 {
                     var item = fileEntries.Find(e => e.Path == relPath);
                     if (item.Node == null) throw new Exception($"找不到文件: {relPath}");
+                    if (item.Node["unpacked"]?.GetValue<bool>() == true || item.Node.ContainsKey("link"))
+                        throw new InvalidDataException($"目标模块不是内嵌文件，拒绝此版本: {relPath}");
                     if (!item.Node.ContainsKey("offset") || item.Node["offset"] == null)
                     {
                         throw new Exception($"文件非内嵌 payload 文件: {relPath}");
                     }
                     long offset = long.Parse(item.Node["offset"]!.ToString());
                     int size = int.Parse(item.Node["size"]!.ToString());
+                    if (offset < 0 || size < 0 || offset > asarBytes.Length - payloadBase ||
+                        size > asarBytes.Length - payloadBase - offset)
+                        throw new InvalidDataException($"ASAR 文件边界无效: {relPath}");
                     byte[] buf = new byte[size];
                     Array.Copy(asarBytes, payloadBase + offset, buf, 0, size);
                     return buf;
@@ -183,7 +192,7 @@ namespace AntigravityZhManager.Services
 
                     utilsJs = utilsJs.Replace(
                         "    }\n    void win.loadURL(url);\n",
-                        "    }\n    let closePending = false;\n    let allowNormalClose = false;\n    win.on('close', (event) => {\n        if (process.platform !== 'win32' || allowNormalClose || !exports.closeWindowToBackground) return;\n        event.preventDefault();\n        if (closePending) return;\n        closePending = true;\n        Promise.resolve().then(() => exports.closeWindowToBackground()).then((enabled) => {\n            if (win.isDestroyed()) return;\n            if (enabled) win.hide();\n            else { allowNormalClose = true; win.close(); }\n        }).catch((error) => {\n            console.error('Unable to read background setting for window close:', error);\n        }).finally(() => { closePending = false; });\n    });\n    try { require('./zh-bundle.js').attach(win, url); } catch(e){ console.error('ZH attach error', e); }\n    void win.loadURL(url);\n"
+                        "    }\n    let closePending = false;\n    let allowNormalClose = false;\n    win.on('close', (event) => {\n        if (process.platform !== 'win32' || allowNormalClose || !exports.closeWindowToBackground) return;\n        event.preventDefault();\n        if (closePending) return;\n        closePending = true;\n        Promise.resolve().then(() => exports.closeWindowToBackground()).then((enabled) => {\n            if (win.isDestroyed()) return;\n            if (enabled) win.hide();\n            else { allowNormalClose = true; win.close(); }\n        }).catch((error) => {\n            console.error('Unable to read background setting for window close:', error);\n            if (!win.isDestroyed()) { allowNormalClose = true; win.close(); }\n        }).finally(() => { closePending = false; });\n    });\n    try { require('./zh-bundle.js').attach(win, url); } catch(e){ console.error('ZH attach error', e); }\n    void win.loadURL(url);\n"
                     );
                 }
                 else if (!utilsJs.Contains("zh-bundle.js"))
@@ -243,7 +252,11 @@ namespace AntigravityZhManager.Services
                 };
 
                 // 在 header 中注册 dist/zh-bundle.js
-                var distFiles = filesNode["dist"]!["files"]!.AsObject();
+                var distFiles = filesNode["dist"]?["files"]?.AsObject()
+                    ?? throw new InvalidDataException("缺少 dist/files 目录。");
+                if (distFiles["zh-bundle.js"] is JsonObject existingBundle &&
+                    (existingBundle["unpacked"]?.GetValue<bool>() == true || existingBundle.ContainsKey("link")))
+                    throw new InvalidDataException("已有汉化模块是 unpacked/link，拒绝直接覆盖。");
                 if (!distFiles.ContainsKey("zh-bundle.js"))
                 {
                     string bHash = CalcSha256(zhBundleBytes);
@@ -282,13 +295,22 @@ namespace AntigravityZhManager.Services
                     node["offset"] = curOffset.ToString();
                     node["size"] = fileData.Length;
 
+                    const int blockSize = 4194304;
+                    var blocks = new JsonArray();
+                    for (int start = 0; start < fileData.Length;)
+                    {
+                        int length = Math.Min(blockSize, fileData.Length - start);
+                        blocks.Add(CalcSha256(fileData.AsSpan(start, length).ToArray()));
+                        start += length;
+                    }
+                    if (fileData.Length == 0) blocks.Add(CalcSha256(Array.Empty<byte>()));
                     string fileHash = CalcSha256(fileData);
                     node["integrity"] = new JsonObject
                     {
                         ["algorithm"] = "SHA256",
                         ["hash"] = fileHash,
                         ["blockSize"] = 4194304,
-                        ["blocks"] = new JsonArray { fileHash }
+                        ["blocks"] = blocks
                     };
 
                     payloadStreams.Add(fileData);
@@ -392,16 +414,22 @@ namespace AntigravityZhManager.Services
                     count++;
                 }
 
-                // 清理可能散落在根目录的脚本
-                string[] scriptPatterns = { "*.cmd", "*.vbs", "install.ps1", "restore*.ps1", "common.ps1", "launch.ps1" };
-                foreach (var pattern in scriptPatterns)
+                // 清理可能散落在根目录的已知历史补丁脚本（精确匹配，绝不使用通配符误伤用户自定义维护脚本）
+                string[] legacyScriptNames = {
+                    "install.cmd", "install.vbs", "install.ps1",
+                    "restore.cmd", "restore.vbs", "restore.ps1",
+                    "restore-en.cmd", "restore-en.vbs", "restore-en.ps1",
+                    "common.ps1", "launch.ps1"
+                };
+                foreach (var scriptName in legacyScriptNames)
                 {
-                    foreach (var file in Directory.GetFiles(installDir, pattern))
+                    string scriptFile = Path.Combine(installDir, scriptName);
+                    if (File.Exists(scriptFile))
                     {
                         try
                         {
-                            File.Delete(file);
-                            log?.Invoke($"🧹 已清理旧脚本: {Path.GetFileName(file)}");
+                            File.Delete(scriptFile);
+                            log?.Invoke($"🧹 已清理旧脚本: {scriptName}");
                             count++;
                         }
                         catch { }
