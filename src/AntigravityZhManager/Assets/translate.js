@@ -52,6 +52,8 @@
   }
 
   const regexTranslations = [
+    // 浏览器动作元素点击标题 (带动态目标) (§5.1 规则)
+    [/^(Clicking|Clicked)\s+element\s+(.+)$/, (m) => `${m[1] === "Clicking" ? "正在点击元素" : "已点击元素"} ${m[2]}`],
     // Built-in skills descriptions fuzzy & robust matching
     [/^Build, package, run, and debug UI extensions for Antigravity[\s\S]*$/i, () => "为 Antigravity 构建、打包、运行和调试 UI 扩展：在侧边面板中显示的交互式 Web 面板，由使用内置 Sidecar SDK 的 Node.js Sidecar 提供服务。"],
     [/^Discover UI plugin panels relevant to the current task[\s\S]*$/i, () => "发现与当前任务相关的 UI 插件面板，并在对话中提供一键快捷按钮以在侧边栏打开（切换）。当运行中的 UI 插件面板对当前操作有帮助，或用户刚启用新 UI 插件面板需要快捷入口时使用。"],
