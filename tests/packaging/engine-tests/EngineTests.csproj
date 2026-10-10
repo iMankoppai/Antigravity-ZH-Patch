@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- 直接编译生产源码 BaselineManifest.cs，验证真实判定逻辑。
+       不引用 WPF，保持可在 CI 上快速运行。 -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>BaselineManifestTests</AssemblyName>
+    <RootNamespace>BaselineManifestTests</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="..\..\..\src\AntigravityZhManager\Services\BaselineManifest.cs" />
+    <Compile Include="..\..\..\src\AntigravityZhManager\Services\AsarArchiveVerifier.cs" />
+    <Compile Include="..\..\..\src\AntigravityZhManager\Services\LegacyOwnership.cs" />
+    <Compile Include="..\..\..\src\AntigravityZhManager\Services\LegacyCleaner.cs" />
+    <Compile Include="..\..\..\src\AntigravityZhManager\Services\AsarCleanPatcher.cs" />
+    <Compile Include="..\..\..\src\AntigravityZhManager\Services\AntigravityDetector.cs" />
+    <EmbeddedResource Include="..\..\..\src\AntigravityZhManager\Assets\zh-bundle.js"
+                      LogicalName="AntigravityZhManager.Assets.zh-bundle.js" />
+    <EmbeddedResource Include="..\..\..\localization\client-baselines.json"
+                      LogicalName="AntigravityZhManager.localization.client-baselines.json" />
+  </ItemGroup>
+</Project>

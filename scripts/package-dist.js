@@ -6,7 +6,7 @@ const crypto = require('crypto');
 
 const root = path.resolve(__dirname, '..');
 const distDir = path.join(root, 'dist');
-const zipPath = path.join(distDir, 'Antigravity-ZH-1.0.0-Windows-x64.zip');
+const zipPath = path.join(distDir, 'Antigravity-ZH-1.0.1-Windows-x64.zip');
 
 const tempDir = path.join(root, 'dist/temp_pack');
 if (fs.existsSync(tempDir)) fs.rmSync(tempDir, { recursive: true, force: true });
@@ -21,7 +21,7 @@ fs.rmSync(tempDir, { recursive: true, force: true });
 
 const zipBuf = fs.readFileSync(zipPath);
 const sha256 = crypto.createHash('sha256').update(zipBuf).digest('hex');
-fs.writeFileSync(path.join(distDir, 'SHA256SUMS.txt'), `${sha256}  Antigravity-ZH-1.0.0-Windows-x64.zip\n`, 'utf8');
+fs.writeFileSync(path.join(distDir, 'SHA256SUMS.txt'), `${sha256}  Antigravity-ZH-1.0.1-Windows-x64.zip\n`, 'utf8');
 
 console.log('🎉 发布包创建成功！');
 console.log('📦 文件体积:', (zipBuf.length / (1024 * 1024)).toFixed(2), 'MB');

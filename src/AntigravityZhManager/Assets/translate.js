@@ -1,5 +1,5 @@
 (() => {
-  const patchVersion = 31;
+  const patchVersion = 35;
   const dictionary = window.__antigravityZhPatchDictionary || {};
   const identity = window.__antigravityZhPatchDictionarySignature || JSON.stringify(dictionary);
   const guard = `${patchVersion}:${identity}`;
@@ -418,21 +418,168 @@
     "[role='article'][aria-label='用户消息'], [role='article'][aria-label='Agent response'], " +
     "[role='article'][aria-label='智能体回复']";
   const uiSelector = "button, [role='button'], [role='menuitem'], [data-antigravity-ui='true'], " +
+    "[data-testid='cascade-system-message-toolbar'], [data-testid='idle-status-text'], " +
+    "[data-testid='turn-cards-container'] .files-changed-header, " +
     "label, [role='radio'], [role='checkbox'], [role='option'], [role='listbox'], " +
     "[data-testid$='-step'], [data-testid='agent-loading'], .animate-shimmer-text, [data-testid$='-collapsible'], " +
     "[data-testid$='-collapsible-trigger'], [data-testid='running-items-panel'], " +
     ".group.flex.w-full.min-w-0.items-center, [class*='select-none'][class*='min-h-8']";
   const identitySelector = 'a[href^="/c/"], [data-testid="conversation-row-history"] span.truncate.inline-block.text-left';
 
-  const conversationUiSelector = "[data-antigravity-ui='true'], .user-input-buttons-container button";
+  // fY/hY/jY in the 2.21.1 renderer: admit only application status headers,
+  // never an entire step/article. hY's second span contains filenames/tool data.
+  const statusHeaderSelector = '.group.flex.w-full.min-w-0.items-center.min-h-8.py-1.px-2.select-none';
+  const statusTitleSelector = '.flex.flex-row.items-center.gap-1.overflow-hidden.whitespace-nowrap.text-muted-foreground';
+  const statusControlSelector = 'button[data-testid="thinking-collapsible-trigger"], button[data-testid="tool-group-collapsible"]';
+  const authoredStatusExclusion = "[data-testid='user-input-step'], [data-testid='pending-user-messages'], " +
+    "[data-testid='planner-response-text'], [data-antigravity-user-content], " +
+    "[role='article'][aria-label='User message'], [role='article'][aria-label='用户消息'], " +
+    '.cursor-edit.group.relative.text-secondary-foreground.pl-2, pre, code, .xterm-screen, input, textarea, [contenteditable="true"]';
+  // Authored bodies (plan / agent response text, user messages, thought prose).
+  // Their text is model- or user-written, so it is never UI chrome.
+  const authoredContentSelector = "[data-testid='user-input-step'], [data-testid='planner-response-text'], " +
+    "[data-testid='pending-user-messages'], [data-antigravity-user-content], " +
+    "[role='article'][aria-label='User message'], [role='article'][aria-label='用户消息'], " +
+    '.cursor-edit.group.relative.text-secondary-foreground.pl-2';
+  // The only controls that legitimately live inside a message body: the code
+  // block actions and the input toolbar buttons. Everything else found inside an
+  // authored body (even a fabricated thinking/tool-group button) stays content.
+  const messageBodyControlSelector = ".user-input-buttons-container button, " +
+    "button[aria-label='Copy code'], button[aria-label='Insert in terminal'], " +
+    "button[aria-label='At mention code block']";
+  const statusVerbs = Object.freeze({
+    exploring: '正在探索', explored: '已探索', editing: '正在编辑', edited: '已编辑',
+    running: '正在运行', ran: '已运行', analyzing: '正在分析', analyzed: '已分析',
+    searching: '正在搜索', searched: '已搜索', reading: '正在读取', read: '已读取',
+    checking: '正在检查', checked: '已检查', creating: '正在创建', created: '已创建',
+    viewing: '正在查看', viewed: '已查看', writing: '正在写入', wrote: '已写入',
+    browsing: '正在浏览', browsed: '已浏览', listing: '正在列出', listed: '已列出',
+    killing: '正在终止', killed: '已终止', invoking: '正在调用', invoked: '已调用',
+    // 2.22.0 渲染层 prefix 词表里出现、但此前未覆盖的动作（构建/测试/执行等）
+    building: '正在构建', built: '已构建', testing: '正在测试', tested: '已测试',
+    executing: '正在执行', executed: '已执行', asking: '正在询问', asked: '已询问',
+    scrolling: '正在滚动', scrolled: '已滚动', retrieving: '正在获取', retrieved: '已获取',
+    run: '运行',
+  });
+  const statusNouns = Object.freeze({
+    file: '文件', files: '文件', artifact: '成果', artifacts: '成果', workspace: '工作区',
+    command: '命令', commands: '命令', task: '任务', tasks: '任务', folder: '文件夹', folders: '文件夹',
+    search: '搜索', searches: '搜索', page: '页面', pages: '页面', browser: '浏览器', browsers: '浏览器',
+    subagent: '子代理', subagents: '子代理',
+    content: '内容', outline: '大纲', resource: '资源', resources: '资源', 'task log': '任务日志',
+  });
+  function statusRegion(element) {
+    if (!element || element.closest(authoredStatusExclusion)) return null;
+    return element.closest(statusControlSelector + ', ' + statusHeaderSelector);
+  }
+  function statusPayload(element) {
+    if (!statusRegion(element)) return false;
+    const title = element.closest(statusTitleSelector);
+    if (!title) return false;
+    const prefix = title.firstElementChild;
+    // hY can omit its prefix. Structured content (vB file/URI components)
+    // still remains data when it is the first span rather than the second.
+    if (prefix?.matches('span.inline-flex.text-muted-foreground')) return prefix.contains(element);
+    if (!prefix?.matches('span.text-muted-foreground:not(.truncate):not(.inline-flex)')) return false;
+    const payload = prefix.nextElementSibling;
+    return Boolean(payload && payload.contains(element));
+  }
+  function elapsedStatus(value) {
+    if (!value || value.length > 256) return null;
+    const match = value.trim().match(/^(Thought|Thinking)\s+for\s+(.+?)([\s›❯>⌄▾▼]*)$/i);
+    if (!match) return null;
+    const duration = match[2], units = {h:'小时',hr:'小时',hrs:'小时',m:'分钟',min:'分钟',mins:'分钟',s:'秒',sec:'秒',secs:'秒'};
+    const token = /\s*(\d+(?:\.\d+)?)\s*(hrs|hr|h|mins|min|m|secs|sec|s)/iy;
+    const parts = []; let offset = 0;
+    while (offset < duration.length) {
+      token.lastIndex = offset;
+      const part = token.exec(duration);
+      if (!part) return null;
+      parts.push(`${part[1]} ${units[part[2].toLowerCase()]}`);
+      offset = token.lastIndex;
+    }
+    return `${match[1].toLowerCase() === 'thinking' ? '正在思考' : '已思考'} ${parts.join(' ')}${match[3]}`;
+  }
+  function translateStatusLabel(value) {
+    if (!value) return value;
+    const core = value.trim(), leading = value.match(/^\s*/)?.[0] || '', trailing = value.match(/\s*$/)?.[0] || '';
+    const elapsed = elapsedStatus(core);
+    if (elapsed) return leading + elapsed + trailing;
+    if (/^(Thinking|Thought Process|Working|Done|Unknown (?:file )?edit|Analyz(?:ing|ed) (?:Task Log|content)|Check(?:ing|ed) command status|Fetch(?:ing|ed) network requests?(?: for page\.)?|Extract(?:ing|ed) DOM elements|Failed to (?:build|edit|execute|read)|Test failed|(?:Searching|Searched) Moma for|(?:Retrieving|Retrieved) findings for|Build Cleaner (?:is running on|completed for))$/i.test(core) && translations.has(core))
+      return leading + translations.get(core) + trailing;
+    const single = core.match(/^([A-Za-z]+)$/);
+    if (single && statusVerbs[single[1].toLowerCase()]) return leading + statusVerbs[single[1].toLowerCase()] + trailing;
+    // pqb includes a raw command only for a single Running/Ran segment. Preserve
+    // every character after that verb, including commas, quotes and Unicode.
+    const command = core.match(/^(Running|Ran)\s+([\s\S]+)$/i);
+    if (command && !/^commands?[\s›❯>⌄▾▼]*$/i.test(command[2]))
+      return leading + statusVerbs[command[1].toLowerCase()] + ' ' + command[2] + trailing;
+    const summary = core.replace(/[\s›❯>⌄▾▼]+$/, '').split(/,\s*/);
+    if (summary.length > 1 && summary.every(part => /^(Exploring|Explored|Running|Ran|Editing|Edited|Building|Built|Testing|Tested|Executing|Executed|Reading|Read|Analyzing|Analyzed|Searching|Searched|Creating|Created)\s+(files?|artifacts?|commands?)$/i.test(part))) {
+      const translated = summary.map(part => { const [verb, noun] = part.toLowerCase().split(/\s+/); return statusVerbs[verb] + statusNouns[noun]; });
+      const marker = core.match(/[\s›❯>⌄▾▼]+$/)?.[0] || '';
+      return leading + translated.join('，') + marker + trailing;
+    }
+    const action = core.match(/^([A-Za-z]+)(?:\s+([\s\S]+))?$/);
+    const verb = action && statusVerbs[action[1].toLowerCase()];
+    if (!verb) {
+      // Known static status text is safe; arbitrary tool summaries are data.
+      if (/^(Thinking|Thought Process|Working|Done|Unknown (?:file )?edit|Analyz(?:ing|ed) Task Log)$/i.test(core)) return translateValue(value);
+      return value;
+    }
+    const tail = action[2];
+    if (!tail) return leading + verb + trailing;
+    const count = tail.match(/^(\d+)\s+(files?|artifacts?|commands?|tasks?|folders?|searches?|pages?|browsers?|subagents?|resources?)(?=$|[\s:：])([\s\S]*)$/i);
+    if (count) {
+      const noun = count[2].toLowerCase(), measure = /^search/.test(noun) ? '次' : '个';
+      return leading + verb + ' ' + count[1] + ' ' + measure + statusNouns[noun] + count[3] + trailing;
+    }
+    const noun = tail.match(/^(task log|files?|artifacts?|workspace|commands?|tasks?|folders?|searches?|pages?|browsers?|subagents?|content|outline|resources?)(?=$|[\s:：])([\s\S]*)$/i);
+    if (noun && statusNouns[noun[1].toLowerCase()]) return leading + verb + statusNouns[noun[1].toLowerCase()] + noun[2] + trailing;
+    // A file/command/task name is not passed back through the dictionary.
+    return leading + verb + ' ' + tail + trailing;
+  }
+  function translateElapsedContainer(element) {
+    const region = statusRegion(element);
+    if (!region?.matches('button[data-testid="thinking-collapsible-trigger"]')) return false;
+    const original = originalElementText(region);
+    const translated = elapsedStatus(original);
+    if (!translated) return false;
+    const walker = document.createTreeWalker(region, NodeFilter.SHOW_TEXT);
+    const nodes = []; let node;
+    while ((node = walker.nextNode())) nodes.push(node);
+    // Preserve React's nodes and callbacks; count/unit fragments may be separate
+    // nodes and may arrive later. WeakMap originals also preserve live updates.
+    nodes.forEach((text, index) => writeText(text, index === 0 ? translated : '', originalText(text)));
+    return true;
+  }
+
+  // Antigravity 2.21.1 never emits the data-antigravity-ui attribute: 0 occurrences in
+  // the renderer bundle and 0 in the official app.asar. Keying the exemption off that
+  // phantom marker left every agent-article control classified as model output, which is
+  // why Worked for / Copy / Copy code / Review / relative times stayed English. The old
+  // attribute is kept as a harmless legacy fallback; the selectors below are the real
+  // 2.21.1 anchors that actually match.
+  const conversationUiSelector = "[data-antigravity-ui='true'], .user-input-buttons-container button, " +
+    "[data-testid='cascade-system-message-toolbar'], " +
+    "button[data-testid='thinking-collapsible-trigger'], button[data-testid='tool-group-collapsible'], " +
+    "button[data-testid='worked-for-collapsible'], " +
+    "button[aria-label='Copy code'], button[aria-label='Insert in terminal'], " +
+    "button[aria-label='At mention code block'], " +
+    "[data-testid='turn-cards-container'] .files-changed-header, " +
+    "[data-testid='running-items-panel'] button";
   function isOpaque(element) {
     if (isProjectIdentity(element)) return true;
+    if (statusPayload(element)) return true;
     const root = element?.closest(opaqueSelector);
     // 日志空状态占位提示并非真实日志，特例放行 (R4 修复)
-    // Empty-state exceptions require an app-owned marker, never content equality.
-    if (root?.matches('pre[data-antigravity-ui="true"]')) return false;
+    // The sidecar log panel renders its empty placeholder as a bare <pre> inside an
+    // app-owned container. Real log lines share that element, so the exemption is
+    // scoped to the container plus the exact placeholder string.
+    if (root?.matches('pre') && root.closest("[data-testid='sidecar-logs-content']") &&
+        root.childElementCount === 0 && root.textContent?.trim() === "No logs available.") return false;
     // Code block action buttons (like Copy code) are UI controls, not code characters.
-    const codeControl = element?.closest('[data-antigravity-ui="true"]');
+    const codeControl = element?.closest("button[aria-label='Copy code'], button[aria-label='Insert in terminal'], button[aria-label='At mention code block']");
     if (root?.matches('pre, code') && codeControl && root.contains(codeControl)) return false;
     // Only the application's gutter control is UI; every code character stays opaque.
     if (root?.matches('.line-content') && root.closest('.file-viewer-root') &&
@@ -445,6 +592,13 @@
   function isConversationContent(element) {
     const root = element?.closest(conversationSelector);
     if (!root) return false;
+    if (statusRegion(element)) return false;
+    // Authored text wins over control identity: a status or toolbar control that
+    // merely appears inside a message body is content, not chrome.
+    if (element.closest(authoredContentSelector)) {
+      const bodyControl = element.closest(messageBodyControlSelector);
+      return !(bodyControl && root.contains(bodyControl));
+    }
     const control = element.closest(conversationUiSelector);
     return !(control && control !== root && root.contains(control));
   }
@@ -487,18 +641,19 @@
   function translateTextNode(node) {
     if (shouldSkipTextNode(node)) { restoreNode(node); return; }
     const parent = node.parentElement;
+    if (translateElapsedContainer(parent)) return;
     translateOnboardingContainer(parent);
     if (translateArchivedNotification(parent)) return;
     if (parent.childNodes.length > 1 && translateSplitNoPhrase(parent)) return;
     const original = originalText(node);
     // A bare "No" inside a split sentence is not a yes/no response.
     if (original?.trim() === "No" && !parent.closest("button, label, [role='button'], [role='option']")) return;
-    let translated = translateValue(original);
+    const status = statusRegion(parent);
+    const title = status && parent.closest(statusTitleSelector);
+    let translated = status && (title || status.matches(statusControlSelector)) ? translateStatusLabel(original) : translateValue(original);
     const core = original?.trim();
     translated = translateOnboardingFragment(parent, original, translated);
     translated = translateScheduledText(parent, original, translated);
-    if (core === 's' && parent.closest('button[data-testid="thinking-collapsible-trigger"]') &&
-        /^Thinking for \d+s$/.test(originalElementText(parent))) translated = original.replace('s', ' 秒');
     // 侧边面板入口前后片段翻译 (R6 修复)
     if (core === "Stream and control") translated = original.replace(core, "在侧边面板中实时查看和控制");
     if (core === "directly in the side pane.") translated = original.replace(core, "。");
@@ -822,7 +977,8 @@
       const fileLabel = fileTab && attribute === 'title' && (element === fileTab || element.matches('div.whitespace-nowrap[title]'));
       const imageLabel = attribute === 'alt' && element.matches('img[draggable="false"].object-contain') &&
         element.closest('[role="region"][aria-label="File Viewer"], [role="region"][aria-label="文件查看器"]') && original?.startsWith('Image: ');
-      const next = fileLabel ? translateFileTabLabel(fileTab, original) : imageLabel ? original.replace(/^Image: /, '图片：') : translateValue(original);
+      const next = fileLabel ? translateFileTabLabel(fileTab, original) : imageLabel ? original.replace(/^Image: /, '图片：') :
+        statusRegion(element) && (element.closest(statusTitleSelector) || element.matches(statusControlSelector)) ? translateStatusLabel(original) : translateValue(original);
       writeAttribute(element, attribute, next, original);
     }
   }

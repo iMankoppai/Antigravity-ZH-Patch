@@ -1,0 +1,12 @@
+# 统一换行：本项目多处检查按字节比对“源码 <-> 生成产物 <-> 安装包”，
+# 若换行被 core.autocrlf 转成 CRLF，干净克隆会误报“内核不同步”。索引与工作区一律 LF。
+* text=auto eol=lf
+
+# 二进制文件不参与换行转换
+*.png binary
+*.ico binary
+*.jpg binary
+*.jpeg binary
+*.exe binary
+*.dll binary
+*.zip binary

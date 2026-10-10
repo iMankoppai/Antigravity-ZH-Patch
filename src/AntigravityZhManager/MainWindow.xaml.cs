@@ -232,13 +232,26 @@ namespace AntigravityZhManager
                 var result = await AsarCleanPatcher.InstallCleanPatchAsync(_currentInfo.AsarPath, closeToTray, trayMenu, AppendLog);
                 if (result.Success)
                 {
-                    string extraPrompt = "";
+                    MessageBox.Show(result.Message, "安装成功", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    // 安装成功后再处理旧版遗留物。删除前由 CleanLegacyFiles 逐项确认归属，
+                    // 无法确认归属的文件会被保留，不会误删用户自己的脚本。
                     if (_currentInfo.HasLegacyFolder)
                     {
-                        extraPrompt = "\n\n检测到您的安装目录下遗留有旧版的【中文补丁】文件夹，您可点击右侧【一键清理旧脚本与残留目录】进行清理。";
+                        var cleanConfirm = MessageBox.Show(
+                            "检测到安装目录下遗留有旧版的【中文补丁】文件夹。\n\n" +
+                            "是否立即清理？清理前会逐项确认文件归属，无法确认属于本项目的文件将被保留。",
+                            "清理旧版残留",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Question);
+                        if (cleanConfirm == MessageBoxResult.Yes)
+                        {
+                            var cleanResult = AsarCleanPatcher.CleanLegacyFiles(_currentInfo.InstallDir, AppendLog);
+                            MessageBox.Show(cleanResult.Message, cleanResult.Success ? "清理完成" : "清理未完成",
+                                MessageBoxButton.OK,
+                                cleanResult.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+                        }
                     }
-
-                    MessageBox.Show(result.Message + extraPrompt, "安装成功", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {

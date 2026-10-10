@@ -8,7 +8,7 @@ namespace AntigravityZhManager.Services
     public class UpdateInfo
     {
         public bool HasUpdate { get; set; }
-        public string LatestVersion { get; set; } = "1.0.0";
+        public string LatestVersion { get; set; } = "1.0.1";
         public string ReleaseUrl { get; set; } = "https://github.com";
         public string Changelog { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
@@ -16,7 +16,7 @@ namespace AntigravityZhManager.Services
 
     public static class UpdateChecker
     {
-        public const string CurrentVersion = "1.0.0";
+        public const string CurrentVersion = "1.0.1";
 
         public static async Task<UpdateInfo> CheckUpdateAsync(Action<string>? log = null)
         {
@@ -30,7 +30,7 @@ namespace AntigravityZhManager.Services
 
                 info.HasUpdate = false;
                 info.LatestVersion = CurrentVersion;
-                info.Message = $"当前版本 (v{CurrentVersion}) 已是最新版！已内置深度精校词库，完整适配 Antigravity 2.21.1。";
+                info.Message = $"当前版本 (v{CurrentVersion}) 已是最新版！已内置深度精校词库，完整适配 Antigravity 2.22.0。";
                 log?.Invoke("✅ " + info.Message);
                 return info;
             }

@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "purpose": "官方客户端基线哈希清单；用于识别未知版本与错版备份。",
+  "baselines": [
+    {
+      "productVersion": "2.21.1",
+      "platform": "win32",
+      "arch": "x64",
+      "installedSha256": "15e9723d80681359fa97d269a1b937320746f26281772fe9fd69d8938dacf0cf",
+      "installedBytes": 4971017,
+      "installedPath": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar",
+      "requiredEntries": {
+        "dist/ipcHandlers.js": true,
+        "dist/main.js": true,
+        "dist/tray.js": true,
+        "dist/utils.js": true
+      },
+      "embeddedKernelSha256": "d162d61fcf34b10667f3dd1f6f2a5509b0bcd487263d0b93e378de63b1e36020",
+      "recordedAt": "2026-10-09T16:19:38.082Z",
+      "backup": {
+        "path": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar.bak",
+        "sha256": "d075e5d9ff01f8806016aa88c39bf1429f068a941fdbe46147d8409843e62113",
+        "bytes": 4633502,
+        "productVersion": "2.21.1",
+        "isPristine": true
+      },
+      "pristine": {
+        "sha256": "d075e5d9ff01f8806016aa88c39bf1429f068a941fdbe46147d8409843e62113",
+        "bytes": 4633502,
+        "productVersion": "2.21.1",
+        "source": "backup",
+        "path": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar.bak",
+        "recordedAt": "2026-10-10T08:11:11.110Z"
+      },
+      "requiredTargets": [
+        "dist/ipcHandlers.js",
+        "dist/main.js",
+        "dist/utils.js",
+        "dist/tray.js"
+      ],
+      "requiredAnchors": [
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspace'",
+          "count": 1
+        },
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspaces'",
+          "count": 1
+        },
+        {
+          "target": "dist/main.js",
+          "text": "void win.loadURL(newUrl);",
+          "count": 1
+        },
+        {
+          "target": "dist/utils.js",
+          "text": "void win.loadURL(url);",
+          "count": 1
+        },
+        {
+          "target": "dist/tray.js",
+          "text": "Menu.buildFromTemplate(actions)",
+          "count": 1
+        }
+      ],
+      "missingTargets": [],
+      "knownPatchedSha256": [
+        {
+          "sha256": "15e9723d80681359fa97d269a1b937320746f26281772fe9fd69d8938dacf0cf",
+          "kernelSha256": "d162d61fcf34b10667f3dd1f6f2a5509b0bcd487263d0b93e378de63b1e36020",
+          "bytes": 4971017,
+          "recordedAt": "2026-10-09T16:20:16.035Z"
+        },
+        {
+          "sha256": "c0a7c002346fbfe19ff3636ab005657375878d83208267e734d83132929e736b",
+          "kernelSha256": "35e87a35b0bcf0f0d5c39f6dcbd86d09abbbcf2bc37577b2cf7b922fe2509a80",
+          "bytes": 4974244,
+          "recordedAt": "2026-10-10T08:11:11.124Z"
+        }
+      ]
+    },
+    {
+      "productVersion": "2.22.0",
+      "platform": "win32",
+      "arch": "x64",
+      "pristine": {
+        "sha256": "259c83ffa266088dda6ede520a601bbf06cc5c34985cdf56c5d68549c98dbb0e",
+        "bytes": 4486221,
+        "productVersion": "2.22.0",
+        "source": "backup",
+        "path": "D:/Antigravity/resources/app.asar.bak",
+        "recordedAt": "2026-10-10T10:43:25.236Z"
+      },
+      "requiredTargets": [
+        "dist/ipcHandlers.js",
+        "dist/main.js",
+        "dist/utils.js",
+        "dist/tray.js"
+      ],
+      "requiredEntries": {
+        "dist/ipcHandlers.js": true,
+        "dist/main.js": true,
+        "dist/tray.js": true,
+        "dist/utils.js": true
+      },
+      "requiredAnchors": [
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspace'",
+          "count": 1
+        },
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspaces'",
+          "count": 1
+        },
+        {
+          "target": "dist/main.js",
+          "text": "void win.loadURL(newUrl);",
+          "count": 1
+        },
+        {
+          "target": "dist/utils.js",
+          "text": "void win.loadURL(url);",
+          "count": 1
+        },
+        {
+          "target": "dist/tray.js",
+          "text": "Menu.buildFromTemplate(actions)",
+          "count": 1
+        }
+      ],
+      "missingTargets": [],
+      "knownPatchedSha256": [
+        {
+          "sha256": "96d1c200e041e6d40d9c779c9cada57592a048d8e2da3305221afe9c5e4ca5ea",
+          "kernelSha256": "35e87a35b0bcf0f0d5c39f6dcbd86d09abbbcf2bc37577b2cf7b922fe2509a80",
+          "bytes": 4826963,
+          "recordedAt": "2026-10-10T08:55:05.707Z"
+        },
+        {
+          "sha256": "40038cfa1e8b51ef6a20f21bdb9310bb53a29ee5cb510f96910e4017af568def",
+          "kernelSha256": "35e87a35b0bcf0f0d5c39f6dcbd86d09abbbcf2bc37577b2cf7b922fe2509a80",
+          "bytes": 4826963,
+          "recordedAt": "2026-10-10T10:08:07.561Z"
+        },
+        {
+          "sha256": "6ffe791e93b2ddf37507c735d678dc5862b5aa294d4b46bb1bcb31bb3a58f978",
+          "kernelSha256": "08a91ba2ef1c47182ec973dc254720e296e86c7ea66a0110c6831b5253500bfe",
+          "bytes": 4828019,
+          "recordedAt": "2026-10-10T10:10:37.981Z"
+        },
+        {
+          "sha256": "4c2068534db2b6e6e37583e0f04961dc7455ad26065095af763a39c052876960",
+          "kernelSha256": "08a91ba2ef1c47182ec973dc254720e296e86c7ea66a0110c6831b5253500bfe",
+          "bytes": 4828391,
+          "recordedAt": "2026-10-10T10:26:29.802Z"
+        },
+        {
+          "sha256": "e0457c6f73f422b89cd86964916cdc64c9dcefcc436c806ff75e0abb9882fb4f",
+          "kernelSha256": "08a91ba2ef1c47182ec973dc254720e296e86c7ea66a0110c6831b5253500bfe",
+          "bytes": 4828391,
+          "recordedAt": "2026-10-10T10:43:25.251Z"
+        }
+      ]
+    }
+  ]
+}

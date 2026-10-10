@@ -10,9 +10,9 @@
     <ApplicationTitle>Antigravity 汉化管理器</ApplicationTitle>
     <AssemblyTitle>Antigravity 汉化管理器</AssemblyTitle>
     <Product>Antigravity 汉化管理器</Product>
-    <Version>1.0.0</Version>
-    <FileVersion>1.0.0.0</FileVersion>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <Version>1.0.1</Version>
+    <FileVersion>1.0.1.0</FileVersion>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
     <Description>Google Antigravity 中文汉化与一键管理工具（终极洁癖模式）</Description>
     <Copyright>Copyright © 2026 Antigravity-ZH</Copyright>
     <PublishSingleFile>true</PublishSingleFile>
@@ -26,6 +26,7 @@
   <ItemGroup>
     <Resource Include="Assets\app.ico" />
     <EmbeddedResource Include="Assets\**\*" />
+    <EmbeddedResource Include="..\..\localization\client-baselines.json" LogicalName="AntigravityZhManager.localization.client-baselines.json" />
   </ItemGroup>
 
 </Project>

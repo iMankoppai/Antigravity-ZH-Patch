@@ -22,14 +22,28 @@ namespace AntigravityZhManager.Services
         public bool IsOfficialOriginal { get; set; }
         public bool HasLegacyFolder { get; set; }
         public string LegacyFolderPath { get; set; } = string.Empty;
-        public string Version { get; set; } = "2.21.1";
+        public string Version { get; set; } = "2.22.0";
         public string DetectSource { get; set; } = string.Empty;
     }
 
     public static class AntigravityDetector
     {
-        // 2.21.1 官方原版 SHA256
+        // 官方原版 SHA256（按已适配版本记录）
         public const string OFFICIAL_2_21_1_HASH = "d075e5d9ff01f8806016aa88c39bf1429f068a941fdbe46147d8409843e62113";
+        public const string OFFICIAL_2_22_0_HASH = "259c83ffa266088dda6ede520a601bbf06cc5c34985cdf56c5d68549c98dbb0e";
+
+        /// <summary>
+        /// 把卸载记录的 DisplayIcon 值规范成可用的可执行文件路径：
+        /// 去掉外层引号，并去掉形如 “,0” 的资源序号后缀。
+        /// </summary>
+        public static string NormalizeDisplayIcon(string? raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return string.Empty;
+            string value = raw.Trim().Trim('"').Trim();
+            int comma = value.LastIndexOf(',');
+            if (comma > 0 && value[(comma + 1)..].All(char.IsDigit)) value = value[..comma].Trim().Trim('"').Trim();
+            return value;
+        }
 
         private static string CalcFileHash(string path)
         {
@@ -152,7 +166,8 @@ namespace AntigravityZhManager.Services
                 if (info.HasAsar)
                 {
                     string currentHash = CalcFileHash(info.AsarPath);
-                    if (currentHash.Equals(OFFICIAL_2_21_1_HASH, StringComparison.OrdinalIgnoreCase))
+                    if (currentHash.Equals(OFFICIAL_2_21_1_HASH, StringComparison.OrdinalIgnoreCase) ||
+                        currentHash.Equals(OFFICIAL_2_22_0_HASH, StringComparison.OrdinalIgnoreCase))
                     {
                         info.IsOfficialOriginal = true;
                     }
@@ -227,7 +242,7 @@ namespace AntigravityZhManager.Services
                                 string? displayIcon = subKey.GetValue("DisplayIcon")?.ToString();
                                 if (!string.IsNullOrEmpty(displayIcon))
                                 {
-                                    string cleanIcon = displayIcon.Trim('"', ' ');
+                                    string cleanIcon = NormalizeDisplayIcon(displayIcon);
                                     if (cleanIcon.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) && File.Exists(cleanIcon))
                                     {
                                         return cleanIcon;

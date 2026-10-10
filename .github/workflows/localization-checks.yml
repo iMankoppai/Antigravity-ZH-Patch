@@ -1,0 +1,40 @@
+name: localization-checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      # 统一入口与本地完全相同；CI 不安装到客户端、不关闭真实应用。
+      # 干净克隆没有 Chrome 与本机 ASAR，因此跳过浏览器回归并跳过安装层比较。
+      - name: Current source checks
+        shell: pwsh
+        run: ./scripts/check-current.ps1 -SkipBrowser -AsarPath '' -ReportPath ./work/check-current-result.json
+
+      - name: Build manager (compile only)
+        shell: pwsh
+        run: dotnet build src/AntigravityZhManager/AntigravityZhManager.csproj -c Release
+
+      - name: Upload check result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: check-current-result
+          path: work/check-current-result.json
+          if-no-files-found: warn

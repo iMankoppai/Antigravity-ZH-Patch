@@ -1,1 +1,1 @@
-99a1fec75e357cf1cf9e3977858c1e2a4df7ab482d064f4437c4ca934ecd8c8c  Antigravity-ZH-1.0.0-Windows-x64.zip
+c30e4752d6556948db988aac85103c5a12d6f3c7ea58be32405c7011019098c6  Antigravity-ZH-1.0.1-Windows-x64.zip

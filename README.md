@@ -1,6 +1,6 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.0.0-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Release](https://img.shields.io/badge/Release-v1.0.1-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -17,11 +17,12 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
   直接将翻译引擎与完整深度精校词库无缝封包进 `resources/app.asar` 内部：
   - **零外置文件夹**：安装后，Antigravity 根目录下**无需存在任何外部补丁文件夹**，也没有任何散落的 `.cmd` / `.ps1` 脚本，目录纯净整洁；
   - **自动安全备份**：首次安装自动将官方原版备份为 `app.asar.bak`。
-- **🧠 全场景工作状态与动态动作全覆盖**  
+- **🧠 工作状态与动态动作汉化**
   深度覆盖智能体运行全周期文本：
   - **实时思考计时**：支持思考中动态计时（如 `Thinking for 22s ›` ➔ `正在思考 22 秒`）与思考完成折叠（`已思考 22 秒`）；
   - **复合动作折叠行**：覆盖多动作拼接场景（如 `正在探索文件，正在运行命令，正在编辑成果 ⌄`）；
   - **智能体与任务操作**：`已列出 1 个任务`、`已终止任务`、`已向任务发送输入`、`已调用子代理`、`已设定定时任务` 等。
+  - **内核 v32 状态修复**：识别应用状态栏内的思考计时、复合动作及文件/任务操作前缀，支持 React 拆分节点与动态更新；文件名、行号、命令和任务名称保持原样。
 - **🎨 界面与生态全面汉化**  
   深度覆盖插件扩展市场（Google Workspace、科学计算套件、开发工具等）、所有个性化外观主题（包括 Gruvbox Material 复古材质、一号深色专业版等）及权限审查弹窗。
 - **↩️ 官方纯净英文一键秒级还原**  
@@ -37,7 +38,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`Antigravity汉化管理器.exe`** 或 **`Antigravity-ZH-1.0.0-Windows-x64.zip`**；
+2. 下载 **`Antigravity汉化管理器.exe`** 或 **`Antigravity-ZH-1.0.1-Windows-x64.zip`**；
 3. 双击运行 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -59,9 +60,15 @@ Antigravity ZH/
 ```
 
 ### 技术规格
-- **适配软件**：Google Antigravity 2.21.1+ (Windows x64)
+- **适配软件**：Google Antigravity 2.21.1 (Windows x64)
 - **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、工作状态、插件市场与主题设置）
 - **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入
+
+### 维护与回归
+
+从核心 Assets 重建内嵌资源：`node 维护工具/重建汉化内核.js`；仅校验同步：追加 `--check`。
+
+状态标签回归：`node 维护工具/状态标签回归.cjs`。测试使用独立无界面 Chrome，不操作真实客户端；需安装 Chrome 与 Node.js。
 
 ---
 

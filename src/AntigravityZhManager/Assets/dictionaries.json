@@ -3348,5 +3348,16 @@
   "Context Window": "上下文窗口",
   "← Parent": "← 父级",
   "Child Subagent": "子代理",
-  "No cascade ID provided": "未提供 Cascade ID"
+  "No cascade ID provided": "未提供 Cascade ID",
+  "Missing Folder": "文件夹缺失",
+  "does not exist.": "不存在。",
+  "Input disabled because": "输入已禁用，因为",
+  "Create the folder in this project": "请在此项目中创建该文件夹",
+  "Test failed": "测试失败",
+  "Searching Moma for": "正在 Moma 中搜索",
+  "Searched Moma for": "已在 Moma 中搜索",
+  "Retrieving findings for": "正在获取分析发现：",
+  "Retrieved findings for": "已获取分析发现：",
+  "Build Cleaner is running on": "正在执行构建清理：",
+  "Build Cleaner completed for": "构建清理已完成："
 }

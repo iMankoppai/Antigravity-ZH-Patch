@@ -26,3 +26,6 @@ work/
 # Local backups
 本机备份/
 
+# Release staging and archived packages (local only)
+dist/stage/
+dist/archive/
