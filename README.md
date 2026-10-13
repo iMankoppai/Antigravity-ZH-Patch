@@ -1,11 +1,14 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.0.1-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Release](https://img.shields.io/badge/Release-v1.0.2-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Antigravity](https://img.shields.io/badge/Antigravity-2.23.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
+
+> **当前版本 v1.0.2 适配 Google Antigravity 2.23.0（Windows x64）**，汉化内核 v39、词条 3,497 条。官方客户端升级后旧补丁会被更新包覆盖，重新执行一次安装即可。
 
 ---
 
@@ -13,6 +16,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 - **⚡ 免重启实时汉化（热加载模式）**  
   软件在前台运行中无需退出，通过 CDP 协议秒级动态注入最新翻译引擎，界面即时切换为中文，**AI 正在进行的思考与会话连接完全不受影响**。
+  内核 v39 适配 Antigravity 2.23.0（前端 bundle 本次确有改动，新增 437 条可读串）：新增 137 条界面词条（插件包、Google Drive、SSO 登录、会话已读标记、权限详情等），修复模型名被逐词翻译（`Gemini 3.8 Flash High` 不再变成 `…Flash 高`），清理 6 条永不命中的死词条，并补齐两条动态模板规则。
 - **📦 永久原生内嵌汉化（终极洁癖模式）**  
   直接将翻译引擎与完整深度精校词库无缝封包进 `resources/app.asar` 内部：
   - **零外置文件夹**：安装后，Antigravity 根目录下**无需存在任何外部补丁文件夹**，也没有任何散落的 `.cmd` / `.ps1` 脚本，目录纯净整洁；
@@ -38,7 +42,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`Antigravity汉化管理器.exe`** 或 **`Antigravity-ZH-1.0.1-Windows-x64.zip`**；
+2. 下载 **`Antigravity汉化管理器.exe`** 或 **`Antigravity-ZH-1.0.2-Windows-x64.zip`**；
 3. 双击运行 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -60,7 +64,8 @@ Antigravity ZH/
 ```
 
 ### 技术规格
-- **适配软件**：Google Antigravity 2.21.1 (Windows x64)
+- **适配软件**：**Google Antigravity 2.23.0**（Windows x64）
+- **汉化内核**：v39（词条 3,497 条）
 - **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、工作状态、插件市场与主题设置）
 - **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入
 
@@ -69,6 +74,33 @@ Antigravity ZH/
 从核心 Assets 重建内嵌资源：`node 维护工具/重建汉化内核.js`；仅校验同步：追加 `--check`。
 
 状态标签回归：`node 维护工具/状态标签回归.cjs`。测试使用独立无界面 Chrome，不操作真实客户端；需安装 Chrome 与 Node.js。
+回归包含千个控件页面切换的逐帧检查、样式变化时的中文保留，以及词库更新、内容保护和英文还原。
+
+汉化范围与保留项说明：`docs/汉化范围说明-哪些不翻译.md`（为什么内容、专名与程序内部标识故意保留英文）。
+
+本次 2.23.0 适配的完整说明：`docs/2.23.0-适配说明.md`。
+
+---
+
+## 📦 版本记录
+
+### v1.0.2 — 适配 Antigravity 2.23.0（2026-10-13）
+
+- **适配客户端**：Google Antigravity **2.23.0**（Windows x64）。官方 2.23.0 的渲染层 bundle 相对 2.21.1/2.22.0 确有改动（9,607,177 → 9,902,207 字节，新增 437 条可读字符串），因此本轮为真实适配，不是单纯重装。
+- **汉化内核**：v37 → **v39**；词条 3,361 → **3,497 条**。
+- **新增覆盖**：插件包（Bundles）、Google Drive 连接与上传、SSO / 企业账号登录、会话已读与未读标记、权限详情、排序与最近使用、Zip 附件、音量与播放、文件夹校验提示、新引导页文案等 137 条界面词条。
+- **修复误译**：模型名不再被逐词翻译（`Gemini 3.8 Flash High` 曾渲染为 `Gemini 3.8 Flash 高`，与同一按钮的无障碍标签自相矛盾）；模型名与推理档位选项统一保持英文。
+- **修复死词条**：清理 6 条键里带前后空格、永远无法命中的词条（程序查表前会 trim）。
+- **补齐模板**：新增权限预设按钮的 `aria-label` 与悬浮提示两条动态模板规则；修正会话行标题保护选择器（官方 testid 是动态的 `conversation-row-${kind}`）。
+- **质量守护**：渲染回归断言 73 → 80 条，覆盖模型名/档位保持英文、面板其他文案仍汉化的边界；统一门禁 17 项全通过。
+
+### v1.0.1 — 适配 Antigravity 2.21.1 / 2.22.0
+
+- 修复最终审计的 P0/P1/P2 问题（重复安装、内容保护、词库扩充）；新增 requireAdministrator 清单与全局异常处理，支持直接双击启动。
+
+### v1.0.0 — 首个版本
+
+- Antigravity 中文汉化管理器：原生内嵌洁癖模式、免重启热加载、官方英文一键还原。
 
 ---
 

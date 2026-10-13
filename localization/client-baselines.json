@@ -165,6 +165,79 @@
           "recordedAt": "2026-10-10T10:43:25.251Z"
         }
       ]
+    },
+    {
+      "productVersion": "2.23.0",
+      "platform": "win32",
+      "arch": "x64",
+      "pristine": {
+        "sha256": "4e99093662d797ecba823e92823d352413e3bf2ca721257df4a255c045df1598",
+        "bytes": 4486221,
+        "productVersion": "2.23.0",
+        "source": "backup",
+        "path": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar.bak",
+        "recordedAt": "2026-10-13T08:59:56.680Z"
+      },
+      "requiredTargets": [
+        "dist/ipcHandlers.js",
+        "dist/main.js",
+        "dist/utils.js",
+        "dist/tray.js"
+      ],
+      "requiredEntries": {
+        "dist/ipcHandlers.js": true,
+        "dist/main.js": true,
+        "dist/tray.js": true,
+        "dist/utils.js": true
+      },
+      "requiredAnchors": [
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspace'",
+          "count": 1
+        },
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspaces'",
+          "count": 1
+        },
+        {
+          "target": "dist/main.js",
+          "text": "void win.loadURL(newUrl);",
+          "count": 1
+        },
+        {
+          "target": "dist/utils.js",
+          "text": "void win.loadURL(url);",
+          "count": 1
+        },
+        {
+          "target": "dist/tray.js",
+          "text": "Menu.buildFromTemplate(actions)",
+          "count": 1
+        }
+      ],
+      "missingTargets": [],
+      "knownPatchedSha256": [
+        {
+          "sha256": "f4c9393ee2506f0c5f650cf95db5ee34a8706360403283edc8ad63311d736466",
+          "kernelSha256": "30fd2701199e4c35692e5e1042ef955cb5075b78f11d436c20d6e2fe0656ac02",
+          "bytes": 4837026,
+          "recordedAt": "2026-10-13T05:21:10.065Z"
+        },
+        {
+          "sha256": "6b6ba70eb98253cfcc16d82fd13b5a56edd95fca215028801a0f09e2a3555c46",
+          "kernelSha256": "40f0c9790ffa1b34b3739b19d02dc5ca7cb8ba116e8ecd8406907d1c5c03674a",
+          "bytes": 4837983,
+          "recordedAt": "2026-10-13T08:51:43.597Z"
+        },
+        {
+          "sha256": "8a9f908b2dee28181142900560732a678347d420dda6a3c19c0a241eb6f4a6a7",
+          "kernelSha256": "1d328d2fc41ffd2b248e92687472f7e61163f1ac3f0371a812825229d016ab16",
+          "bytes": 4838218,
+          "recordedAt": "2026-10-13T08:59:56.684Z"
+        }
+      ]
     }
   ]
 }

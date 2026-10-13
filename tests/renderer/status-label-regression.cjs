@@ -7,6 +7,7 @@
 //   ZH_CHROME_PATH  absolute path to chrome.exe (default: standard Windows install)
 //   ZH_TEST_OUT     output directory for results and the throwaway profile
 //                   (default: <repo>/work/status-label-repair)
+//   ZH_RUNTIME_SOURCE optional runtime path for reproducing a previous version
 //
 // The expected patch version is read from Assets/translate.js, never hard-coded,
 // and the pass count is computed from the assertions that actually ran.
@@ -21,7 +22,7 @@ if (!fs.existsSync(CHROME)) {
 }
 fs.mkdirSync(out, { recursive: true });
 const dictionary = JSON.parse(fs.readFileSync(path.join(assets, 'dictionaries.json'), 'utf8'));
-const source = fs.readFileSync(path.join(assets, 'translate.js'), 'utf8');
+const source = fs.readFileSync(process.env.ZH_RUNTIME_SOURCE || path.join(assets, 'translate.js'), 'utf8');
 const expectedVersion = Number(source.match(/const patchVersion = (\d+)/)?.[1]);
 if (!Number.isInteger(expectedVersion)) throw new Error('无法从 translate.js 读取 patchVersion');
 const oldSource = fs.existsSync(path.join(out, 'baseline/translate.js')) ? fs.readFileSync(path.join(out, 'baseline/translate.js'), 'utf8') : null;
@@ -60,11 +61,19 @@ ${step('running', 'Ran', 'npm run test, echo &quot;Edited files&quot;')}
 <div class="${header}"><div class="${title}"><span class="inline-flex text-muted-foreground"><span id="prefixless-file" title="Read">Analyzed</span></span></div></div>
 <div class="banner" id="missing-banner"><span id="missing-title">Missing Folder</span><button id="missing-close" aria-label="Close"></button></div>
 <div data-testid="planner-response-text"><p id="authored-missing">Missing Folder</p></div>
+<button id="model-trigger" data-testid="model-selector-trigger" aria-label="Select model, current: Gemini 3.8 Flash High"><span id="model-name" class="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">Gemini 3.8 Flash<span id="model-effort" class="opacity-70"> High</span></span></button>
+<div data-testid="model-selector-panel" id="model-panel">
+<span id="model-group" data-testid="model-selector-effort-group">Gemini 3.8 Flash</span>
+<span id="model-option" data-testid="model-selector-effort-option">High</span>
+<span id="model-option-panel" class="shrink-0 opacity-70 text-xs">Medium</span>
+<span id="model-panel-footer">View Usage</span>
+</div>
+<span id="effort-elsewhere">High</span>
 <div id="late-holder"></div><div id="many"></div>
 <script>window.clicks=0;document.getElementById('summary').addEventListener('click',()=>window.clicks++);window.originalCaret=document.getElementById('caret');window.countNode=document.createTextNode('11');document.getElementById('time-label').append(document.createTextNode('Thought for '),window.countNode,document.createTextNode('s'));</script>
 </body>`;
 function cdp(method, params = {}) { return new Promise((resolve, reject) => { const i = ++id, t = setTimeout(() => { pending.delete(i); reject(Error('CDP ' + method + ' timeout')) }, 10000); pending.set(i, m => { clearTimeout(t); m.error ? reject(Error(m.error.message)) : resolve(m.result) }); ws.send(JSON.stringify({ id: i, method, params })); }); }
-async function evaluate(expression) { const r = await cdp('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw Error(r.exceptionDetails.exception?.description || r.exceptionDetails.text); return r.result?.value; }
+async function evaluate(expression) { let r; try { r = await cdp('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); } catch (error) { throw Error(error.message + '\nExpression: ' + expression.slice(0, 200)); } if (r.exceptionDetails) throw Error(r.exceptionDetails.exception?.description || r.exceptionDetails.text); return r.result?.value; }
 async function until(fn) { for (let i = 0; i < 120; i++) { if (await fn()) return; await pause(25) } throw Error('condition timeout'); }
 async function eq(name, expression, expected) { const actual = await evaluate(expression); assert.deepEqual(actual, expected, name); checks.push(name); }
 async function main() {
@@ -110,8 +119,57 @@ async function main() {
   for (const [id, want] of [['agent-prose', 'Analyzed'], ['authored-header', 'Analyzed'], ['authored-header-target', 'Settings'], ['authored-time', 'Thought for 12s'], ['thought-prose', 'Thought for 12s'], ['user-header', 'Analyzed'], ['user-header-target', 'Settings'], ['user-summary', 'Exploring file, running command, editing files'], ['user-prose', 'Thought for 12s'], ['code', 'Analyzed'], ['button-code', 'Settings'], ['terminal', 'Thought for 12s'], ['editor', 'Checked task do not change']]) await eq('content protected ' + id, `document.getElementById('${id}').textContent`, want);
   await eq('prefixless structured filename unchanged', "document.getElementById('prefixless-file').textContent", 'Analyzed');
   await eq('prefixless structured file tooltip unchanged', "document.getElementById('prefixless-file').title", 'Read');
+  // 模型名与推理档位属于专名：模型选择器区域保持英文，区域外的档位词仍按词库翻译。
+  await eq('model selector name stays English', "document.getElementById('model-name').textContent", 'Gemini 3.8 Flash High');
+  await eq('model selector aria translated, name kept', "document.getElementById('model-trigger').getAttribute('aria-label')", '选择模型，当前：Gemini 3.8 Flash High');
+  await eq('model group base name stays English', "document.getElementById('model-group').textContent", 'Gemini 3.8 Flash');
+  await eq('model effort option stays English', "document.getElementById('model-option').textContent", 'High');
+  await eq('panel effort badge stays English', "document.getElementById('model-option-panel').textContent", 'Medium');
+  await eq('panel chrome still translated', "document.getElementById('model-panel-footer').textContent", '查看用量');
+  await eq('effort word outside selector still translated', "document.getElementById('effort-elsewhere').textContent", '高');
   await eq('textarea draft unchanged', "document.getElementById('draft').value", 'Exploring file, running command, editing files');
   await eq('ordinary UI translation', "document.getElementById('settings').textContent", '设置');
+  await eq('page switches stay Chinese before every frame', `new Promise(resolve => {
+    const panel = document.createElement('section');
+    panel.innerHTML = '<button title="Settings">Settings</button>'.repeat(1000);
+    const samples = [];
+    function sample() {
+      samples.push([...panel.querySelectorAll('button')].every(button => button.textContent === '设置' && button.title === '设置'));
+      if (samples.length < 6) requestAnimationFrame(sample);
+      else { panel.remove(); resolve(samples); }
+    }
+    // Register the render probe before the patch can schedule any frame work.
+    requestAnimationFrame(sample);
+    document.body.append(panel);
+  })`, Array(6).fill(true));
+  await eq('class changes never restore translated UI to English', `new Promise(resolve => {
+    const panel = document.createElement('section');
+    const button = document.getElementById('settings');
+    button.title = 'Settings';
+    document.body.append(panel);
+    panel.append(button);
+    setTimeout(() => {
+      const englishWrites = [];
+      const observer = new MutationObserver(records => {
+        for (const record of records) {
+          if (record.type === 'characterData' && record.oldValue === '设置') englishWrites.push('text');
+          if (record.type === 'attributes' && record.attributeName === 'title' && record.oldValue === '设置') englishWrites.push('title');
+        }
+      });
+      observer.observe(panel, { subtree: true, characterData: true, characterDataOldValue: true, attributes: true, attributeOldValue: true });
+      panel.className = 'active-settings-screen';
+      setTimeout(() => {
+        observer.disconnect(); document.body.append(button); panel.remove();
+        resolve([englishWrites, button.textContent, button.title]);
+      }, 150);
+    }, 150);
+  })`, [[], '设置', '设置']);
+  await evaluate("document.getElementById('settings').setAttribute('data-antigravity-user-content','true')");
+  await until(() => evaluate("document.getElementById('settings').textContent==='Settings'"));
+  await eq('reused UI becomes protected content', "[document.getElementById('settings').textContent,document.getElementById('settings').title]", ['Settings', 'Settings']);
+  await evaluate("document.getElementById('settings').removeAttribute('data-antigravity-user-content')");
+  await until(() => evaluate("document.getElementById('settings').textContent==='设置'"));
+  checks.push('protected content becomes UI again');
   await eq('missing-folder banner translated', "document.getElementById('missing-title').textContent", '文件夹缺失');
   await eq('missing-folder banner close label translated', "document.getElementById('missing-close').getAttribute('aria-label')", '关闭');
   await eq('authored Missing Folder preserved', "document.getElementById('authored-missing').textContent", 'Missing Folder');
@@ -135,8 +193,15 @@ async function main() {
   for (let i = 0; i < additional.length; i++) await eq('count and static status ' + additional[i][0], `document.getElementById('extra-${i}').textContent`, additional[i][1]);
   await evaluate("document.getElementById('summary').click()");
   await eq('original callback and icon preserved', "[window.clicks,window.originalCaret===document.getElementById('caret')]", [1, true]);
+  await evaluate('window.savedController=window.__antigravityZhPatchController');
   await evaluate(source);
-  await eq('idempotent reinjection same controller', "window.__antigravityZhPatchVersion", expectedVersion);
+  await eq('idempotent reinjection same controller', "window.savedController===window.__antigravityZhPatchController", true);
+  await evaluate("window.__antigravityZhPatchDictionary={...window.__antigravityZhPatchDictionary, Settings:'常规设置'}");
+  await eq('dictionary upgrades finish before first frame', `new Promise(resolve => {
+    requestAnimationFrame(() => resolve(document.getElementById('settings').textContent));
+    ${source}
+  })`, '常规设置');
+  await eq('upgrade replaces previous controller', "window.savedController.stopped && window.savedController!==window.__antigravityZhPatchController", true);
   await evaluate('window.__antigravityZhPatchRestore()');
   await eq('restore latest count and prefix', "[document.getElementById('time').textContent,document.getElementById('analyzed').textContent,window.late.textContent]", ['Thought for 12s', 'Analyzing', 'Thinking for 3s']);
   await eq('restore original summary and metadata', "[document.getElementById('summary').textContent,document.getElementById('summary').getAttribute('aria-label'),document.getElementById('summary').firstElementChild.title]", ['Exploring file, running command, editing files', 'Exploring file, running command, editing files', 'Exploring file, running command, editing files']);

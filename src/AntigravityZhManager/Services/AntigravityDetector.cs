@@ -22,7 +22,7 @@ namespace AntigravityZhManager.Services
         public bool IsOfficialOriginal { get; set; }
         public bool HasLegacyFolder { get; set; }
         public string LegacyFolderPath { get; set; } = string.Empty;
-        public string Version { get; set; } = "2.22.0";
+        public string Version { get; set; } = "2.23.0";
         public string DetectSource { get; set; } = string.Empty;
     }
 
@@ -31,6 +31,7 @@ namespace AntigravityZhManager.Services
         // 官方原版 SHA256（按已适配版本记录）
         public const string OFFICIAL_2_21_1_HASH = "d075e5d9ff01f8806016aa88c39bf1429f068a941fdbe46147d8409843e62113";
         public const string OFFICIAL_2_22_0_HASH = "259c83ffa266088dda6ede520a601bbf06cc5c34985cdf56c5d68549c98dbb0e";
+        public const string OFFICIAL_2_23_0_HASH = "4e99093662d797ecba823e92823d352413e3bf2ca721257df4a255c045df1598";
 
         /// <summary>
         /// 把卸载记录的 DisplayIcon 值规范成可用的可执行文件路径：
@@ -167,7 +168,8 @@ namespace AntigravityZhManager.Services
                 {
                     string currentHash = CalcFileHash(info.AsarPath);
                     if (currentHash.Equals(OFFICIAL_2_21_1_HASH, StringComparison.OrdinalIgnoreCase) ||
-                        currentHash.Equals(OFFICIAL_2_22_0_HASH, StringComparison.OrdinalIgnoreCase))
+                        currentHash.Equals(OFFICIAL_2_22_0_HASH, StringComparison.OrdinalIgnoreCase) ||
+                        currentHash.Equals(OFFICIAL_2_23_0_HASH, StringComparison.OrdinalIgnoreCase))
                     {
                         info.IsOfficialOriginal = true;
                     }

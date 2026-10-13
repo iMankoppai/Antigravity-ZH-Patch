@@ -1,5 +1,5 @@
 (() => {
-  const patchVersion = 35;
+  const patchVersion = 39;
   const dictionary = window.__antigravityZhPatchDictionary || {};
   const identity = window.__antigravityZhPatchDictionarySignature || JSON.stringify(dictionary);
   const guard = `${patchVersion}:${identity}`;
@@ -109,6 +109,11 @@
     [/^Question\s+(\d+)\s+of\s+(\d+)$/i, m => `问题 ${m[1]} / ${m[2]}`],
     [/^Version\s+(.+)$/, (match) => `版本 ${match[1]}`],
     [/^Select model, current:\s*(.+)$/, (match) => `选择模型，当前：${match[1]}`],
+    [/^Agent permissions preset selector, current:\s*(.+)$/, (match) => `代理权限预设选择器，当前：${match[1]}`],
+    [/^This (.+) overrides your global permission settings\.$/, (match) => {
+      const scope = { project: '项目', global: '全局', workspace: '工作区', environment: '环境' }[match[1].toLowerCase()] || match[1];
+      return `此${scope}会覆盖你的全局权限设置。`;
+    }],
     [/^Select project, current:\s*(.+)$/, (match) => `选择项目，当前：${match[1] === "No Project" ? "未选择项目" : match[1]}`],
     [/^You have used some of your weekly limit, it will fully refresh in (.+)\.$/, (match) => `你已使用部分每周额度，将在 ${translateDuration(match[1])}后完全恢复。`],
     [/^You have used some of your 5-hour limit, it will fully refresh in (.+)\.$/, (match) => `你已使用部分五小时额度，将在 ${translateDuration(match[1])}后完全恢复。`],
@@ -424,7 +429,19 @@
     "[data-testid$='-step'], [data-testid='agent-loading'], .animate-shimmer-text, [data-testid$='-collapsible'], " +
     "[data-testid$='-collapsible-trigger'], [data-testid='running-items-panel'], " +
     ".group.flex.w-full.min-w-0.items-center, [class*='select-none'][class*='min-h-8']";
-  const identitySelector = 'a[href^="/c/"], [data-testid="conversation-row-history"] span.truncate.inline-block.text-left';
+  // 会话行标题属于用户内容：2.23.0 的行 testid 是动态的 `conversation-row-${kind}`，
+  // 固定在 `conversation-row-history` 上会让这层保护整段失效；标题 span 的类名
+  // 在 2.23.0 仍保留 truncate / inline-block / text-left 三个类。
+  // 模型名同理属于专名：2.23.0 的模型选择器把“模型名 + 推理档位”拆成两个文本节点
+  // （`Gemini 3.8 Flash` + `High`），档位词命中词条 High=高 会渲染成
+  // “Gemini 3.8 Flash 高”，与 aria 标签不一致，因此整块模型名视为 identity。
+  // 档位选项菜单（model-selector-effort-option，即 Low/Medium/High/Extra/Max 的列表）
+  // 与模型名是同一套标识，按用户要求同样保持英文。
+  const identitySelector = 'a[href^="/c/"], [data-testid^="conversation-row-"] span.truncate.inline-block.text-left, ' +
+    '[data-testid="model-selector-trigger"] span.min-w-0.overflow-hidden.text-ellipsis.whitespace-nowrap, ' +
+    '[data-testid="model-selector-effort-group"], ' +
+    '[data-testid="model-selector-effort-option"], ' +
+    '[data-testid="model-selector-panel"] span.shrink-0.opacity-70.text-xs';
 
   // fY/hY/jY in the 2.21.1 renderer: admit only application status headers,
   // never an entire step/article. hY's second span contains filenames/tool data.
@@ -1082,16 +1099,18 @@
       for (let parent = text.parentNode; parent; parent = parent.parentNode) if (roots.has(parent)) return;
       texts.add(text);
     }
-    function requestDrain() { if (!scheduled) { scheduled = true; schedule(drain); } }
-    function* initialJob() {
-      // Restore earlier versions' records even in content that is now protected.
-      // Both restoration and translation advance one DOM node per budget step.
-      for (const node of nodesIn(document.documentElement, false)) yield { node, restore: true };
-      for (const node of nodesIn(document.documentElement)) yield { node, restore: false };
+    function requestDrain() {
+      if (scheduled || controller.stopped) return;
+      scheduled = true;
+      // MutationObserver runs before paint. Keep continuations in that same
+      // microtask checkpoint: yielding to a frame/timer exposes English UI.
+      queueMicrotask(drain);
     }
     function* translationJob(root) {
-      for (const node of nodesIn(root, false)) yield { node, restore: true };
-      for (const node of nodesIn(root)) yield { node, restore: false };
+      // Recompute directly from saved originals, without an English restore
+      // pass. Visit protected nodes too so reused UI and old patch records can
+      // be restored when their context becomes authored content.
+      yield* nodesIn(root, false);
     }
     function completeInitial() {
       initialPending = false;
@@ -1104,6 +1123,7 @@
     }
     function drain() {
       scheduled = false;
+      if (controller.stopped) return;
       const deadline = clock() + 8;
       let count = 0;
       while (!controller.stopped && count < 400 && clock() < deadline) {
@@ -1124,11 +1144,13 @@
           if (initialPending) completeInitial();
           continue;
         }
-        const { node, restore } = next.value;
+        const node = next.value;
         if (node.isConnected) {
-          if (restore) restoreNode(node);
-          else if (node.nodeType === Node.TEXT_NODE) translateTextNode(node);
-          else translateElement(node);
+          if (node.nodeType === Node.TEXT_NODE) translateTextNode(node);
+          else {
+            if (isOpaque(node) || isConversationContent(node) || node.matches(identitySelector)) restoreNode(node);
+            translateElement(node);
+          }
         }
         count++;
       }
@@ -1171,7 +1193,7 @@
       for (const node of nodesIn(document.documentElement, false)) { restoreNode(node); count++; }
       return count;
     };
-    job = initialJob(); requestDrain();
+    job = translationJob(document.documentElement); requestDrain();
   }
   start();
 })();
