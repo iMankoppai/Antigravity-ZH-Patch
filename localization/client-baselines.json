@@ -176,7 +176,7 @@
         "productVersion": "2.23.0",
         "source": "backup",
         "path": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar.bak",
-        "recordedAt": "2026-10-13T08:59:56.680Z"
+        "recordedAt": "2026-10-13T11:17:20.189Z"
       },
       "requiredTargets": [
         "dist/ipcHandlers.js",
@@ -236,6 +236,12 @@
           "kernelSha256": "1d328d2fc41ffd2b248e92687472f7e61163f1ac3f0371a812825229d016ab16",
           "bytes": 4838218,
           "recordedAt": "2026-10-13T08:59:56.684Z"
+        },
+        {
+          "sha256": "0d3674f11a45b9784ae7f1b7ea74d549233bbae68fc5d4e2faa3e85dd452e9d0",
+          "kernelSha256": "0d33c740ffb4e455b60c3abb02937bebb7c0861d2556f52828e0a6813e000e71",
+          "bytes": 4840678,
+          "recordedAt": "2026-10-13T11:17:20.194Z"
         }
       ]
     }

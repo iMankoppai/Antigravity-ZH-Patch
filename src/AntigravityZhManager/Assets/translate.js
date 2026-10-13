@@ -1,5 +1,5 @@
 (() => {
-  const patchVersion = 39;
+  const patchVersion = 40;
   const dictionary = window.__antigravityZhPatchDictionary || {};
   const identity = window.__antigravityZhPatchDictionarySignature || JSON.stringify(dictionary);
   const guard = `${patchVersion}:${identity}`;
@@ -404,6 +404,21 @@
     [/^Stream and control\s+(.+)\s+directly in the side pane\.$/i, (m) => `在侧边面板中实时查看和控制 ${m[1]}。`],
     // 日志空状态保底 (R4 辅助)
     [/^No logs available\.?$/i, () => "暂无可用日志。"],
+    // 通用兜底：界面文案 + 快捷键/计数括号。官方大量提示把快捷键或数量写在括号里
+    // （Clear search (Esc)、Reset zoom (0)、Select Environment (Ctrl+.)、Tool Calls (5)…）；
+    // 词典里通常只有不带括号的文案，这里保留括号内容、只翻译已知文案。
+    [/^([\s\S]{2,120}?)\s*\((Esc|Enter|Shift\+Enter|Ctrl\+\S+|⌘\S*|⌃\S*|Space|Tab|\d+)\)$/, (m) => {
+      const base = m[1].trim();
+      const hit = translations.get(base) || translations.get(base.replace(/\s+/g, " "));
+      return hit ? `${hit}（${m[2]}）` : m[0];
+    }],
+    // 通用兜底：状态/错误行「已知文案: 值」。官方大量运行状态与错误消息是
+    // `Label: value` 形式（Code search: "x"、Opened browser: url、Failed to load trajectory: err…），
+    // 词典只有标签本身，这里翻译标签、原样保留值。
+    [/^([A-Za-z][A-Za-z0-9 +/&'-]{2,60}): ([\s\S]+)$/, (m) => {
+      const hit = translations.get(m[1].trim());
+      return hit ? `${hit}：${m[2]}` : m[0];
+    }],
   ];
 
 
@@ -890,12 +905,21 @@
     const paragraph = element.closest('p');
     const toast = paragraph?.closest('[data-testid="toast-notification"][data-notification-tag^="archive-conversation-"]');
     if (!toast || isOpaque(paragraph) || isConversationContent(paragraph)) return false;
-    const link = paragraph.querySelector('a[href="notification://history"]');
-    if (!link) return false;
     const walker = document.createTreeWalker(paragraph, NodeFilter.SHOW_TEXT);
     const nodes = []; let node;
     while ((node = walker.nextNode())) nodes.push(node);
-    if (nodes.map(originalText).join('').replace(/\s+/g, ' ').trim() !== 'View archived conversations in history.') return false;
+    if (!nodes.length) return false;
+    const flat = nodes.map(originalText).join('').replace(/\s+/g, ' ').trim();
+    const link = paragraph.querySelector('a[href="notification://history"]');
+    // 2.23.0 归档提示正文：markdown 内联图标让首节点变成 "View archived in the sidebar ("，
+    // 整句无法命中词典，必须在结构层改写首尾节点（中间是图标，保持 React 节点不动）。
+    if (!link && /^View archived in the sidebar \(.*menu\)\.$/.test(flat)) {
+      nodes.forEach((text, index) => writeText(text,
+        index === 0 ? '在侧边栏查看已归档项（' : index === nodes.length - 1 ? ' 菜单）。' : '', originalText(text)));
+      return true;
+    }
+    if (!link) return false;
+    if (flat !== 'View archived conversations in history.') return false;
     const start = nodes.findIndex(node => link.contains(node));
     const end = nodes.findLastIndex(node => link.contains(node));
     if (start <= 0 || end >= nodes.length - 1) return false;

@@ -69,6 +69,11 @@ ${step('running', 'Ran', 'npm run test, echo &quot;Edited files&quot;')}
 <span id="model-panel-footer">View Usage</span>
 </div>
 <span id="effort-elsewhere">High</span>
+<div data-testid="toast-notification" data-notification-tag="archive-conversation-abc"><p id="archive-toast">View archived in the sidebar (<span class="inline-icon"></span> menu).</p></div>
+<div data-testid="toast-notification" data-notification-tag="archive-conversation-def"><p id="archive-toast-legacy">View archived conversations in <a href="notification://history" id="archive-link">history</a>.</p></div>
+<span id="shortcut-hint">Clear search (Esc)</span>
+<span id="shortcut-hint-rule">Select Environment (Ctrl+.)</span>
+<span id="status-line">Code search: "auth flow"</span>
 <div id="late-holder"></div><div id="many"></div>
 <script>window.clicks=0;document.getElementById('summary').addEventListener('click',()=>window.clicks++);window.originalCaret=document.getElementById('caret');window.countNode=document.createTextNode('11');document.getElementById('time-label').append(document.createTextNode('Thought for '),window.countNode,document.createTextNode('s'));</script>
 </body>`;
@@ -127,6 +132,13 @@ async function main() {
   await eq('panel effort badge stays English', "document.getElementById('model-option-panel').textContent", 'Medium');
   await eq('panel chrome still translated', "document.getElementById('model-panel-footer').textContent", '查看用量');
   await eq('effort word outside selector still translated', "document.getElementById('effort-elsewhere').textContent", '高');
+  // 通知正文与通用兜底规则：markdown 内联图标把首节点拼成 “…sidebar (”，词典整句命不中。
+  await eq('archive toast body (2.23.0 variant)', "document.getElementById('archive-toast').textContent", '在侧边栏查看已归档项（ 菜单）。');
+  await eq('archive toast body (legacy variant keeps link)', "document.getElementById('archive-toast-legacy').textContent", '已归档的对话可在历史记录中查看。');
+  await eq('archive toast link preserved', "!!document.getElementById('archive-link')", true);
+  await eq('shortcut suffix hint (dictionary entry wins)', "document.getElementById('shortcut-hint').textContent", '清除搜索 (Esc)');
+  await eq('shortcut suffix hint (new generic rule)', "document.getElementById('shortcut-hint-rule').textContent", '选择环境（Ctrl+.）');
+  await eq('label: value status line translated', "document.getElementById('status-line').textContent", '代码搜索：“auth flow”');
   await eq('textarea draft unchanged', "document.getElementById('draft').value", 'Exploring file, running command, editing files');
   await eq('ordinary UI translation', "document.getElementById('settings').textContent", '设置');
   await eq('page switches stay Chinese before every frame', `new Promise(resolve => {

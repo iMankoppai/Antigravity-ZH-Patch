@@ -1,6 +1,6 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.0.2-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Release](https://img.shields.io/badge/Release-v1.0.3-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Antigravity](https://img.shields.io/badge/Antigravity-2.23.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
@@ -8,7 +8,7 @@
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.0.2 适配 Google Antigravity 2.23.0（Windows x64）**，汉化内核 v39、词条 3,497 条。官方客户端升级后旧补丁会被更新包覆盖，重新执行一次安装即可。
+> **当前版本 v1.0.3 适配 Google Antigravity 2.23.0（Windows x64）**，汉化内核 v40、词条 3,513 条。官方客户端升级后旧补丁会被更新包覆盖，重新执行一次安装即可。
 
 ---
 
@@ -42,7 +42,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`Antigravity汉化管理器.exe`** 或 **`Antigravity-ZH-1.0.2-Windows-x64.zip`**；
+2. 下载 **`Antigravity汉化管理器.exe`** 或 **`Antigravity-ZH-1.0.3-Windows-x64.zip`**；
 3. 双击运行 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -65,7 +65,7 @@ Antigravity ZH/
 
 ### 技术规格
 - **适配软件**：**Google Antigravity 2.23.0**（Windows x64）
-- **汉化内核**：v39（词条 3,497 条）
+- **汉化内核**：v40（词条 3,513 条）
 - **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、工作状态、插件市场与主题设置）
 - **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入
 
@@ -83,6 +83,15 @@ Antigravity ZH/
 ---
 
 ## 📦 版本记录
+
+### v1.0.3 — 通知/提示类漏译修复（2026-10-13）
+
+- **汉化内核**：v39 → **v40**；词条 3,497 → **3,513 条**。
+- **修复归档提示正文漏译**：官方把提示按 markdown 渲染，内联图标把正文切成 `View archived in the sidebar (` + 图标 + ` menu).` 两个文本节点，整句永远命不中词典。现按结构改写首尾节点，保留中间图标与 React 节点。
+- **新增两条通用兜底规则**：① `界面文案 (快捷键/计数)`（`Clear search (Esc)`、`Reset zoom (0)`、`Select Environment (Ctrl+.)`、`Tool Calls (5)` 等）；② `状态/错误行「标签: 值」`（`Code search: "x"`、`Opened browser: url`、`Failed to load trajectory: err` 等）。
+- **词库补齐 16 条**：`Failed to load resources`、`Failed to validate the saved GitHub token.`、认证/登录提示片段、媒体控件（`Back 5s (←)`、`≥ 1s`…`≥ 5m`）、`Zoom`、`Send feedback as ` 等。
+- **同类排查**：通知正文未覆盖 5 → 1 条、`aria-label` 0 条、`label` 12 → 2 条；剩余项均为内部串、产品名或示例 URL，按策略保留原文。
+- **质量守护**：渲染回归断言 80 → **86** 条；统一门禁 17 项全通过。
 
 ### v1.0.2 — 适配 Antigravity 2.23.0（2026-10-13）
 

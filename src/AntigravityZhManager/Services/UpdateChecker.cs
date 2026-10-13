@@ -8,7 +8,7 @@ namespace AntigravityZhManager.Services
     public class UpdateInfo
     {
         public bool HasUpdate { get; set; }
-        public string LatestVersion { get; set; } = "1.0.2";
+        public string LatestVersion { get; set; } = "1.0.3";
         public string ReleaseUrl { get; set; } = "https://github.com";
         public string Changelog { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
@@ -16,7 +16,7 @@ namespace AntigravityZhManager.Services
 
     public static class UpdateChecker
     {
-        public const string CurrentVersion = "1.0.2";
+        public const string CurrentVersion = "1.0.3";
 
         public static async Task<UpdateInfo> CheckUpdateAsync(Action<string>? log = null)
         {

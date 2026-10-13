@@ -3495,5 +3495,21 @@
   "Get Anything Done with": "用",
   "No bundle found for": "未找到插件包：",
   "Working directory:": "工作目录：",
-  "Zipping": "正在压缩"
+  "Zipping": "正在压缩",
+  "Failed to load resources": "加载资源失败",
+  "There was an error with your authentication. To log in, click ": "身份验证出错。要登录，请点击 ",
+  "To use the agent, please login ": "要使用代理，请先登录 ",
+  "Failed to validate the saved GitHub token.": "验证已保存的 GitHub 令牌失败。",
+  "View archived in the sidebar (Display options menu).": "在侧边栏查看已归档项（显示选项菜单）。",
+  "Back 5s (←)": "后退 5 秒（←）",
+  "Forward 5s (→)": "前进 5 秒（→）",
+  "Previous (←)": "上一个（←）",
+  "Next (→)": "下一个（→）",
+  "Send feedback as ": "以此身份提交反馈：",
+  "Zoom": "缩放",
+  "≥ 1s": "≥ 1 秒",
+  "≥ 5s": "≥ 5 秒",
+  "≥ 15s": "≥ 15 秒",
+  "≥ 1m": "≥ 1 分钟",
+  "≥ 5m": "≥ 5 分钟"
 }
