@@ -56,6 +56,19 @@ Check("正确版本的官方原版备份 -> 允许", BaselineManifest.VerifyBack
 Check("未知客户端版本 -> 拒绝还原", BaselineManifest.VerifyBackup("9.9.9", pristineSha) != null);
 Check("无版本信息 -> 拒绝还原", BaselineManifest.VerifyBackup(null, pristineSha) != null);
 
+// 每个适配版本都校验自己的原版，并拒绝恢复其他版本的备份。
+foreach (string supported in knownVersions)
+{
+    string? ownSha = BaselineManifest.PristineForVersion(supported);
+    Check($"{supported} 官方原版允许安装", ownSha != null && BaselineManifest.VerifyInstallable(supported, ownSha, false) == null);
+    Check($"{supported} 官方备份允许还原", ownSha != null && BaselineManifest.VerifyBackup(supported, ownSha) == null);
+    foreach (string other in knownVersions.Where(v => v != supported))
+    {
+        string? otherSha = BaselineManifest.PristineForVersion(other);
+        Check($"{supported} 拒绝 {other} 的错版备份", otherSha != null && BaselineManifest.VerifyBackup(supported, otherSha) != null);
+    }
+}
+
 // ---------- B. ASAR 临时归档回读校验 ----------
 static byte[] BuildArchive(Dictionary<string, byte[]> files, List<string> order)
 {

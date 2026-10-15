@@ -1,14 +1,14 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.0.3-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
-[![Antigravity](https://img.shields.io/badge/Antigravity-2.23.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Release](https://img.shields.io/badge/Release-v1.0.4-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Antigravity](https://img.shields.io/badge/Antigravity-2.23.1-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.0.3 适配 Google Antigravity 2.23.0（Windows x64）**，汉化内核 v40、词条 3,513 条。官方客户端升级后旧补丁会被更新包覆盖，重新执行一次安装即可。
+> **当前版本 v1.0.4 适配 Google Antigravity 2.23.1（Windows x64）**，汉化内核 v40、词条 3,513 条。官方客户端升级后旧补丁会被更新包覆盖，重新执行一次安装即可。
 
 ---
 
@@ -42,7 +42,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`Antigravity汉化管理器.exe`** 或 **`Antigravity-ZH-1.0.3-Windows-x64.zip`**；
+2. 下载 **`Antigravity汉化管理器.exe`** 或 **`Antigravity-ZH-1.0.4-Windows-x64.zip`**；
 3. 双击运行 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -64,7 +64,7 @@ Antigravity ZH/
 ```
 
 ### 技术规格
-- **适配软件**：**Google Antigravity 2.23.0**（Windows x64）
+- **适配软件**：**Google Antigravity 2.23.1**（Windows x64）
 - **汉化内核**：v40（词条 3,513 条）
 - **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、工作状态、插件市场与主题设置）
 - **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入
@@ -78,11 +78,17 @@ Antigravity ZH/
 
 汉化范围与保留项说明：`docs/汉化范围说明-哪些不翻译.md`（为什么内容、专名与程序内部标识故意保留英文）。
 
-本次 2.23.0 适配的完整说明：`docs/2.23.0-适配说明.md`。
+本次 2.23.1 适配的完整说明：`docs/2.23.1-适配说明.md`。
 
 ---
 
 ## 📦 版本记录
+
+### v1.0.4 — 适配 Antigravity 2.23.1（2026-10-15）
+
+- 登记 2.23.1 官方归档基线，管理器支持重新安装和对应版本的英文还原。
+- 新版全部 15 个注入锚点匹配；前端差异为布局样式，沿用已验证的 v40 内核和 3,513 条词库。
+- 管理器窗口版本号和本地版本提示同步为 1.0.4；增加逐版本备份匹配回归，拒绝错版恢复。
 
 ### v1.0.3 — 通知/提示类漏译修复（2026-10-13）
 

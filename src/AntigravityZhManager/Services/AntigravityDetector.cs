@@ -22,7 +22,7 @@ namespace AntigravityZhManager.Services
         public bool IsOfficialOriginal { get; set; }
         public bool HasLegacyFolder { get; set; }
         public string LegacyFolderPath { get; set; } = string.Empty;
-        public string Version { get; set; } = "2.23.0";
+        public string Version { get; set; } = string.Empty;
         public string DetectSource { get; set; } = string.Empty;
     }
 

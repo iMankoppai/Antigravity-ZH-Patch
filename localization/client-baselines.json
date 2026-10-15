@@ -244,6 +244,67 @@
           "recordedAt": "2026-10-13T11:17:20.194Z"
         }
       ]
+    },
+    {
+      "productVersion": "2.23.1",
+      "platform": "win32",
+      "arch": "x64",
+      "pristine": {
+        "sha256": "b8ec3628df2a12ee9deac5dc06367f238065af146bfe6298fdad6db5f9790d9c",
+        "bytes": 4486221,
+        "productVersion": "2.23.1",
+        "source": "backup",
+        "path": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar.bak",
+        "recordedAt": "2026-10-15T04:43:28.934Z"
+      },
+      "requiredTargets": [
+        "dist/ipcHandlers.js",
+        "dist/main.js",
+        "dist/utils.js",
+        "dist/tray.js"
+      ],
+      "requiredEntries": {
+        "dist/ipcHandlers.js": true,
+        "dist/main.js": true,
+        "dist/tray.js": true,
+        "dist/utils.js": true
+      },
+      "requiredAnchors": [
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspace'",
+          "count": 1
+        },
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspaces'",
+          "count": 1
+        },
+        {
+          "target": "dist/main.js",
+          "text": "void win.loadURL(newUrl);",
+          "count": 1
+        },
+        {
+          "target": "dist/utils.js",
+          "text": "void win.loadURL(url);",
+          "count": 1
+        },
+        {
+          "target": "dist/tray.js",
+          "text": "Menu.buildFromTemplate(actions)",
+          "count": 1
+        }
+      ],
+      "missingTargets": [],
+      "knownPatchedSha256": [
+        {
+          "sha256": "c401cebd9413230fff40488173d1b9a1f830d4ef2ef4e74bc411c832eef9b042",
+          "kernelSha256": "0d33c740ffb4e455b60c3abb02937bebb7c0861d2556f52828e0a6813e000e71",
+          "bytes": 4840678,
+          "recordedAt": "2026-10-15T04:43:28.939Z"
+        }
+      ]
     }
   ]
 }

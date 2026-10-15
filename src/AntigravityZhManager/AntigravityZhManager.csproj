@@ -10,9 +10,9 @@
     <ApplicationTitle>Antigravity 汉化管理器</ApplicationTitle>
     <AssemblyTitle>Antigravity 汉化管理器</AssemblyTitle>
     <Product>Antigravity 汉化管理器</Product>
-    <Version>1.0.3</Version>
-    <FileVersion>1.0.3.0</FileVersion>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <Version>1.0.4</Version>
+    <FileVersion>1.0.4.0</FileVersion>
+    <AssemblyVersion>1.0.4.0</AssemblyVersion>
     <Description>Google Antigravity 中文汉化与一键管理工具（终极洁癖模式）</Description>
     <Copyright>Copyright © 2026 Antigravity-ZH</Copyright>
     <PublishSingleFile>true</PublishSingleFile>
