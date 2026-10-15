@@ -18,6 +18,7 @@ namespace AntigravityZhManager.Services
 
     public static class AsarCleanPatcher
     {
+        private static readonly System.Threading.SemaphoreSlim FileGate = new(1, 1);
         private static string CalcSha256(byte[] data)
         {
             using var sha = SHA256.Create();
@@ -92,13 +93,22 @@ namespace AntigravityZhManager.Services
             string asarPath,
             bool enableCloseToTray = true,
             bool enableTrayMenu = true,
-            Action<string>? log = null)
+            Action<string>? log = null,
+            bool allowCompatibleUpdates = false)
+        {
+            await FileGate.WaitAsync();
+            try { return await InstallCoreAsync(asarPath, enableCloseToTray, enableTrayMenu, log, allowCompatibleUpdates); }
+            finally { FileGate.Release(); }
+        }
+
+        private static async Task<PatchResult> InstallCoreAsync(string asarPath, bool enableCloseToTray,
+            bool enableTrayMenu, Action<string>? log, bool allowCompatibleUpdates)
         {
             var result = new PatchResult();
+            string? temporaryOutput = null;
             try
             {
-                var processes = System.Diagnostics.Process.GetProcessesByName("Antigravity");
-                if (processes.Length > 0)
+                if (ClientProcessGuard.IsRunningForArchive(asarPath))
                 {
                     result.Message = "检测到 Antigravity 正在运行中！\n为防止文件占用冲突，请先彻底关闭 Antigravity 客户端（包括系统托盘图标），然后再点击安装。";
                     log?.Invoke("❌ " + result.Message);
@@ -116,7 +126,14 @@ namespace AntigravityZhManager.Services
                 string bakPath = Path.Combine(dir, "app.asar.bak");
 
                 log?.Invoke("📖 正在读取并解构 ASAR 归档...");
-                byte[] asarBytes = await File.ReadAllBytesAsync(asarPath);
+                var current = ArchiveSnapshot.Read(await File.ReadAllBytesAsync(asarPath));
+                ArchiveSnapshot? backup = current.IsPatched && File.Exists(bakPath)
+                    ? ArchiveSnapshot.Read(await File.ReadAllBytesAsync(bakPath)) : null;
+                var compatibility = ArchiveCompatibility.CheckInstalled(current, backup, allowCompatibleUpdates);
+                if (!compatibility.Allowed) throw new InvalidDataException(compatibility.Reason);
+                var source = current.IsPatched ? backup! : current;
+                byte[] asarBytes = source.Bytes;
+                log?.Invoke("🔎 " + compatibility.Reason);
 
                 if (asarBytes.Length < 16) throw new InvalidDataException("ASAR 文件头不足 16 字节。");
                 uint magic = BitConverter.ToUInt32(asarBytes, 0);
@@ -139,6 +156,11 @@ namespace AntigravityZhManager.Services
                 }
 
                 var filesNode = headerNode["files"]!.AsObject();
+                headerNode["antigravityZh"] = new JsonObject
+                {
+                    ["schema"] = 1, ["version"] = source.Version,
+                    ["pristineSha256"] = source.Sha256, ["referenceVersion"] = compatibility.ReferenceVersion
+                };
 
                 // 扁平化文件列表
                 var fileEntries = new List<(string Path, JsonObject Node)>();
@@ -185,69 +207,6 @@ namespace AntigravityZhManager.Services
                 }
 
                 string GetFileText(string relPath) => Encoding.UTF8.GetString(GetFileBytes(relPath));
-
-                // 基线校验：在改动任何字节之前，确认客户端版本已适配、当前归档
-                // 是已知的官方原版或已知补丁版、且备份可核对。任一项不满足即停止写入。
-                string clientVersion = ReadClientVersion(asarBytes, payloadBase) ?? string.Empty;
-                string currentSha = CalcSha256(asarBytes);
-                bool backupExistsNow = File.Exists(bakPath);
-
-                // 同一版内核会因管理器开关组合（关闭到托盘 / 托盘菜单）产出不同哈希，
-                // 不可能逐一登记到基线清单；用户切换开关后再次安装会被误判成第三方
-                // 修改而拒写。这里按“是否带本项目内核注入标记”识别自家产物。
-                bool isProjectOutput = false;
-                try
-                {
-                    if (fileEntries.Exists(e => e.Path == "dist/zh-bundle.js"))
-                    {
-                        isProjectOutput =
-                            GetFileText("dist/main.js").Contains("require('./zh-bundle.js').attach") &&
-                            GetFileText("dist/utils.js").Contains("require('./zh-bundle.js').attach");
-                    }
-                }
-                catch
-                {
-                    isProjectOutput = false;
-                }
-
-                string? baselineError = BaselineManifest.VerifyInstallable(
-                    string.IsNullOrEmpty(clientVersion) ? null : clientVersion, currentSha, backupExistsNow, isProjectOutput);
-                if (baselineError != null)
-                {
-                    result.Message = baselineError;
-                    log?.Invoke("❌ " + baselineError);
-                    return result;
-                }
-                if (backupExistsNow)
-                {
-                    string? backupError = BaselineManifest.VerifyBackup(clientVersion, Sha256OfFile(bakPath));
-                    if (backupError != null)
-                    {
-                        result.Message = backupError;
-                        log?.Invoke("❌ " + backupError);
-                        return result;
-                    }
-                }
-
-                // 备份必须在基线校验通过之后创建：此时当前归档已被确认为官方原版
-                // 或已知补丁版，绝不会把未知/第三方修改过的归档误写成“官方原版备份”。
-                if (!backupExistsNow)
-                {
-                    if (BaselineManifest.Classify(currentSha) == ArchiveKind.Pristine)
-                    {
-                        log?.Invoke("📦 正在创建官方原版备份: app.asar.bak ...");
-                        File.Copy(asarPath, bakPath, true);
-                        log?.Invoke("✅ 原版备份创建成功！");
-                    }
-                    else
-                    {
-                        throw new InvalidDataException("当前归档不是官方原版，无法创建可信的原版备份。");
-                    }
-                }
-                else
-                {
-                    log?.Invoke("ℹ️ 已存在并已核对的官方原版备份: app.asar.bak");
-                }
 
                 log?.Invoke("⚡ 正在应用原生模块适配规则...");
                 string ipcHandlers = GetFileText("dist/ipcHandlers.js");
@@ -502,7 +461,8 @@ namespace AntigravityZhManager.Services
                 BitConverter.GetBytes(4u).CopyTo(prefix, 0);
                 BitConverter.GetBytes((uint)h.Length).CopyTo(prefix, 4);
 
-                string tmpAsarPath = asarPath + ".tmp";
+                string tmpAsarPath = asarPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
+                temporaryOutput = tmpAsarPath;
                 log?.Invoke("💾 正在写入新版洁癖 ASAR 归档...");
 
                 using (var fs = new FileStream(tmpAsarPath, FileMode.Create, FileAccess.Write, FileShare.None))
@@ -524,7 +484,13 @@ namespace AntigravityZhManager.Services
 
                 // 校验通过后才替换主文件；失败时上面的校验会抛错，
                 // 原归档保持不动，只留下属于本次操作的 .tmp 供分析。
-                File.Move(tmpAsarPath, asarPath, true);
+                EnsureUnchangedAndStopped(asarPath, current.Sha256);
+                await PrepareBackupAsync(bakPath, source, log);
+                EnsureUnchangedAndStopped(asarPath, current.Sha256);
+                if (Sha256OfFile(bakPath) != source.Sha256) throw new InvalidDataException("提交前备份发生变化，已停止安装。");
+                string writtenHash = Sha256OfFile(tmpAsarPath);
+                File.Replace(tmpAsarPath, asarPath, null);
+                if (Sha256OfFile(asarPath) != writtenHash) throw new InvalidDataException("安装后回读哈希不一致。");
 
                 result.Success = true;
                 result.Message = "✨ 永久汉化安装成功（终极洁癖模式）！所有翻译逻辑与汉化内核已完全内嵌在ASAR中，软件目录下无需任何多余文件夹！";
@@ -538,15 +504,23 @@ namespace AntigravityZhManager.Services
                 log?.Invoke("❌ " + result.Message);
                 return result;
             }
+            finally { if (temporaryOutput != null) TryDeleteTemporary(temporaryOutput); }
         }
 
         public static async Task<PatchResult> RestoreEnglishAsync(string asarPath, Action<string>? log = null)
         {
+            await FileGate.WaitAsync();
+            try { return await RestoreCoreAsync(asarPath, log); }
+            finally { FileGate.Release(); }
+        }
+
+        private static async Task<PatchResult> RestoreCoreAsync(string asarPath, Action<string>? log)
+        {
             var result = new PatchResult();
+            string? temporaryOutput = null;
             try
             {
-                var processes = System.Diagnostics.Process.GetProcessesByName("Antigravity");
-                if (processes.Length > 0)
+                if (ClientProcessGuard.IsRunningForArchive(asarPath))
                 {
                     result.Message = "检测到 Antigravity 正在运行中！\n为防止文件占用冲突，请先彻底关闭 Antigravity 客户端（包括系统托盘图标），然后再执行还原。";
                     log?.Invoke("❌ " + result.Message);
@@ -563,32 +537,22 @@ namespace AntigravityZhManager.Services
                     return result;
                 }
 
-                // 还原前核对：备份必须属于当前客户端版本的官方原版，避免把
-                // 其他版本的备份覆盖到本目录上。
-                string? restoreVersion = null;
-                if (File.Exists(asarPath))
-                {
-                    try
-                    {
-                        byte[] currentBytes = await File.ReadAllBytesAsync(asarPath);
-                        if (currentBytes.Length >= 16)
-                        {
-                            uint headerSize = BitConverter.ToUInt32(currentBytes, 4);
-                            restoreVersion = ReadClientVersion(currentBytes, checked(8 + (int)headerSize));
-                        }
-                    }
-                    catch { restoreVersion = null; }
-                }
-                string? restoreError = BaselineManifest.VerifyBackup(restoreVersion, Sha256OfFile(bakPath));
-                if (restoreError != null)
-                {
-                    result.Message = restoreError;
-                    log?.Invoke("❌ " + restoreError);
-                    return result;
-                }
-
-                log?.Invoke("↩️ 正在从官方原版备份还原 app.asar ...");
-                await Task.Run(() => File.Copy(bakPath, asarPath, true));
+                var current = ArchiveSnapshot.Read(await File.ReadAllBytesAsync(asarPath));
+                var backup = ArchiveSnapshot.Read(await File.ReadAllBytesAsync(bakPath));
+                var compatible = ArchiveCompatibility.CheckInstalled(current, backup, true);
+                if (!compatible.Allowed || current.Version != backup.Version ||
+                    !ArchiveCompatibility.CheckPristine(backup, true).Allowed)
+                    throw new InvalidDataException(compatible.Allowed ? "备份版本不匹配，拒绝还原。" : compatible.Reason);
+                if (!current.IsPatched)
+                    return new PatchResult { Success = true, Message = "当前归档已经是原件，无需覆盖。" };
+                log?.Invoke("↩️ 正在从匹配的原件备份还原 app.asar ...");
+                string temporary = asarPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
+                temporaryOutput = temporary;
+                await File.WriteAllBytesAsync(temporary, backup.Bytes);
+                if (Sha256OfFile(temporary) != backup.Sha256) throw new InvalidDataException("还原临时文件校验失败。");
+                EnsureUnchangedAndStopped(asarPath, current.Sha256);
+                File.Replace(temporary, asarPath, null);
+                if (Sha256OfFile(asarPath) != backup.Sha256) throw new InvalidDataException("还原后哈希校验失败。");
 
                 result.Success = true;
                 result.Message = "官方英文原版还原成功！所有改动已彻底清除。";
@@ -602,6 +566,7 @@ namespace AntigravityZhManager.Services
                 log?.Invoke("❌ " + result.Message);
                 return result;
             }
+            finally { if (temporaryOutput != null) TryDeleteTemporary(temporaryOutput); }
         }
         /// <summary>
         /// 清理旧版遗留物。实际编排与归属判定在 LegacyCleaner / LegacyOwnership，
@@ -612,5 +577,39 @@ namespace AntigravityZhManager.Services
             var outcome = LegacyCleaner.Clean(installDir, log);
             return new PatchResult { Success = outcome.Success, Message = outcome.Message };
         }
+
+        private static void EnsureUnchangedAndStopped(string path, string expectedHash)
+        {
+            if (ClientProcessGuard.IsRunningForArchive(path)) throw new IOException("客户端已启动，等待下次退出后再安装。");
+            if (Sha256OfFile(path) != expectedHash) throw new IOException("资源包在处理期间发生变化，等待更新完成后重试。");
+        }
+
+        private static async Task PrepareBackupAsync(string backupPath, ArchiveSnapshot source, Action<string>? log)
+        {
+            if (File.Exists(backupPath))
+            {
+                string oldHash = Sha256OfFile(backupPath);
+                if (oldHash == source.Sha256) return;
+                string oldVersion;
+                try { oldVersion = ArchiveSnapshot.Read(await File.ReadAllBytesAsync(backupPath)).Version; }
+                catch { oldVersion = "unknown"; }
+                string preserved = backupPath + "." + oldVersion + "." + oldHash;
+                if (!File.Exists(preserved)) File.Copy(backupPath, preserved, false);
+                if (Sha256OfFile(preserved) != oldHash) throw new IOException("旧备份归档校验失败，停止覆盖。");
+                log?.Invoke("📦 已保留旧版备份：" + Path.GetFileName(preserved));
+            }
+            string temporary = backupPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
+            try
+            {
+                await File.WriteAllBytesAsync(temporary, source.Bytes);
+                if (Sha256OfFile(temporary) != source.Sha256) throw new IOException("新版原件备份校验失败。");
+                File.Move(temporary, backupPath, true);
+            }
+            finally { TryDeleteTemporary(temporary); }
+            log?.Invoke("📦 已建立并核对 " + source.Version + " 的原件备份。");
+        }
+
+        private static void TryDeleteTemporary(string path)
+        { try { if (File.Exists(path)) File.Delete(path); } catch { /* Only this operation's unique temporary file. */ } }
     }
 }

@@ -12,14 +12,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
+    <Compile Include="CompatibilityRepairTests.cs" />
     <Compile Include="..\..\..\src\AntigravityZhManager\Services\BaselineManifest.cs" />
     <Compile Include="..\..\..\src\AntigravityZhManager\Services\AsarArchiveVerifier.cs" />
     <Compile Include="..\..\..\src\AntigravityZhManager\Services\LegacyOwnership.cs" />
     <Compile Include="..\..\..\src\AntigravityZhManager\Services\LegacyCleaner.cs" />
     <Compile Include="..\..\..\src\AntigravityZhManager\Services\AsarCleanPatcher.cs" />
+    <Compile Include="..\..\..\src\AntigravityZhManager\Services\ArchiveCompatibility.cs" />
+    <Compile Include="..\..\..\src\AntigravityZhManager\Services\ClientProcessGuard.cs" />
+    <Compile Include="..\..\..\src\AntigravityZhManager\Services\CompatibilityRepairService.cs" />
+    <Compile Include="..\..\..\src\AntigravityZhManager\Services\CdpHotPatcher.cs" />
     <Compile Include="..\..\..\src\AntigravityZhManager\Services\AntigravityDetector.cs" />
     <EmbeddedResource Include="..\..\..\src\AntigravityZhManager\Assets\zh-bundle.js"
                       LogicalName="AntigravityZhManager.Assets.zh-bundle.js" />
+    <EmbeddedResource Include="..\..\..\src\AntigravityZhManager\Assets\translate.js" LogicalName="AntigravityZhManager.Assets.translate.js" />
+    <EmbeddedResource Include="..\..\..\src\AntigravityZhManager\Assets\dictionaries.json" LogicalName="AntigravityZhManager.Assets.dictionaries.json" />
     <EmbeddedResource Include="..\..\..\localization\client-baselines.json"
                       LogicalName="AntigravityZhManager.localization.client-baselines.json" />
   </ItemGroup>

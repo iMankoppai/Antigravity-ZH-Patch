@@ -1,6 +1,6 @@
 {
   "project": "Antigravity-ZH",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "adaptedAppVersion": "2.23.1",
   "termsCount": 3513,
   "architecture": "C# .NET 8 WPF Single-File Self-Contained EXE",
@@ -13,12 +13,12 @@
   "officialAsarSha256": "b8ec3628df2a12ee9deac5dc06367f238065af146bfe6298fdad6db5f9790d9c",
   "installedAsarSha256": "c401cebd9413230fff40488173d1b9a1f830d4ef2ef4e74bc411c832eef9b042",
   "installedKernelSha256": "0d33c740ffb4e455b60c3abb02937bebb7c0861d2556f52828e0a6813e000e71",
-  "managerExeSha256": "0d360d30fe332db9fb3cf5fbae832f416b5cbdfae3b14231413d25bb52d8e589",
-  "managerExeNote": "本地管理器已构建为 1.0.4，支持 2.23.1；内核沿用 v40 / 3513 条。编译资源、安装内核与源码逐字节一致。",
-  "releaseZip": "Antigravity-ZH-1.0.4-Windows-x64.zip",
-  "releaseZipSha256": "a78f0406e00e5b36835354f5c97a6f04ea2445c93e7422a920fe495e34510454",
-  "publishedInfo": "本次发布版本 v1.0.4，适配 Antigravity 2.23.1（Windows x64）；交付文件哈希见本状态文件及 dist/release-metadata.json。",
-  "updatedAt": "2026-10-15T04:44:52.611Z",
+  "managerExeSha256": "4993901fe7bb630ecef2d1129f487d4e030aa43268aca4cbc7c7cd3a3e9dd824",
+  "managerExeNote": "v1.1.0 手动新版汉化适配已替换并正常启动。无后台升级监测、自动重试或退出后自动安装；紫色图标保留。",
+  "releaseZip": "Antigravity-ZH-1.1.0-Windows-x64.zip",
+  "releaseZipSha256": "b2b2fcadf2ab6b7579c70526e616252b66b0ed0cb71b8aff310fe0b298ab5b7e",
+  "publishedInfo": "v1.1.0 发布内容：手动新版汉化适配、兼容性核验、备份与还原增强、紫色透明图标；已验证适配 Antigravity 2.23.1（Windows x64），无后台升级监测。",
+  "updatedAt": "2026-10-15T07:06:22.456Z",
   "patchVersion": 40,
   "installedPatchVersion": 40,
   "statusLabelRegressionChecks": 86,
@@ -26,7 +26,7 @@
   "statusLabelRepairReport": "work/status-label-repair-report.md",
   "b3InstallFixReport": "work/b3-install-fix-report.md",
   "adaptationReport": "docs/2.23.1-适配说明.md",
-  "qualityAuditReport": "work/2-23-1-probe/check-after-install.json",
+  "qualityAuditReport": "work/manual-compatibility/check-release.json",
   "liveVerification": {
     "checkedAt": "2026-10-15T04:44:21.236Z",
     "clientVersion": "2.23.1",
@@ -48,5 +48,36 @@
     "restoredSha256": "b8ec3628df2a12ee9deac5dc06367f238065af146bfe6298fdad6db5f9790d9c",
     "sourceCompiledInstalledResourcesMatch": true
   },
-  "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.0.4"
+  "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.1.0",
+  "trayIcon": {
+    "palette": "violet-purple",
+    "bitDepth": 32,
+    "sizes": [
+      16,
+      20,
+      24,
+      32,
+      40,
+      48,
+      64,
+      256
+    ],
+    "sha256": "d79b611ae9a7e11b9f8b142d5ebfee8e1b71c6599abffee7b9092b1729692f47",
+    "source": "src/AntigravityZhManager/Assets/app-icon.png",
+    "alphaReference": "src/AntigravityZhManager/Assets/app-icon-mask.png",
+    "generator": "scripts/build-icon.ps1",
+    "verification": "work/purple-icon/verification.json",
+    "imagegenRecord": "work/purple-icon/imagegen-record.md"
+  },
+  "compatibilityRepair": {
+    "mode": "manual",
+    "button": "新版汉化适配",
+    "backgroundMonitoring": false,
+    "automaticRetry": false,
+    "automaticInstallAfterExit": false,
+    "testsPassed": 38,
+    "documentation": "docs/新版汉化适配.md",
+    "managerProcessId": 8124,
+    "managerRunning": true
+  }
 }

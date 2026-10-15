@@ -64,7 +64,7 @@ namespace AntigravityZhManager.Services
             }
         }
 
-        public static AntigravityInfo Detect(string? customPath = null, Action<string>? log = null)
+        public static AntigravityInfo Detect(string? customPath = null, Action<string>? log = null, bool inspectArchive = true)
         {
             var info = new AntigravityInfo();
 
@@ -140,6 +140,7 @@ namespace AntigravityZhManager.Services
                 // 探测多源备份
                 string resDir = Path.Combine(info.InstallDir, "resources");
                 string defaultBak = Path.Combine(resDir, "app.asar.bak");
+                info.AsarBakPath = defaultBak;
                 string legacyBak1 = Path.Combine(resDir, "app-2.21.1-native-original.asar");
                 string legacyBak2 = Path.Combine(resDir, "app-original.asar");
 
@@ -164,12 +165,10 @@ namespace AntigravityZhManager.Services
                 info.HasLegacyFolder = Directory.Exists(info.LegacyFolderPath);
 
                 // 探测 ASAR 状态
-                if (info.HasAsar)
+                if (info.HasAsar && inspectArchive)
                 {
                     string currentHash = CalcFileHash(info.AsarPath);
-                    if (currentHash.Equals(OFFICIAL_2_21_1_HASH, StringComparison.OrdinalIgnoreCase) ||
-                        currentHash.Equals(OFFICIAL_2_22_0_HASH, StringComparison.OrdinalIgnoreCase) ||
-                        currentHash.Equals(OFFICIAL_2_23_0_HASH, StringComparison.OrdinalIgnoreCase))
+                    if (BaselineManifest.IsKnownPristine(currentHash))
                     {
                         info.IsOfficialOriginal = true;
                     }

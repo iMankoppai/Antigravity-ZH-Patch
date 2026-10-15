@@ -181,15 +181,16 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Antigravity 汉化管理器" FontSize="19" FontWeight="Bold" Foreground="#FFFFFF"/>
                         <Border Background="#1E293B" CornerRadius="4" Padding="7,2" Margin="10,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="v1.0.4" Foreground="#94A3B8" FontSize="11"/>
+                            <TextBlock Text="v1.1.0" Foreground="#94A3B8" FontSize="11"/>
                         </Border>
                     </StackPanel>
                     <TextBlock Text="纯净 ASAR 原生内嵌架构 · 支持免重启临时汉化与一键恢复默认" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
                 </StackPanel>
             </StackPanel>
 
-            <!-- 右侧检查更新 -->
+            <!-- 右侧手动适配与检查更新 -->
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="BtnCompatibilityRepair" Content="新版汉化适配" Style="{StaticResource PrimaryButtonStyle}" Margin="0,0,8,0" Click="BtnCompatibilityRepair_Click" ToolTip="Antigravity 更新后汉化丢失时，点击检查兼容性并恢复中文"/>
                 <Button x:Name="BtnCheckUpdate" Content="🔄 检查更新" Style="{StaticResource ModernButtonStyle}" Click="BtnCheckUpdate_Click"/>
             </StackPanel>
         </Grid>
@@ -201,7 +202,7 @@
                 <Grid Margin="0,0,0,8">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Ellipse x:Name="StatusDot" Width="9" Height="9" Fill="#10B981" Margin="0,0,8,0"/>
-                        <TextBlock x:Name="TxtAppRunningStatus" Text="Antigravity 运行中 (v2.21.1)" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC"/>
+                        <TextBlock x:Name="TxtAppRunningStatus" Text="正在检测 Antigravity…" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC"/>
                     </StackPanel>
                 </Grid>
 
@@ -264,7 +265,7 @@
                             </Border>
                         </StackPanel>
 
-                        <TextBlock Grid.Row="1" Text="一键切换当前前台窗口语言：点一下开启汉化，再点一下恢复英文。免重启软件，AI 会话不断连！（仅当前运行窗口生效，退出或重启后自动复原为英文）" 
+                        <TextBlock Grid.Row="1" Text="一键切换当前窗口语言，免重启且保留会话。永久安装的补丁在下次启动时仍可生效。"
                                    FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,0,0,12" LineHeight="17" VerticalAlignment="Top"/>
 
                         <Button Grid.Row="2" x:Name="BtnHotInject" Content="⚡ 开启汉化" 
@@ -315,8 +316,8 @@
 
                         <!-- 选项勾选 -->
                         <WrapPanel Grid.Row="2" Margin="0,0,0,10" VerticalAlignment="Center">
-                            <CheckBox x:Name="ChkCloseToTray" Content="关闭窗口时最小化到托盘 (后台运行)" IsChecked="True"/>
-                            <CheckBox x:Name="ChkTrayMenu" Content="托盘双击唤醒窗口 &amp; 中文右键菜单" IsChecked="True"/>
+                            <CheckBox x:Name="ChkCloseToTray" Content="关闭客户端窗口时最小化到托盘" IsChecked="True" Checked="RepairOptions_Changed" Unchecked="RepairOptions_Changed"/>
+                            <CheckBox x:Name="ChkTrayMenu" Content="客户端托盘双击唤醒与中文菜单" IsChecked="True" Checked="RepairOptions_Changed" Unchecked="RepairOptions_Changed"/>
                         </WrapPanel>
 
                         <Button Grid.Row="3" x:Name="BtnInstallClean" Content="📦 一键嵌入汉化 (ASAR 内嵌封装)" 
@@ -359,11 +360,11 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Margin="0,0,0,6">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,75,0">
                         <TextBlock Text="📝 操作日志 &amp; 状态反馈" FontSize="12" FontWeight="SemiBold" Foreground="#64748B"/>
                     </StackPanel>
                     <Button HorizontalAlignment="Right" Content="清空日志" Style="{StaticResource ModernButtonStyle}" 
-                            Padding="8,2" FontSize="11" Click="BtnClearLogs_Click"/>
+                            Padding="8,2" FontSize="11" Height="24" VerticalAlignment="Top" Click="BtnClearLogs_Click"/>
                 </Grid>
 
                 <ScrollViewer Grid.Row="1" x:Name="LogScrollViewer" VerticalScrollBarVisibility="Auto">

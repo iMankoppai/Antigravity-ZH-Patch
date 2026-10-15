@@ -60,7 +60,7 @@ namespace AntigravityZhManager.Services
                 {
                     var fi = new FileInfo(appInfo.AsarPath);
                     string hash = await ComputeFileHashAsync(appInfo.AsarPath);
-                    if (hash.Equals(OfficialAsarHash, StringComparison.OrdinalIgnoreCase))
+                    if (BaselineManifest.IsKnownPristine(hash))
                     {
                         itemAsar.IsOk = true;
                         itemAsar.Details = $"官方英文原版 (哈希校验通过，文件大小: {fi.Length / 1024 / 1024}MB)";
@@ -101,15 +101,19 @@ namespace AntigravityZhManager.Services
                 try
                 {
                     string bakHash = await ComputeFileHashAsync(appInfo.AsarBakPath);
-                    if (bakHash.Equals(OfficialAsarHash, StringComparison.OrdinalIgnoreCase))
+                    var backup = ArchiveSnapshot.Read(await File.ReadAllBytesAsync(appInfo.AsarBakPath));
+                    var current = ArchiveSnapshot.Read(await File.ReadAllBytesAsync(appInfo.AsarPath));
+                    var backupDecision = ArchiveCompatibility.CheckInstalled(current, backup, true);
+                    bool backupMatches = current.Version == backup.Version && backupDecision.Allowed && ArchiveCompatibility.CheckPristine(backup, true).Allowed;
+                    if (backupMatches)
                     {
                         itemBackup.IsOk = true;
-                        itemBackup.Details = "官方原版备份已就绪 (app.asar.bak 哈希匹配官方原版，随时可无损还原)";
+                        itemBackup.Details = "同版本原件备份已核对，可用于还原。";
                     }
                     else
                     {
-                        itemBackup.IsOk = true;
-                        itemBackup.Details = $"备份文件已就绪 (SHA256: {bakHash.Substring(0, 12)}...)";
+                        itemBackup.IsWarning = true;
+                        itemBackup.Details = "当前备份与客户端不匹配；自动修复会先保留旧备份，再为兼容的新版本建立原件备份。";
                     }
                     log?.Invoke($"  ✅ [备份] {itemBackup.Details}");
                 }
@@ -127,9 +131,8 @@ namespace AntigravityZhManager.Services
                 {
                     try
                     {
-                        File.Copy(appInfo.AsarPath, appInfo.AsarBakPath, true);
-                        itemBackup.IsOk = true;
-                        itemBackup.Details = "未发现备份，已自动抓取当前官方原版建立 app.asar.bak 守护备份！";
+                        itemBackup.IsWarning = true;
+                        itemBackup.Details = "尚未建立备份；首次安装或自动固化时将创建并核对原件备份。";
                         log?.Invoke($"  ✅ [备份] {itemBackup.Details}");
                     }
                     catch (Exception ex)

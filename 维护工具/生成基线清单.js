@@ -74,6 +74,20 @@ if (fs.existsSync(backupPath)) {
   };
 }
 const structSource = pristine || installed;
+if (pristine) {
+  if (pristine.pkg.version !== version) throw new Error('备份版本与目标版本不一致，拒绝登记');
+  const targets = requiredTargets.concat('dist/ideInstall/wizard.js');
+  const pkg = pristine.pkg;
+  const signature = pkg.name + '\n' + pkg.main + '\n' + Object.keys(pkg.dependencies || {}).sort().map(k => k + '=' + pkg.dependencies[k]).join('\n');
+  baseline.compatibility = {
+    packageSignatureSha256: reader.sha256(Buffer.from(signature)),
+    targetSha256: Object.fromEntries(targets.map(t => {
+      const content = pristine.archive.read(t);
+      if (!content) throw new Error('缺少兼容性目标：' + t);
+      return [t, reader.sha256(content)];
+    })),
+  };
+}
 baseline.requiredTargets = requiredTargets;
 baseline.requiredEntries = Object.fromEntries(structSource.archive.entries
   .map((e) => [norm(e.path), e])

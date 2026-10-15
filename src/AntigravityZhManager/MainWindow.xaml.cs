@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.ComponentModel;
+using System.Threading;
 using AntigravityZhManager.Services;
 using Microsoft.Win32;
 
@@ -13,18 +15,75 @@ namespace AntigravityZhManager
     public partial class MainWindow : Window
     {
         private AntigravityInfo _currentInfo = new();
+        private readonly ManagerSettingsStore _settings = new();
+        private ManagerOptions _options = new();
+        private readonly CompatibilityRepairService _repair = new(new CompatibilityRepairEnvironment());
+        private System.Windows.Forms.NotifyIcon? _tray;
+        private System.Drawing.Icon? _trayIcon;
+        private bool _loading = true;
+        private bool _exitRequested;
+        private bool _quitting;
+        private bool _trayHintShown;
 
         public MainWindow()
         {
+            _options = _settings.Load();
             InitializeComponent();
+            ChkCloseToTray.IsChecked = _options.CloseClientToTray;
+            ChkTrayMenu.IsChecked = _options.ChineseTrayMenu;
+            var menu = new System.Windows.Forms.ContextMenuStrip();
+            menu.Items.Add("打开汉化管理器", null, (_, _) => Dispatcher.BeginInvoke(new Action(ShowManager)));
+            menu.Items.Add("退出管理器", null, async (_, _) => await Dispatcher.InvokeAsync(QuitAsync).Task.Unwrap());
+            using var iconStream = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Assets/app.ico"))!.Stream;
+            using var loadedIcon = new System.Drawing.Icon(iconStream, System.Windows.Forms.SystemInformation.SmallIconSize);
+            _trayIcon = (System.Drawing.Icon)loadedIcon.Clone();
+            _tray = new System.Windows.Forms.NotifyIcon { Text = "Antigravity 汉化管理器", Icon = _trayIcon, ContextMenuStrip = menu, Visible = true };
+            _tray.DoubleClick += (_, _) => Dispatcher.BeginInvoke(new Action(ShowManager));
+            Closing += Manager_Closing;
+            Closed += (_, _) => { _tray?.Dispose(); _trayIcon?.Dispose(); };
+            _loading = false;
             Loaded += MainWindow_Loaded;
+        }
+
+        private void ShowManager() { Show(); WindowState = WindowState.Normal; Activate(); }
+
+        private void Manager_Closing(object? sender, CancelEventArgs e)
+        {
+            if (_exitRequested) return;
+            e.Cancel = true;
+            Hide();
+            if (!_trayHintShown && _tray != null)
+            { _trayHintShown = true; _tray.ShowBalloonTip(3000, "管理器已最小化到托盘", "双击图标可打开，右键可退出管理器。", System.Windows.Forms.ToolTipIcon.Info); }
+        }
+
+        private async Task QuitAsync()
+        {
+            if (_quitting) return;
+            _quitting = true;
+            await _repair.Operations.WaitAsync();
+            _exitRequested = true;
+            _repair.Operations.Release();
+            Close();
+        }
+
+        private void ApplyOptions(ManagerOptions updated)
+        {
+            try { _settings.Save(updated); _options = updated; }
+            catch (Exception ex) { AppendLog("⚠️ 设置保存失败：" + ex.Message); _options = updated; }
+        }
+
+        private void RepairOptions_Changed(object sender, RoutedEventArgs e)
+        {
+            if (_loading) return;
+            ApplyOptions(_options with { CloseClientToTray = ChkCloseToTray.IsChecked == true, ChineseTrayMenu = ChkTrayMenu.IsChecked == true });
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             AppendLog("🚀 欢迎使用 Antigravity 汉化管理器！");
-            AppendLog("💡 提示：若 Antigravity 正在前台运行，可直接点击【⚡ 立即热加载】免重启生效。");
+            AppendLog("💡 提示：更新后汉化丢失，可点击右上角【新版汉化适配】恢复中文。");
             await RefreshAppStatusAsync();
+            if (_settings.LoadError != null) AppendLog("⚠️ 设置读取失败，已使用默认选项：" + _settings.LoadError);
         }
 
         private void AppendLog(string message)
@@ -40,7 +99,7 @@ namespace AntigravityZhManager
         private async Task RefreshAppStatusAsync(string? explicitPath = null)
         {
             AppendLog("🔍 正在全方位自动扫描 Antigravity 运行状态、安装目录及备份状态...");
-            _currentInfo = await Task.Run(() => AntigravityDetector.Detect(explicitPath));
+            _currentInfo = await Task.Run(() => AntigravityDetector.Detect(explicitPath ?? _options.PreferredExePath));
 
             Dispatcher.Invoke(() =>
             {
@@ -158,6 +217,7 @@ namespace AntigravityZhManager
 
         private async void BtnHotInject_Click(object sender, RoutedEventArgs e)
         {
+            await RefreshAppStatusAsync();
             if (!_currentInfo.IsRunning)
             {
                 MessageBox.Show("当前未检测到 Antigravity 正在运行，无法切换实时语言。\n请先启动软件或点击【永久固化安装】。", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -165,13 +225,14 @@ namespace AntigravityZhManager
             }
 
             BtnHotInject.IsEnabled = false;
+            await _repair.Operations.WaitAsync();
 
             try
             {
                 if (_isHotInjected)
                 {
                     // 当前已是中文 -> 执行关闭（恢复英文）
-                    AppendLog("⏹️ 用户触发恢复英文，正在向窗口发送重载指令...");
+                    AppendLog("⏹️ 用户触发恢复英文，正在还原窗口文字...");
                     bool ok = await CdpHotPatcher.RestoreLiveWindowAsync(AppendLog);
                     if (ok)
                     {
@@ -201,6 +262,7 @@ namespace AntigravityZhManager
             }
             finally
             {
+                _repair.Operations.Release();
                 BtnHotInject.IsEnabled = _currentInfo.IsRunning;
             }
         }
@@ -224,12 +286,13 @@ namespace AntigravityZhManager
             if (confirm != MessageBoxResult.Yes) return;
 
             BtnInstallClean.IsEnabled = false;
+            await _repair.Operations.WaitAsync();
             try
             {
                 bool closeToTray = ChkCloseToTray.IsChecked == true;
                 bool trayMenu = ChkTrayMenu.IsChecked == true;
 
-                var result = await AsarCleanPatcher.InstallCleanPatchAsync(_currentInfo.AsarPath, closeToTray, trayMenu, AppendLog);
+                var result = await AsarCleanPatcher.InstallCleanPatchAsync(_currentInfo.AsarPath, closeToTray, trayMenu, AppendLog, allowCompatibleUpdates: true);
                 if (result.Success)
                 {
                     MessageBox.Show(result.Message, "安装成功", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -260,6 +323,7 @@ namespace AntigravityZhManager
             }
             finally
             {
+                _repair.Operations.Release();
                 BtnInstallClean.IsEnabled = true;
                 await RefreshAppStatusAsync();
             }
@@ -268,7 +332,7 @@ namespace AntigravityZhManager
         private async void BtnRestoreEnglish_Click(object sender, RoutedEventArgs e)
         {
             var confirm = MessageBox.Show(
-                "确定要恢复官方纯净英文吗？\n\n• 若当前前台软件正在运行，将实时重载清除热加载并恢复纯净英文\n• 若已永久安装汉化，将自动从备份还原官方原版 resources\\app.asar\n\n是否立即执行还原？",
+                "确定要恢复英文吗？\n\n• 前台窗口直接还原英文，保留会话与输入内容\n• 磁盘还原要求客户端彻底退出，并使用同版本匹配备份\n\n是否立即执行还原？",
                 "确认恢复官方英文",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
@@ -276,8 +340,10 @@ namespace AntigravityZhManager
             if (confirm != MessageBoxResult.Yes) return;
 
             BtnRestoreEnglish.IsEnabled = false;
+            await _repair.Operations.WaitAsync();
             try
             {
+                await RefreshAppStatusAsync();
                 bool windowReloaded = false;
                 bool asarRestored = false;
                 string extraMsg = "";
@@ -285,7 +351,7 @@ namespace AntigravityZhManager
                 // 1. 若当前软件正在运行，优先执行前台窗口热重载还原，清除内存中的热注入
                 if (_currentInfo.IsRunning)
                 {
-                    AppendLog("🔄 正在向当前前台窗口发送重载指令，清除热加载并恢复英文...");
+                    AppendLog("🔄 正在还原当前窗口英文文字...");
                     windowReloaded = await CdpHotPatcher.RestoreLiveWindowAsync(AppendLog);
                 }
 
@@ -296,6 +362,7 @@ namespace AntigravityZhManager
                     {
                         var res = await AsarCleanPatcher.RestoreEnglishAsync(_currentInfo.AsarPath, AppendLog);
                         asarRestored = res.Success;
+                        if (!res.Success) extraMsg += "\n磁盘尚未还原：" + res.Message;
                     }
                     else
                     {
@@ -307,17 +374,18 @@ namespace AntigravityZhManager
                     AppendLog("ℹ️ 磁盘上的 app.asar 已是官方纯净状态，无需覆盖。");
                 }
 
-                string successMsg = "🎉 官方纯净英文已恢复成功！\n\n";
-                if (windowReloaded) successMsg += "• 前台运行窗口已实时重载并恢复英文界面\n";
+                string successMsg = "英文还原结果：\n\n";
+                if (windowReloaded) successMsg += "• 前台运行窗口已恢复英文，会话与输入内容保留\n";
                 if (asarRestored) successMsg += "• 磁盘 resources\\app.asar 已从官方备份还原\n";
-                if (!windowReloaded && !asarRestored) successMsg += "• 磁盘资源与当前状态均已确认为官方纯净英文原版\n";
+                if (!windowReloaded && !asarRestored) successMsg += _currentInfo.IsOfficialOriginal ? "• 磁盘已是官方英文原版\n" : "• 本次未完成还原，请查看日志\n";
                 successMsg += extraMsg;
 
                 UpdateHotButtonState(false);
-                MessageBox.Show(successMsg, "恢复英文成功", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(successMsg, "英文恢复结果", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             finally
             {
+                _repair.Operations.Release();
                 BtnRestoreEnglish.IsEnabled = true;
                 await RefreshAppStatusAsync();
             }
@@ -376,6 +444,20 @@ namespace AntigravityZhManager
             }
         }
 
+        private async void BtnCompatibilityRepair_Click(object sender, RoutedEventArgs e)
+        {
+            BtnCompatibilityRepair.IsEnabled = false;
+            try
+            {
+                var result = await _repair.RepairAsync(_options, AppendLog);
+                AppendLog((result.Success ? "✅ " : "⚠️ ") + result.Message);
+                MessageBox.Show(result.Message, "新版汉化适配", MessageBoxButton.OK,
+                    result.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+                await RefreshAppStatusAsync();
+            }
+            finally { BtnCompatibilityRepair.IsEnabled = true; }
+        }
+
         private async void BtnCheckUpdate_Click(object sender, RoutedEventArgs e)
         {
             BtnCheckUpdate.IsEnabled = false;
@@ -401,6 +483,8 @@ namespace AntigravityZhManager
             if (dialog.ShowDialog() == true)
             {
                 AppendLog($"📁 用户手动指定路径: {dialog.FileName}");
+                _options = _options with { PreferredExePath = dialog.FileName };
+                try { _settings.Save(_options); } catch (Exception ex) { AppendLog("路径保存失败：" + ex.Message); }
                 await RefreshAppStatusAsync(dialog.FileName);
             }
         }

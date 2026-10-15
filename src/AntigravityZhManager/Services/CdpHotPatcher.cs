@@ -1,305 +1,154 @@
-using System;
 using System.IO;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
-namespace AntigravityZhManager.Services
+namespace AntigravityZhManager.Services;
+
+public sealed class HotInjectResult
 {
-    public class HotInjectResult
+    public bool Success { get; set; }
+    public int TermCount { get; set; }
+    public string Message { get; set; } = "";
+}
+
+public static class CdpHotPatcher
+{
+    private static string Resource(string name)
     {
-        public bool Success { get; set; }
-        public int TermCount { get; set; }
-        public string Message { get; set; } = string.Empty;
+        using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("AntigravityZhManager.Assets." + name)
+            ?? throw new InvalidDataException("内嵌资源缺失：" + name);
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+        return reader.ReadToEnd();
+    }
+    private static readonly Lazy<(string Dictionary, string Runtime, int Version, int Count)> Resources = new(() =>
+    {
+        string dictionary = Resource("dictionaries.json"), runtime = Resource("translate.js");
+        using var parsed = JsonDocument.Parse(dictionary);
+        return (dictionary, runtime, int.Parse(Regex.Match(runtime, @"const patchVersion = (\d+)").Groups[1].Value), parsed.RootElement.EnumerateObject().Count());
+    });
+
+    private static async Task<List<Uri>> TargetsAsync(CancellationToken token)
+    {
+        string file = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Antigravity", "DevToolsActivePort");
+        var lines = await File.ReadAllLinesAsync(file, token);
+        if (lines.Length == 0 || !int.TryParse(lines[0], out int port) || port < 1 || port > 65535)
+            throw new InvalidDataException("调试端口暂不可用。");
+        using var handler = new HttpClientHandler { AllowAutoRedirect = false, UseProxy = false };
+        using var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(3) };
+        using var document = JsonDocument.Parse(await client.GetStringAsync($"http://127.0.0.1:{port}/json/list", token));
+        var result = new List<Uri>();
+        foreach (var page in document.RootElement.EnumerateArray())
+        {
+            if (page.GetProperty("type").GetString() != "page" ||
+                !Uri.TryCreate(page.GetProperty("url").GetString(), UriKind.Absolute, out var origin) ||
+                origin.Scheme != "https" || origin.Host != "127.0.0.1") continue;
+            if (page.TryGetProperty("webSocketDebuggerUrl", out var endpoint) &&
+                Uri.TryCreate(endpoint.GetString(), UriKind.Absolute, out var uri) &&
+                uri.Scheme == "ws" && uri.Host == "127.0.0.1" && uri.Port == port) result.Add(uri);
+        }
+        if (result.Count == 0) throw new IOException("主应用窗口尚未就绪。");
+        return result;
     }
 
-    public static class CdpHotPatcher
+    // CDP can interleave events and fragment a reply across WebSocket frames.
+    internal static async Task<JsonElement> ReceiveResultAsync(WebSocket socket, int id, CancellationToken token)
     {
-        public static async Task<HotInjectResult> InjectAsync(Action<string>? log = null)
+        var buffer = new byte[16384];
+        while (true)
         {
-            var result = new HotInjectResult();
-
-            try
+            using var message = new MemoryStream();
+            WebSocketReceiveResult frame;
+            do
             {
-                string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                string portFile = Path.Combine(appData, "Antigravity", "DevToolsActivePort");
-
-                if (!File.Exists(portFile))
-                {
-                    result.Message = "未找到 DevToolsActivePort，请确认 Antigravity 是否正在运行。";
-                    log?.Invoke("❌ " + result.Message);
-                    return result;
-                }
-
-                string[] lines = await File.ReadAllLinesAsync(portFile);
-                if (lines.Length == 0 || !int.TryParse(lines[0].Trim(), out int port))
-                {
-                    result.Message = "无法解析调试端口。";
-                    log?.Invoke("❌ " + result.Message);
-                    return result;
-                }
-
-                log?.Invoke($"🔍 检测到 Antigravity 调试端口: {port}");
-
-                using var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(3) };
-                string jsonList = await httpClient.GetStringAsync($"http://127.0.0.1:{port}/json/list");
-
-                using var doc = JsonDocument.Parse(jsonList);
-                string? wsUrl = null;
-                string? pageTitle = null;
-
-                foreach (var el in doc.RootElement.EnumerateArray())
-                {
-                    if (el.TryGetProperty("type", out var typeProp) && typeProp.GetString() == "page")
-                    {
-                        if (el.TryGetProperty("url", out var urlProp) && urlProp.GetString()?.StartsWith("https://127.0.0.1:") == true)
-                        {
-                            wsUrl = el.GetProperty("webSocketDebuggerUrl").GetString();
-                            pageTitle = el.TryGetProperty("title", out var titleProp) ? titleProp.GetString() : "主窗口";
-                            break;
-                        }
-                    }
-                }
-
-                if (string.IsNullOrEmpty(wsUrl))
-                {
-                    result.Message = "未找到主应用页面调试目标。";
-                    log?.Invoke("❌ " + result.Message);
-                    return result;
-                }
-
-                log?.Invoke($"🎯 命中窗口目标: {pageTitle}");
-
-                // 读取字典与 translate.js
-                var assembly = Assembly.GetExecutingAssembly();
-                string dictJson = string.Empty;
-                string translateJs = string.Empty;
-
-                using (var s = assembly.GetManifestResourceStream("AntigravityZhManager.Assets.dictionaries.json"))
-                {
-                    if (s != null)
-                    {
-                        using var r = new StreamReader(s, Encoding.UTF8);
-                        dictJson = await r.ReadToEndAsync();
-                    }
-                }
-
-                using (var s = assembly.GetManifestResourceStream("AntigravityZhManager.Assets.translate.js"))
-                {
-                    if (s != null)
-                    {
-                        using var r = new StreamReader(s, Encoding.UTF8);
-                        translateJs = await r.ReadToEndAsync();
-                    }
-                }
-
-                if (string.IsNullOrEmpty(dictJson) || string.IsNullOrEmpty(translateJs))
-                {
-                    result.Message = "内嵌汉化资源读取失败。";
-                    log?.Invoke("❌ " + result.Message);
-                    return result;
-                }
-
-                // 统计词条数
-                int termsCount = 0;
-                try
-                {
-                    using var dictDoc = JsonDocument.Parse(dictJson);
-                    termsCount = dictDoc.RootElement.EnumerateObject().Count();
-                }
-                catch { }
-
-                log?.Invoke($"📚 正在准备注入 {termsCount} 条核心精校词库与翻译引擎...");
-
-                // 组装注入 JS 脚本
-                string injectCode = "(() => {\n" +
-                    "  try {\n" +
-                    "    window.__antigravityZhPatchHotActive = true;\n" +
-                    "    window.__antigravityZhPatchDictionary = " + dictJson + ";\n" +
-                    "    window.__antigravityZhPatchDictionaryRevision = Date.now();\n" +
-                    "    window.__antigravityZhNativeAutoload = true;\n" +
-                    translateJs + "\n" +
-                    "    return JSON.stringify({ success: true, count: Object.keys(window.__antigravityZhPatchDictionary).length });\n" +
-                    "  } catch(e) {\n" +
-                    "    return JSON.stringify({ success: false, error: e.message });\n" +
-                    "  }\n" +
-                    "})()";
-
-                // WebSocket 连接
-                using var ws = new ClientWebSocket();
-                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-                await ws.ConnectAsync(new Uri(wsUrl), cts.Token);
-
-                var payload = new
-                {
-                    id = 1,
-                    method = "Runtime.evaluate",
-                    @params = new
-                    {
-                        expression = injectCode,
-                        returnByValue = true
-                    }
-                };
-
-                string msg = JsonSerializer.Serialize(payload);
-                byte[] sendBytes = Encoding.UTF8.GetBytes(msg);
-                await ws.SendAsync(new ArraySegment<byte>(sendBytes), WebSocketMessageType.Text, true, cts.Token);
-
-                byte[] buffer = new byte[65536];
-                var recvResult = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), cts.Token);
-                string respJson = Encoding.UTF8.GetString(buffer, 0, recvResult.Count);
-
-                await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "done", CancellationToken.None);
-
-                result.Success = true;
-                result.TermCount = termsCount;
-                result.Message = $"热加载成功！已实时注入 {termsCount} 个汉化词条，当前前台窗口已即时生效！";
-                log?.Invoke("⚡ " + result.Message);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                result.Success = false;
-                result.Message = "热注入失败: " + ex.Message;
-                log?.Invoke("❌ " + result.Message);
-                return result;
-            }
+                frame = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), token);
+                if (frame.MessageType == WebSocketMessageType.Close) throw new IOException("调试连接已关闭。");
+                message.Write(buffer, 0, frame.Count);
+                if (message.Length > 2 * 1024 * 1024) throw new IOException("调试响应过大。");
+            } while (!frame.EndOfMessage);
+            using var document = JsonDocument.Parse(message.ToArray());
+            var response = document.RootElement;
+            if (!response.TryGetProperty("id", out var responseId) || responseId.GetInt32() != id) continue;
+            if (response.TryGetProperty("error", out var error)) throw new IOException("CDP 错误：" + error);
+            var result = response.GetProperty("result");
+            if (result.TryGetProperty("exceptionDetails", out var exception)) throw new IOException("页面执行失败：" + exception);
+            return result.GetProperty("result").Clone();
         }
+    }
 
-        public static async Task<bool> RestoreLiveWindowAsync(Action<string>? log = null)
+    private static async Task<JsonElement> EvaluateAsync(Uri target, string expression, CancellationToken token)
+    {
+        using var socket = new ClientWebSocket();
+        await socket.ConnectAsync(target, token);
+        var payload = JsonSerializer.SerializeToUtf8Bytes(new { id = 1, method = "Runtime.evaluate", @params = new { expression, returnByValue = true, awaitPromise = true } });
+        await socket.SendAsync(new ArraySegment<byte>(payload), WebSocketMessageType.Text, true, token);
+        return await ReceiveResultAsync(socket, 1, token);
+    }
+
+    private static string HealthExpression => $"Boolean(window.__antigravityZhPatchInstalled && window.__antigravityZhPatchVersion === {Resources.Value.Version} && window.__antigravityZhPatchDictionarySize === {Resources.Value.Count} && document.documentElement.lang === 'zh-CN')";
+
+    public static async Task<bool> CheckIsHotInjectedAsync()
+    {
+        try
         {
-            try
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            foreach (var page in await TargetsAsync(timeout.Token))
             {
-                string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                string portFile = Path.Combine(appData, "Antigravity", "DevToolsActivePort");
-                if (!File.Exists(portFile)) return false;
-
-                string[] lines = await File.ReadAllLinesAsync(portFile);
-                if (lines.Length == 0 || !int.TryParse(lines[0].Trim(), out int port)) return false;
-
-                using var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(2) };
-                string jsonList = await httpClient.GetStringAsync($"http://127.0.0.1:{port}/json/list");
-
-                using var doc = JsonDocument.Parse(jsonList);
-                string? wsUrl = null;
-
-                foreach (var el in doc.RootElement.EnumerateArray())
-                {
-                    if (el.TryGetProperty("type", out var typeProp) && typeProp.GetString() == "page")
-                    {
-                        if (el.TryGetProperty("url", out var urlProp) && urlProp.GetString()?.StartsWith("https://127.0.0.1:") == true)
-                        {
-                            wsUrl = el.GetProperty("webSocketDebuggerUrl").GetString();
-                            break;
-                        }
-                    }
-                }
-
-                if (string.IsNullOrEmpty(wsUrl)) return false;
-
-                log?.Invoke("🔄 正在向当前前台窗口发送重载指令，清除热加载内存注入...");
-                using var ws = new ClientWebSocket();
-                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(3));
-                await ws.ConnectAsync(new Uri(wsUrl), cts.Token);
-
-                string reloadJs = "(() => { try { delete window.__antigravityZhPatchHotActive; delete window.__antigravityZhPatchDictionary; delete window.__antigravityZhPatchInstalled; delete window.__antigravityZhNativeAutoload; location.reload(); } catch(e){} })()";
-                var payload = new
-                {
-                    id = 99,
-                    method = "Runtime.evaluate",
-                    @params = new
-                    {
-                        expression = reloadJs,
-                        returnByValue = true
-                    }
-                };
-
-                string msg = JsonSerializer.Serialize(payload);
-                byte[] sendBytes = Encoding.UTF8.GetBytes(msg);
-                await ws.SendAsync(new ArraySegment<byte>(sendBytes), WebSocketMessageType.Text, true, cts.Token);
-
-                await Task.Delay(200);
-                await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "done", CancellationToken.None);
-                log?.Invoke("✅ 前台窗口已成功重载，已清除热加载并恢复纯净英文界面！");
-                return true;
+                var value = await EvaluateAsync(page, HealthExpression, timeout.Token);
+                if (!value.TryGetProperty("value", out var healthy) || healthy.ValueKind != JsonValueKind.True) return false;
             }
-            catch (Exception ex)
-            {
-                log?.Invoke("⚠️ 前台窗口重载提示: " + ex.Message);
-                return false;
-            }
+            return true;
         }
+        catch { return false; }
+    }
 
-        public static async Task<bool> CheckIsHotInjectedAsync()
+    public static async Task<HotInjectResult> InjectAsync(Action<string>? log = null)
+    {
+        try
         {
-            try
+            var resources = Resources.Value;
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(12));
+            var pages = await TargetsAsync(timeout.Token);
+            string script = "(async () => {" +
+                "if (!document.querySelector('[data-testid=\"model-selector-trigger\"], [data-testid^=\"conversation-row-\"], [data-testid=\"planner-response-text\"]')) throw new Error('主界面尚未就绪或结构已变化');" +
+                "window.__antigravityZhPatchHotActive = true; window.__antigravityZhNativeAutoload = true;" +
+                "window.__antigravityZhPatchDictionary = " + resources.Dictionary + "; window.__antigravityZhPatchDictionaryRevision = Date.now();\n" +
+                resources.Runtime + "\nfor (let i=0;i<100;i++) {if (" + HealthExpression + ") return true; await new Promise(r=>setTimeout(r,20));} throw new Error('汉化内核未完成初始化');})()";
+            foreach (var page in pages)
             {
-                string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                string portFile = Path.Combine(appData, "Antigravity", "DevToolsActivePort");
-                if (!File.Exists(portFile)) return false;
-
-                string[] lines = await File.ReadAllLinesAsync(portFile);
-                if (lines.Length == 0 || !int.TryParse(lines[0].Trim(), out int port)) return false;
-
-                using var httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(1) };
-                string jsonList = await httpClient.GetStringAsync($"http://127.0.0.1:{port}/json/list");
-
-                using var doc = JsonDocument.Parse(jsonList);
-                string? wsUrl = null;
-
-                foreach (var el in doc.RootElement.EnumerateArray())
-                {
-                    if (el.TryGetProperty("type", out var typeProp) && typeProp.GetString() == "page")
-                    {
-                        if (el.TryGetProperty("url", out var urlProp) && urlProp.GetString()?.StartsWith("https://127.0.0.1:") == true)
-                        {
-                            wsUrl = el.GetProperty("webSocketDebuggerUrl").GetString();
-                            break;
-                        }
-                    }
-                }
-
-                if (string.IsNullOrEmpty(wsUrl)) return false;
-
-                using var ws = new ClientWebSocket();
-                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
-                await ws.ConnectAsync(new Uri(wsUrl), cts.Token);
-
-                var payload = new
-                {
-                    id = 101,
-                    method = "Runtime.evaluate",
-                    @params = new
-                    {
-                        expression = "Boolean(window.__antigravityZhPatchHotActive || window.__antigravityZhPatchDictionary || window.__antigravityZhPatchInstalled)",
-                        returnByValue = true
-                    }
-                };
-
-                string msg = JsonSerializer.Serialize(payload);
-                byte[] sendBytes = Encoding.UTF8.GetBytes(msg);
-                await ws.SendAsync(new ArraySegment<byte>(sendBytes), WebSocketMessageType.Text, true, cts.Token);
-
-                byte[] buffer = new byte[8192];
-                var recvResult = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), cts.Token);
-                string respJson = Encoding.UTF8.GetString(buffer, 0, recvResult.Count);
-
-                await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "done", CancellationToken.None);
-
-                using var respDoc = JsonDocument.Parse(respJson);
-                if (respDoc.RootElement.TryGetProperty("result", out var res) &&
-                    res.TryGetProperty("result", out var innerRes) &&
-                    innerRes.TryGetProperty("value", out var val))
-                {
-                    return val.GetBoolean();
-                }
+                var value = await EvaluateAsync(page, script, timeout.Token);
+                if (!value.TryGetProperty("value", out var success) || success.ValueKind != JsonValueKind.True)
+                    throw new IOException("页面未确认汉化成功。");
             }
-            catch { }
-            return false;
+            string message = $"已验证 {pages.Count} 个窗口实时汉化生效（v{resources.Version} / {resources.Count} 条）。";
+            log?.Invoke("⚡ " + message);
+            return new() { Success = true, TermCount = resources.Count, Message = message };
         }
+        catch (Exception ex)
+        {
+            string message = "热加载暂未完成：" + ex.Message;
+            log?.Invoke(message);
+            return new() { Message = message };
+        }
+    }
+
+    public static async Task<bool> RestoreLiveWindowAsync(Action<string>? log = null)
+    {
+        try
+        {
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(6));
+            foreach (var page in await TargetsAsync(timeout.Token))
+            {
+                // Use saved originals: no conversation reload or draft loss.
+                var result = await EvaluateAsync(page, "(() => { if (window.__antigravityZhPatchInstalled && typeof window.__antigravityZhPatchRestore !== 'function') throw new Error('缺少英文恢复接口'); window.__antigravityZhPatchRestore?.(); delete window.__antigravityZhPatchHotActive; delete window.__antigravityZhPatchDictionary; delete window.__antigravityZhNativeAutoload; return !window.__antigravityZhPatchInstalled; })()", timeout.Token);
+                if (!result.TryGetProperty("value", out var ok) || ok.ValueKind != JsonValueKind.True) return false;
+            }
+            log?.Invoke("已恢复窗口英文，保留当前会话与输入内容。");
+            return true;
+        }
+        catch (Exception ex) { log?.Invoke("窗口英文恢复失败：" + ex.Message); return false; }
     }
 }

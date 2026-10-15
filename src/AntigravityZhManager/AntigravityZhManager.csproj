@@ -6,13 +6,16 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <NoWarn>$(NoWarn);WFAC010</NoWarn>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
     <ApplicationTitle>Antigravity 汉化管理器</ApplicationTitle>
     <AssemblyTitle>Antigravity 汉化管理器</AssemblyTitle>
     <Product>Antigravity 汉化管理器</Product>
-    <Version>1.0.4</Version>
-    <FileVersion>1.0.4.0</FileVersion>
-    <AssemblyVersion>1.0.4.0</AssemblyVersion>
+    <Version>1.1.0</Version>
+    <FileVersion>1.1.0.0</FileVersion>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <Description>Google Antigravity 中文汉化与一键管理工具（终极洁癖模式）</Description>
     <Copyright>Copyright © 2026 Antigravity-ZH</Copyright>
     <PublishSingleFile>true</PublishSingleFile>
@@ -24,6 +27,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
     <Resource Include="Assets\app.ico" />
     <EmbeddedResource Include="Assets\**\*" />
     <EmbeddedResource Include="..\..\localization\client-baselines.json" LogicalName="AntigravityZhManager.localization.client-baselines.json" />

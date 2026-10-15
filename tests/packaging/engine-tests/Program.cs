@@ -192,14 +192,9 @@ try { Directory.Delete(cleanRoot, true); } catch { }
             if (File.Exists(candidate)) { pristine = candidate; break; }
         }
     }
-    bool clientRunning = System.Diagnostics.Process.GetProcessesByName("Antigravity").Length > 0;
     if (!File.Exists(pristine))
     {
         Console.WriteLine("[SKIP] 安装演习 - 未找到官方原版归档（设 ZH_PRISTINE_ASAR 可指定）");
-    }
-    else if (clientRunning)
-    {
-        Console.WriteLine("[SKIP] 安装演习 - Antigravity 正在运行，补丁器按设计拒绝写入");
     }
     else
     {
@@ -235,5 +230,6 @@ Check("DisplayIcon 空值返回空串", AntigravityDetector.NormalizeDisplayIcon
 Check("DisplayIcon 目录型取值不误伤", AntigravityDetector.NormalizeDisplayIcon(@"D:\Antigravity,1") == @"D:\Antigravity");
 
 Console.WriteLine();
+failures += await CompatibilityRepairTests.RunAsync();
 Console.WriteLine(failures == 0 ? "engine tests: PASS" : $"engine tests: {failures} FAILED");
 return failures == 0 ? 0 : 1;

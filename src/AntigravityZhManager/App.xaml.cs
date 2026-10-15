@@ -9,8 +9,24 @@ namespace AntigravityZhManager;
 /// </summary>
 public partial class App : Application
 {
+    private System.Threading.Mutex? _singleInstance;
+    private System.Threading.EventWaitHandle? _showSignal;
+    private System.Threading.RegisteredWaitHandle? _showRegistration;
     protected override void OnStartup(StartupEventArgs e)
     {
+        _showSignal = new System.Threading.EventWaitHandle(false, System.Threading.EventResetMode.AutoReset, @"Local\AntigravityZhManager.Show");
+        _singleInstance = new System.Threading.Mutex(true, @"Local\AntigravityZhManager", out bool firstInstance);
+        if (!firstInstance)
+        {
+            _showSignal.Set();
+            Shutdown();
+            return;
+        }
+        _showRegistration = System.Threading.ThreadPool.RegisterWaitForSingleObject(_showSignal, (_, _) =>
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, new Action(() =>
+            {
+                if (MainWindow is Window window) { window.Show(); window.WindowState = WindowState.Normal; window.Activate(); }
+            })), null, System.Threading.Timeout.Infinite, false);
         base.OnStartup(e);
 
         AppDomain.CurrentDomain.UnhandledException += (s, args) =>
@@ -29,6 +45,14 @@ public partial class App : Application
             LogAndShowException(args.Exception, "TaskScheduler UnobservedTaskException");
             args.SetObserved();
         };
+    }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        _showRegistration?.Unregister(null);
+        _showSignal?.Dispose();
+        _singleInstance?.Dispose();
+        base.OnExit(e);
     }
 
     private static void LogAndShowException(Exception? ex, string source)

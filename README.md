@@ -1,6 +1,6 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.0.4-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Release](https://img.shields.io/badge/Release-v1.1.0-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Antigravity](https://img.shields.io/badge/Antigravity-2.23.1-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
@@ -8,11 +8,14 @@
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.0.4 适配 Google Antigravity 2.23.1（Windows x64）**，汉化内核 v40、词条 3,513 条。官方客户端升级后旧补丁会被更新包覆盖，重新执行一次安装即可。
+> **当前版本 v1.1.0 适配 Google Antigravity 2.23.1（Windows x64）**，汉化内核 v40、词条 3,513 条。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
 
 ---
 
 ## ✨ 核心特性
+
+- **🔁 新版汉化适配（v1.1.0）**
+  Antigravity 更新后汉化丢失时，点击右上角【新版汉化适配】。按钮按需检查兼容性：客户端运行时恢复当前窗口中文；彻底退出客户端后再点击，可恢复永久汉化。没有后台升级监测、自动重试或退出后自动安装。旧版备份按版本和哈希保存；不兼容的版本会提示等待适配。
 
 - **⚡ 免重启实时汉化（热加载模式）**  
   软件在前台运行中无需退出，通过 CDP 协议秒级动态注入最新翻译引擎，界面即时切换为中文，**AI 正在进行的思考与会话连接完全不受影响**。
@@ -42,7 +45,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`Antigravity汉化管理器.exe`** 或 **`Antigravity-ZH-1.0.4-Windows-x64.zip`**；
+2. 下载 **`Antigravity汉化管理器.exe`** 或 **`Antigravity-ZH-1.1.0-Windows-x64.zip`**；
 3. 双击运行 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -83,6 +86,15 @@ Antigravity ZH/
 ---
 
 ## 📦 版本记录
+
+### v1.1.0 — 新版汉化适配（2026-10-15）
+
+- 顶部新增【新版汉化适配】，用户按需检查兼容性并恢复汉化，无后台监测或自动重试。
+- 运行时恢复当前窗口中文；彻底退出客户端后再次点击，永久安装汉化。
+- 保留旧版备份，为新版建立匹配原件备份；未知兼容版通过安装记录校验后可还原。
+- CDP 处理分片和异步事件，等待页面实际确认成功；沿用 v40 内核和 3,513 条词库。
+- 管理器使用紫色图标，与官方图标区分；支持托盘和单实例唤回。
+- 使用与兼容边界：`docs/新版汉化适配.md`。
 
 ### v1.0.4 — 适配 Antigravity 2.23.1（2026-10-15）
 
