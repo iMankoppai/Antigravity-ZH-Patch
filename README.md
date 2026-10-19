@@ -45,8 +45,8 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`Antigravity汉化管理器.exe`** 或 **`Antigravity-ZH-1.2.0-Windows-x64.zip`**；
-3. 双击运行 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
+2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.2.0-Windows-x64.zip`**；
+3. 双击下载的 EXE，或解压 ZIP 后运行其中的 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
 ### 方式二：手动固化

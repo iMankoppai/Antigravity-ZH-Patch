@@ -64,6 +64,9 @@ const tempZip = path.join(stageRoot, zipName);
 fs.mkdirSync(stageFiles, { recursive: true });
 
 const exeName = path.basename(candidateExe);
+// GitHub strips Chinese characters from uploaded asset names. Keep the ZIP's
+// local name, and publish the standalone EXE under a stable ASCII name.
+const exeAssetName = 'AntigravityZhManager.exe';
 fs.copyFileSync(candidateExe, path.join(stageFiles, exeName));
 fs.copyFileSync(readmePath, path.join(stageFiles, 'README.md'));
 
@@ -107,7 +110,8 @@ if (failures.length === 0) {
   const zipHash = sha256(zipBuf);
   const bundlePath = path.join(root, 'src/AntigravityZhManager/Assets/zh-bundle.js');
   const bundleHash = fs.existsSync(bundlePath) ? sha256(fs.readFileSync(bundlePath)) : null;
-  const sums = `${sha256(fs.readFileSync(candidateExe))}  ${exeName}\n${zipHash}  ${zipName}\n` + (bundleHash ? `${bundleHash}  zh-bundle.js\n` : '');
+  const exeHash = sha256(fs.readFileSync(candidateExe));
+  const sums = `${exeHash}  ${exeName}\n` + (exeAssetName !== exeName ? `${exeHash}  ${exeAssetName}\n` : '') + `${zipHash}  ${zipName}\n` + (bundleHash ? `${bundleHash}  zh-bundle.js\n` : '');
   const metadata = {
     productName,
     version,
@@ -116,6 +120,7 @@ if (failures.length === 0) {
     zipSha256: zipHash,
     zipBytes: zipBuf.length,
     exe: exeName,
+    exeAsset: exeAssetName,
     exeSha256: sha256(fs.readFileSync(candidateExe)),
     releaseMetadataVersion: 1,
     generatedAt: new Date().toISOString(),
