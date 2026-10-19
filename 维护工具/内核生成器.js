@@ -27,10 +27,16 @@ function loadSources() {
 
 // 受审查的 Electron 包装器模板。改动这里等于改动运行时注入方式，必须单独审查。
 function buildBundle(dict, translateSrc) {
+  const detailCatalogue = JSON.parse(fs.readFileSync(path.join(assets, 'skill-details.json'), 'utf8'));
+  const nativeSrc = fs.readFileSync(path.join(assets, 'native-ui.js'), 'utf8');
+  new vm.Script(nativeSrc);
   const bundleLines = [
     "'use strict';",
     "const dict = " + JSON.stringify(dict) + ";",
     "const translateCode = " + JSON.stringify(translateSrc) + ";",
+    "const skillDetails = " + JSON.stringify(detailCatalogue) + ";",
+    nativeSrc,
+    "const nativeUi = createNativeUi(dict);",
     "const windows = new WeakSet();",
     "",
     "function attach(win, url) {",
@@ -54,6 +60,7 @@ function buildBundle(dict, translateSrc) {
     "    const script = '(() => {\\n' +",
     "      '  window.__antigravityZhPatchDictionary = ' + JSON.stringify(dict) + ';\\n' +",
     "      '  window.__antigravityZhPatchDictionaryRevision = 1;\\n' +",
+    "      '  window.__antigravityZhSkillDetails = ' + JSON.stringify(skillDetails) + ';\\n' +",
     "      '  window.__antigravityZhNativeAutoload = true;\\n' +",
     "      translateCode + '\\n' +",
     "      '})()';",
@@ -65,7 +72,7 @@ function buildBundle(dict, translateSrc) {
     "  inject();",
     "}",
     "",
-    "module.exports = { attach };",
+    "module.exports = { attach, installNativeDialogs: nativeUi.installNativeDialogs };",
     ""
   ];
   return bundleLines.join('\n');

@@ -1,0 +1,375 @@
+[
+  {
+    "id": "breadcrumb",
+    "area": "自定义项面包屑",
+    "html": "<span data-testid=\"breadcrumb-segment\"><span class=\"truncate inline-block\">Customizations</span></span>",
+    "expected": "自定义项"
+  },
+  {
+    "id": "upload",
+    "area": "上传快捷键提示",
+    "html": "<span class=\"flex items-center gap-1.5\">Hold <kbd>Ctrl</kbd> to upload</span>",
+    "expected": "按住 Ctrl 以上传"
+  },
+  {
+    "id": "add-agent",
+    "area": "添加到智能体提示",
+    "html": "<span class=\"flex items-center gap-1.5\">Hold <kbd>Ctrl</kbd> to add to Agent</span>",
+    "expected": "按住 Ctrl 以添加到智能体"
+  },
+  {
+    "id": "searching",
+    "area": "搜索状态",
+    "html": "<div aria-label=\"Searching\"><span>Searching…</span></div>",
+    "expected": "正在搜索…"
+  },
+  {
+    "id": "browser-help",
+    "area": "浏览器预览说明",
+    "html": "<p>Intended primarily for previewing local development servers (e.g., <code>localhost:3000</code>). If a page fails to load, use the <svg></svg> icon in the URL bar.</p>",
+    "expected": "主要用于预览本地开发服务器（例如： localhost:3000）。如果页面无法加载，请使用  地址栏中的图标。"
+  },
+  {
+    "id": "mcp-status",
+    "area": "MCP 认证状态",
+    "html": "<span class=\"border-amber-500/30\">Unauthenticated</span>",
+    "expected": "未认证"
+  },
+  {
+    "id": "plugin-permissions",
+    "area": "插件权限说明",
+    "html": "<p>Agents created by this plugin run in a dedicated <a>environment</a> with its own permissions, which you can change anytime in the <a>settings page.</a></p>",
+    "expected": "此插件创建的智能体在专用的 环境 中运行，拥有独立权限；你可以随时在 设置页面中更改。"
+  },
+  {
+    "id": "play",
+    "area": "媒体播放按钮",
+    "html": "<button aria-label=\"Play\"></button>",
+    "expected": {
+      "aria-label": "播放"
+    }
+  },
+  {
+    "id": "pause",
+    "area": "媒体暂停按钮",
+    "html": "<button aria-label=\"Pause\"></button>",
+    "expected": {
+      "aria-label": "暂停"
+    }
+  },
+  {
+    "id": "seek",
+    "area": "媒体进度条",
+    "html": "<div role=\"slider\" aria-label=\"Seek\" aria-valuetext=\"5 seconds of 30 seconds\"></div>",
+    "expected": {
+      "aria-label": "跳转播放进度",
+      "aria-valuetext": "5 秒 / 共 30 秒"
+    }
+  },
+  {
+    "id": "mute",
+    "area": "媒体静音提示",
+    "html": "<button aria-label=\"Mute (m)\"></button>",
+    "expected": {
+      "aria-label": "静音（m）"
+    }
+  },
+  {
+    "id": "fullscreen",
+    "area": "媒体全屏提示",
+    "html": "<button aria-label=\"Fullscreen (f)\"></button>",
+    "expected": {
+      "aria-label": "全屏（f）"
+    }
+  },
+  {
+    "id": "speed",
+    "area": "播放速度标签",
+    "html": "<button aria-label=\"Playback speed 1.5x\">1.5x</button>",
+    "expected": {
+      "aria-label": "播放速度 1.5 倍"
+    }
+  },
+  {
+    "id": "zoom",
+    "area": "图片缩放提示",
+    "html": "<button aria-label=\"Zoom 100%, reset to fit\">100%</button>",
+    "expected": {
+      "aria-label": "缩放 100%，重置为适合窗口"
+    }
+  },
+  {
+    "id": "unfold",
+    "area": "代码折叠提示",
+    "html": "<button title=\"Unfold lines 12-34\"></button>",
+    "expected": {
+      "title": "展开第 12–34 行"
+    }
+  },
+  {
+    "id": "skipped",
+    "area": "浏览器子代理跳过状态",
+    "html": "<button disabled>Skipped</button>",
+    "expected": "已跳过"
+  },
+  {
+    "id": "skipping",
+    "area": "浏览器子代理正在跳过",
+    "html": "<button>Skipping...</button>",
+    "expected": "正在跳过…"
+  },
+  {
+    "id": "goal",
+    "area": "浏览器子代理目标标题",
+    "html": "<div class=\"text-muted-foreground text-sm\">Goal</div>",
+    "expected": "目标"
+  },
+  {
+    "id": "steps",
+    "area": "图片生成步骤标题",
+    "html": "<div class=\"text-sm font-medium text-foreground\">Generation Steps (<span>3</span>)</div>",
+    "expected": "生成步骤 (3)"
+  },
+  {
+    "id": "wait",
+    "area": "工具等待状态",
+    "html": "<span>Wait for <span class=\"font-medium\">3s</span></span>",
+    "expected": "等待 3 秒"
+  },
+  {
+    "id": "sources",
+    "area": "搜索来源标题",
+    "html": "<div><span class=\"text-sm opacity-70\">Sources</span></div>",
+    "expected": "来源"
+  },
+  {
+    "id": "price-input",
+    "area": "模型输入价格标签",
+    "html": "<span>Input:</span>",
+    "expected": "输入："
+  },
+  {
+    "id": "price-output",
+    "area": "模型输出价格标签",
+    "html": "<span>Output:</span>",
+    "expected": "输出："
+  },
+  {
+    "id": "custom-model",
+    "area": "自定义模型窗口标题",
+    "html": "<h2>Add Custom Model</h2>",
+    "expected": "添加自定义模型"
+  },
+  {
+    "id": "edit-model",
+    "area": "编辑自定义模型窗口标题",
+    "html": "<h2>Edit Custom Model</h2>",
+    "expected": "编辑自定义模型"
+  },
+  {
+    "id": "images",
+    "area": "模型图片能力标签",
+    "html": "<label for=\"supports-images\">Images</label>",
+    "expected": "图片"
+  },
+  {
+    "id": "consent",
+    "area": "改进产品同意说明",
+    "html": "<p>Yes, I agree to help improve <b>Antigravity</b> by allowing Google to collect and use my Interactions data, subject to the <a>Privacy Policy</a>. I understand I can choose to opt out later whenever I want via my settings.</p>",
+    "expected": "是的，我同意帮助改进 Antigravity ，允许 Google 依据以下条款收集和使用我的交互数据： 隐私政策。我理解，之后可以随时在设置中退出。"
+  },
+  {
+    "id": "signout",
+    "area": "账号退出状态",
+    "html": "<button>Signing Out...</button>",
+    "expected": "正在退出登录…"
+  },
+  {
+    "id": "permissions",
+    "area": "权限预设选择说明",
+    "html": "<p>Select one of the <a>options</a>. Agent settings and permissions can be further customized below.</p>",
+    "expected": "请选择其中的 选项。你可以在下方进一步自定义智能体设置和权限。"
+  },
+  {
+    "id": "workflow",
+    "area": "工作流迁移通知",
+    "html": "<p>Workflows are changing on October 19th—stay tuned for updates. You can use the agent to migrate your workflows.</p>",
+    "expected": "工作流将于 10 月 19 日调整，请留意更新。你可以使用智能体迁移工作流。"
+  },
+  {
+    "id": "loading",
+    "area": "加载状态省略号变体",
+    "html": "<span>Loading…</span>",
+    "expected": "正在加载…"
+  },
+  {
+    "id": "checking",
+    "area": "检查状态",
+    "html": "<span>Checking...</span>",
+    "expected": "正在检查…"
+  },
+  {
+    "id": "uploading",
+    "area": "上传状态省略号变体",
+    "html": "<span>Uploading…</span>",
+    "expected": "正在上传…"
+  },
+  {
+    "id": "downloading",
+    "area": "下载状态",
+    "html": "<span>Downloading...</span>",
+    "expected": "正在下载…"
+  },
+  {
+    "id": "customization",
+    "area": "自定义项单数标题",
+    "html": "<span>Customization</span>",
+    "expected": "自定义项"
+  },
+  {
+    "id": "triggered",
+    "area": "自动化触发状态",
+    "html": "<span>Triggered</span>",
+    "expected": "已触发"
+  },
+  {
+    "id": "credits",
+    "area": "AI 积分余额",
+    "html": "<label>Available AI Credits: 10</label>",
+    "expected": "可用 AI 积分：10"
+  },
+  {
+    "id": "more-actions",
+    "area": "插件更多操作无障碍标签",
+    "html": "<button aria-label=\"More actions for Firebase\"></button>",
+    "expected": {
+      "aria-label": "Firebase 的更多操作"
+    }
+  },
+  {
+    "id": "plugin-configure",
+    "area": "插件配置标题",
+    "html": "<h2>Configure Firebase</h2>",
+    "expected": "配置 Firebase"
+  },
+  {
+    "id": "plugin-configure-description",
+    "area": "MCP 配置说明",
+    "html": "<p>The Firebase MCP server requires configuration parameters before it can be started.</p>",
+    "expected": "Firebase MCP 服务器需要配置参数后才能启动。"
+  },
+  {
+    "id": "plugin-enabled",
+    "area": "插件已启用通知",
+    "html": "<h2>Enabled \"Firebase\".</h2>",
+    "expected": "已启用“Firebase”。"
+  },
+  {
+    "id": "file-exists",
+    "area": "创建文件冲突提示",
+    "html": "<p>A file already exists at Example.txt.</p>",
+    "expected": "Example.txt 处已存在文件。"
+  },
+  {
+    "id": "missing-folder",
+    "area": "创建目录确认提示",
+    "html": "<p>The folder “Example” does not exist. Would you like to create it?</p>",
+    "expected": "文件夹“Example”不存在。是否创建？"
+  },
+  {
+    "id": "model-identity",
+    "area": "模型名保护对照",
+    "html": "<button data-testid=\"model-selector-trigger\"><span class=\"min-w-0 overflow-hidden text-ellipsis whitespace-nowrap\">Gemini 3.8 Flash High</span></button>",
+    "expected": "Gemini 3.8 Flash High"
+  },
+  {
+    "id": "authored-protection",
+    "area": "用户正文保护对照",
+    "html": "<div data-testid=\"planner-response-text\"><p>Searching…</p><p>Sources</p></div>",
+    "expected": "Searching…Sources"
+  },
+  {
+    "id": "known-translation",
+    "area": "已覆盖固定文案对照",
+    "html": "<button>Settings</button>",
+    "expected": "设置"
+  },
+  {
+    "id": "real-browser-intro",
+    "area": "真实浏览器预览段落",
+    "html": "<p>Intended primarily for previewing local development servers (e.g., <code>http://localhost:8080</code>).</p>",
+    "expected": "主要用于预览本地开发服务器（例如： http://localhost:8080）。"
+  },
+  {
+    "id": "real-browser-limit",
+    "area": "真实嵌入限制拆分段落",
+    "html": "<p>. If a page fails to load, use the <span>Open in new tab</span> icon in the URL bar.</p>",
+    "expected": "。如果页面无法加载，请使用 在新标签页中打开 地址栏中的图标。"
+  },
+  {
+    "id": "real-permissions",
+    "area": "真实权限预设计数拆分",
+    "html": "<div>Select one of the <span>two</span> options. Agent settings and permissions can be further customized below.</div>",
+    "expected": "请选择其中的 两项 选项。你可以在下方进一步自定义智能体设置和权限。"
+  },
+  {
+    "id": "real-plugin-scope",
+    "area": "真实插件权限变量拆分",
+    "html": "<div>Agents created by <span>this plugin</span> run in a dedicated <span>project</span> with its own permissions, which you can change anytime in the <span>project</span> settings page.</div>",
+    "expected": "由 此插件 创建的智能体在专用的 项目 中运行，拥有独立权限；你可以随时在 项目 设置页面中更改。"
+  },
+  {
+    "id": "real-wait",
+    "area": "真实等待时间数字及单位拆分",
+    "html": "<span>Wait for <span class=\"font-medium\"><span>3</span>s</span></span>",
+    "expected": "等待 3 秒"
+  },
+  {
+    "id": "wsl-heading",
+    "area": "WSL 初始标题",
+    "html": "<div>Setting up WSL: Ubuntu-24.04</div>",
+    "expected": "正在设置 WSL：Ubuntu-24.04"
+  },
+  {
+    "id": "wsl-downloading",
+    "area": "WSL 下载状态",
+    "html": "<div>Downloading the Antigravity binary…</div>",
+    "expected": "正在下载 Antigravity 程序…"
+  },
+  {
+    "id": "wsl-installing",
+    "area": "WSL 安装状态",
+    "html": "<div>Installing into Ubuntu-24.04…</div>",
+    "expected": "正在安装到 Ubuntu-24.04…"
+  },
+  {
+    "id": "project-count",
+    "area": "真实删除卡片：项目名保护与对话计数",
+    "html": "<span>Permanently delete <strong>Settings</strong>, including <strong>1 active conversation and 1 archived conversation</strong>.</span>",
+    "expected": "永久删除 Settings，包含 1 个活跃对话和 1 个已归档对话。"
+  },
+  {
+    "id": "project-count-period",
+    "area": "真实删除卡片：项目名保护与对话计数",
+    "html": "<span>Permanently delete <strong>Settings</strong>, including <strong>2 active conversations and 3 archived conversations.</strong></span>",
+    "expected": "永久删除 Settings，包含 2 个活跃对话和 3 个已归档对话。"
+  },
+  {
+    "id": "project-count-zero",
+    "area": "真实删除卡片：项目名保护与对话计数",
+    "html": "<span>Permanently delete <strong>Settings</strong>, including <strong>0 active conversations</strong>.</span>",
+    "expected": "永久删除 Settings，包含 0 个活跃对话。"
+  },
+  {
+    "id": "archived-count",
+    "area": "真实删除卡片：项目名保护与对话计数",
+    "html": "<span>Permanently delete <strong>Settings</strong>, including <strong>2 archived conversations.</strong></span>",
+    "expected": "永久删除 Settings，包含 2 个已归档对话。"
+  },
+  {
+    "id": "marketplace-more",
+    "area": "插件市场展开数量",
+    "html": "<button aria-label=\"See more in Build with Google\">See 6 more</button>",
+    "expected": "再查看 6 项"
+  }
+]

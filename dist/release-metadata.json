@@ -1,12 +1,12 @@
 {
   "productName": "Antigravity 汉化管理器",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "platform": "win-x64",
-  "zip": "Antigravity-ZH-1.1.0-Windows-x64.zip",
-  "zipSha256": "b2b2fcadf2ab6b7579c70526e616252b66b0ed0cb71b8aff310fe0b298ab5b7e",
-  "zipBytes": 67310850,
+  "zip": "Antigravity-ZH-1.2.0-Windows-x64.zip",
+  "zipSha256": "905fe531636f8f42371e8b7ad0eff005d0316c5cb3b627fde277f0eec64fa410",
+  "zipBytes": 68917699,
   "exe": "Antigravity汉化管理器.exe",
-  "exeSha256": "4993901fe7bb630ecef2d1129f487d4e030aa43268aca4cbc7c7cd3a3e9dd824",
+  "exeSha256": "c0677c3b7bb459ee4d3c33dd90a21f280230a16ef756ead4e0597a6f70a61f89",
   "releaseMetadataVersion": 1,
-  "generatedAt": "2026-10-15T06:59:00.206Z"
+  "generatedAt": "2026-10-19T13:09:09.568Z"
 }

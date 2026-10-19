@@ -79,6 +79,7 @@ public sealed record CompatibilityDecision(bool Allowed, string ReferenceVersion
 public static class ArchiveCompatibility
 {
     public static readonly string[] Targets = { "dist/ipcHandlers.js", "dist/main.js", "dist/utils.js", "dist/tray.js", "dist/ideInstall/wizard.js" };
+    public static readonly string[] OptionalTargets = { "dist/provisionSplash.js" };
     private static readonly Lazy<List<CompatibilityReference>> References = new(LoadReferences);
 
     public static string PackageSignature(JsonObject package)
@@ -122,6 +123,9 @@ public static class ArchiveCompatibility
             var supported = System.Version.Parse(reference.Version);
             if (version.Major != supported.Major || version.Minor != supported.Minor || version.Build <= supported.Build) continue;
             if (PackageSignature(archive.Package) != reference.PackageSignature) continue;
+            if (!OptionalTargets.All(t => archive.Files.TryGetValue(t, out var extra)
+                ? reference.Targets.TryGetValue(t, out var hash) && ArchiveSnapshot.Hash(extra) == hash
+                : !reference.Targets.ContainsKey(t))) continue;
             if (Targets.All(t => archive.Files.TryGetValue(t, out var content) &&
                 reference.Targets.TryGetValue(t, out string? hash) && ArchiveSnapshot.Hash(content) == hash))
                 return new(true, reference.Version, "与 " + reference.Version + " 原生模块完全一致的兼容小版本");

@@ -11,6 +11,7 @@ publish/
 # Executables & Large Binaries
 *.exe
 *.dll
+*.pdb
 *.wasm
 *.tflite
 *.crx
@@ -29,3 +30,4 @@ work/
 # Release staging and archived packages (local only)
 dist/stage/
 dist/archive/
+dist/publish-out/

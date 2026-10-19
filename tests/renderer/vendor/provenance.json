@@ -1,0 +1,16 @@
+[
+  {
+    "package": "react",
+    "version": "18.3.1",
+    "bytes": 10751,
+    "sha256": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd",
+    "url": "https://unpkg.com/react@18.3.1/umd/react.production.min.js"
+  },
+  {
+    "package": "react-dom",
+    "version": "18.3.1",
+    "bytes": 131835,
+    "sha256": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+    "url": "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"
+  }
+]

@@ -1,0 +1,1316 @@
+[
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/accessibility/accessible-error-announcement.md\">accessible-error-announcement</a></strong>: Synchronize programmatic accessibility states (like aria-invalid) with the visual :user-invalid state to ensure screen reader users receive error feedback only after interaction, mirroring the visual experience.",
+    "guide": "accessible-error-announcement",
+    "description": "将程序化无障碍状态（如 aria-invalid）与视觉上的 :user-invalid 状态同步，使屏幕阅读器用户也仅在交互后收到错误反馈，与视觉体验保持一致。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/accessibility/accessible-generated-content.md\">accessible-generated-content</a></strong>: Use CSS generated content (<code>::before</code>/<code>::after</code>) in ways that stay accessible, including alternative text for decorative content.",
+    "guide": "accessible-generated-content",
+    "description": "以保持无障碍访问的方式使用 CSS 生成内容（{{0}}/{{1}}），包括为装饰性内容提供替代文本。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/accessibility/respect-os-text-scale.md\">respect-os-text-scale</a></strong>: Respect the operating system's text scale preference for a page so font sizes, layout, and rem-based measurements follow the user's accessibility settings.",
+    "guide": "respect-os-text-scale",
+    "description": "遵循操作系统的文字缩放偏好，使页面字号、布局和基于 rem 的尺寸随用户的无障碍设置调整。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/built-in-ai/language-detection.md\">language-detection</a></strong>: Detect the language of user-generated content or already present site content.",
+    "guide": "language-detection",
+    "description": "检测用户生成内容或网站已有内容的语言。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/built-in-ai/language-model.md\">language-model</a></strong>: Run on-device natural language inference in the browser using the Prompt API, with streaming output, structured JSON responses, and multi-turn session management.",
+    "guide": "language-model",
+    "description": "使用 Prompt API 在浏览器中进行端侧自然语言推理，支持流式输出、结构化 JSON 响应和多轮会话管理。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/built-in-ai/summarizer.md\">summarizer</a></strong>: Summarize text content using the on-device Summarizer API.",
+    "guide": "summarizer",
+    "description": "使用端侧 Summarizer API 对文本内容生成摘要。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/built-in-ai/translator.md\">translator</a></strong>: Translate text between languages using the on-device Translator API.",
+    "guide": "translator",
+    "description": "使用端侧 Translator API 在不同语言之间翻译文本。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/animate-to-intrinsic-sizes.md\">animate-to-intrinsic-sizes</a></strong>: Smoothly animate interactive components (like accordions, menus, and expanding cards) to and from their natural dimensions.",
+    "guide": "animate-to-intrinsic-sizes",
+    "description": "使手风琴、菜单和展开卡片等交互组件平滑过渡到自然尺寸，也能从自然尺寸平滑收起。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/atrule-support-conditionals.md\">atrule-support-conditionals</a></strong>: Conditionally apply certain CSS rules or declarations only if a certain at-rule is supported by the browser.",
+    "guide": "atrule-support-conditionals",
+    "description": "仅当浏览器支持某个 @ 规则时，才有条件地应用特定 CSS 规则或声明。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/calculate-with-intrinsic-sizes.md\">calculate-with-intrinsic-sizes</a></strong>: Calculate the size of an element based on its intrinsic size, while ensuring it fits within given design constraints.",
+    "guide": "calculate-with-intrinsic-sizes",
+    "description": "根据元素的内在尺寸计算大小，同时确保满足既定设计约束。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/child-state-based-styling.md\">child-state-based-styling</a></strong>: Build a component that changes its styling based on the state of one of its child elements. For example, a component that renders in light or dark mode based on whether a theme toggle is checked (or not).",
+    "guide": "child-state-based-styling",
+    "description": "构建根据子元素状态改变样式的组件。例如，根据主题开关是否选中来切换组件的明暗模式。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/content-based-styling.md\">content-based-styling</a></strong>: Build a component that changes its layout based on whether it contains specific child elements (or not). For example, if the component contains an image, use a multi-column layout, otherwise default to a single-column layout.",
+    "guide": "content-based-styling",
+    "description": "构建根据是否包含特定子元素来改变布局的组件。例如，包含图片时采用多列布局，否则采用单列布局。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/css.md\">css</a></strong>: Action-oriented guidelines for modern CSS architecture, including the cascade, selectors, scoping, nesting, and design tokens. Use this guide when authoring styles or managing design systems.",
+    "guide": "css",
+    "description": "面向实际操作的现代 CSS 架构指南，涵盖层叠、选择器、作用域、嵌套和设计令牌。在编写样式或管理设计系统时使用。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/css-layout.md\">css-layout</a></strong>: Modern CSS layouts such as flexbox, grid, subgrid, container queries, anchor positioning, and intrinsic sizing. Use this skill when architecting responsive UI components or page layouts.",
+    "guide": "css-layout",
+    "description": "现代 CSS 布局指南，涵盖 flexbox、grid、subgrid、容器查询、锚点定位和内在尺寸。在设计响应式 UI 组件或页面布局时使用。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/design-token-reactivity.md\">design-token-reactivity</a></strong>: Define higher-order design tokens, like density modes (compact, comfortable, spacious) or themes and have descendant components react to changes directly and in component-appropriate ways.",
+    "guide": "design-token-reactivity",
+    "description": "定义密度模式（紧凑、舒适、宽松）或主题等高阶设计令牌，让后代组件以适合自身的方式直接响应变化。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/dynamic-sibling-styling.md\">dynamic-sibling-styling</a></strong>: Create dynamic visual spectrums or layout arrangements that automatically adapt to the number of elements in a group.",
+    "guide": "dynamic-sibling-styling",
+    "description": "创建可根据组内元素数量自动调整的动态视觉渐变序列或布局排列。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/fluid-scaling.md\">fluid-scaling</a></strong>: Scale items like font size, spacing, and media sizes smoothly based on the parent container's size rather than using fixed breakpoints",
+    "guide": "fluid-scaling",
+    "description": "根据父容器尺寸平滑调整字号、间距和媒体大小等，而非使用固定断点。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/individual-transform-properties.md\">individual-transform-properties</a></strong>: Animate or override individual CSS transform properties (e.g. translate, rotate, scale) independently of other transform properties on a single element.",
+    "guide": "individual-transform-properties",
+    "description": "在同一元素上独立动画化或覆盖 translate、rotate、scale 等 CSS 变换属性，不影响其他变换属性。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/overflow-clipping-control.md\">overflow-clipping-control</a></strong>: Adjust the visible clipping boundary of an element to align with the content edge, padding edge, or border edge—or a specified offset from any of these—offering finer-grained control over how content is clipped.",
+    "guide": "overflow-clipping-control",
+    "description": "将元素的可见裁剪边界调整到内容边缘、内边距边缘或边框边缘，也可相对这些边缘指定偏移量，更精细地控制内容裁剪。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/reduce-style-repetition.md\">reduce-style-repetition</a></strong>: Reduce excessive style repetition by encapsulating complex or dynamic styling logic into reusable functions (such as a function that computes a gradient based on a set of input parameters).",
+    "guide": "reduce-style-repetition",
+    "description": "将复杂或动态样式逻辑封装为可复用函数，减少重复样式，例如根据一组输入参数计算渐变的函数。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/responsive-design.md\">responsive-design</a></strong>: Build UI that adapts to container and viewport size, including container queries, dynamic viewport units, aspect ratios, and responsive typography.",
+    "guide": "responsive-design",
+    "description": "构建适应容器和视口尺寸的界面，涵盖容器查询、动态视口单位、宽高比和响应式排版。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/selector-atrule-combinations.md\">selector-atrule-combinations</a></strong>: Target elements based on the intersection or union of selectors and conditional @-rules while minimizing repetition.",
+    "guide": "selector-atrule-combinations",
+    "description": "根据选择器与条件 @ 规则的交集或并集选取元素，同时减少重复代码。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/size-aware-styling.md\">size-aware-styling</a></strong>: Build a component whose styles can be conditionally dependent on its own width or height, rather than the width or height of the viewport. For example a card component that can change its layouts depending on how large it is, or a call-to-action button that can conditionally display helper text based on its width.",
+    "guide": "size-aware-styling",
+    "description": "构建样式取决于组件自身宽高、而非视口宽高的组件。例如，卡片根据自身大小改变布局，操作按钮根据自身宽度决定是否显示辅助文字。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/style-parent-with-has.md\">style-parent-with-has</a></strong>: Style parent elements of a form field (e.g. labels or fieldsets) when the field is invalid.",
+    "guide": "style-parent-with-has",
+    "description": "在表单字段无效时，为其父元素（如标签或字段集）设置样式。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/css/usage-aware-component-variations.md\">usage-aware-component-variations</a></strong>: Build components that adapt visual logic based on semantic context using CSS container style queries.",
+    "guide": "usage-aware-component-variations",
+    "description": "使用 CSS 容器样式查询，构建根据语义上下文调整视觉逻辑的组件。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/animated-select-picker.md\">animated-select-picker</a></strong>: Create a custom select component whose dropdown is animated. For example, the menu fades or slides into view, or the options animate upon selection.",
+    "guide": "animated-select-picker",
+    "description": "创建下拉部分带动画的自定义选择组件，例如菜单淡入或滑入，或选项在选中时播放动画。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/autofill-address-form.md\">autofill-address-form</a></strong>: Build an address form with correct autocomplete attributes and autofill support.",
+    "guide": "autofill-address-form",
+    "description": "构建具有正确 autocomplete 属性并支持自动填充的地址表单。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/autofill-highlight-inputs.md\">autofill-highlight-inputs</a></strong>: Use CSS to highlight form fields that have been autofilled by the browser and not edited by the user.",
+    "guide": "autofill-highlight-inputs",
+    "description": "使用 CSS 高亮被浏览器自动填充、且尚未经用户编辑的表单字段。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/autofill-payment-form.md\">autofill-payment-form</a></strong>: Build a payment form that collects card details with correct autocomplete values and autofill support.",
+    "guide": "autofill-payment-form",
+    "description": "构建收集银行卡信息的支付表单，使用正确的 autocomplete 值并支持自动填充。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/autofill-sign-in-form.md\">autofill-sign-in-form</a></strong>: Build a sign-in form with correct autocomplete values and autofill support.",
+    "guide": "autofill-sign-in-form",
+    "description": "构建使用正确 autocomplete 值并支持自动填充的登录表单。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/autofill-sign-up-form.md\">autofill-sign-up-form</a></strong>: Build a sign-up form with correct autocomplete values and autofill support.",
+    "guide": "autofill-sign-up-form",
+    "description": "构建使用正确 autocomplete 值并支持自动填充的注册表单。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/brand-consistent-forms.md\">brand-consistent-forms</a></strong>: Match checkboxes, radio buttons, range sliders, and progress bars to your site's color palette without replacing them with custom components.",
+    "guide": "brand-consistent-forms",
+    "description": "让复选框、单选按钮、范围滑块和进度条匹配网站配色，无需将其替换为自定义组件。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/branded-select-styling.md\">branded-select-styling</a></strong>: Create custom select elements whose button, picker, arrow icon, and checkmark all seamlessly match your brand or design system's typography, colors, spacing, and border treatments.",
+    "guide": "branded-select-styling",
+    "description": "创建自定义选择元素，使其按钮、选择面板、箭头图标和勾选标记的字体、颜色、间距与边框均匹配品牌或设计系统。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/custom-select-picker-layouts.md\">custom-select-picker-layouts</a></strong>: Create custom select pickers whose options are positioned in unique or interesting ways, rather than the traditional stacked list of options.",
+    "guide": "custom-select-picker-layouts",
+    "description": "创建选项采用独特布局的自定义选择面板，突破传统纵向选项列表的限制。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/form-fields-automatically-fit-contents.md\">form-fields-automatically-fit-contents</a></strong>: Allow form fields to grow and shrink to fit the user input, e.g. as the user types or selects a different option. Apply maximum and minimum size limits to create dynamic and responsive form fields that conform with the page design.",
+    "guide": "form-fields-automatically-fit-contents",
+    "description": "让表单字段随用户输入或选择不同选项自动伸缩，并通过最大和最小尺寸限制，使动态响应式字段符合页面设计。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/ime-safe-enter-submit.md\">ime-safe-enter-submit</a></strong>: Implement keyboard text submission (like enter-to-submit in chat/textareas) safely for IME (Input Method Editor) users to prevent premature submission of incomplete text.",
+    "guide": "ime-safe-enter-submit",
+    "description": "为输入法（IME）用户安全实现键盘提交（如聊天框或文本区按回车提交），防止尚未输入完整的文本被提前提交。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/required-field-feedback.md\">required-field-feedback</a></strong>: Provide error message for required form fields that were skipped or left empty <em>only</em> after user interaction, to avoid preemptive errors and ensure feedback is timely and contextually relevant to the user's flow.",
+    "guide": "required-field-feedback",
+    "description": "{{0}}在用户交互后，才为被跳过或留空的必填字段显示错误信息，避免过早报错，并确保反馈及时且符合用户操作流程。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/rich-media-picker.md\">rich-media-picker</a></strong>: Create a custom select component whose options can contain complex HTML formatting (e.g. images, icons, and other rich formatting) rather than just plain text.",
+    "guide": "rich-media-picker",
+    "description": "创建选项可包含图片、图标及其他复杂 HTML 格式的自定义选择组件，而不限于纯文本。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/select-menu-interaction.md\">select-menu-interaction</a></strong>: Validate that a non-default option has been chosen in a select menu only after the user has interacted with the control.",
+    "guide": "select-menu-interaction",
+    "description": "仅在用户与选择菜单交互后，才验证是否已选择非默认选项。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/slider.md\">slider</a></strong>: Style a native range slider with custom track, thumb, fill, and focus states while preserving native functionality and accessibility.",
+    "guide": "slider",
+    "description": "为原生范围滑块自定义轨道、滑块、填充和焦点状态，同时保留原生功能和无障碍支持。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/sms-otp-form.md\">sms-otp-form</a></strong>: Verify user phone numbers and one-time passcodes delivered over SMS with automatic code extraction and accessible form input.",
+    "guide": "sms-otp-form",
+    "description": "通过自动提取短信验证码和无障碍表单输入，验证用户手机号及短信发送的一次性验证码。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/switch.md\">switch</a></strong>: Build an accessible switch with the native HTML switch attribute, falling back to a styled checkbox when not supported.",
+    "guide": "switch",
+    "description": "使用原生 HTML switch 属性构建无障碍开关；不受支持时回退为带样式的复选框。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/forms/validate-input-after-interaction.md\">validate-input-after-interaction</a></strong>: Show form field validation feedback (e.g. password complexity or email format requirements) only after the user has finished their initial interaction, avoiding premature errors on page load or while the user is typing.",
+    "guide": "validate-input-after-interaction",
+    "description": "仅在用户完成首次交互后，才显示密码复杂度、邮箱格式等字段验证反馈，避免页面加载时或用户输入过程中提前报错。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/html/accessible-web-components.md\">accessible-web-components</a></strong>: Make custom elements accessible by default, setting roles and ARIA state via the ElementInternals ARIA mixin, managing focus with delegatesFocus, and keeping ARIA relationships within a single shadow root.",
+    "guide": "accessible-web-components",
+    "description": "通过 ElementInternals 的 ARIA mixin 设置角色和 ARIA 状态，使用 delegatesFocus 管理焦点，并将 ARIA 关系保持在同一影子根中，让自定义元素默认具备无障碍支持。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/html/custom-elements.md\">custom-elements</a></strong>: Define, register, and manage the lifecycle of autonomous custom elements, covering constructor rules, lifecycle callbacks, upgrade timing, attribute/property reflection, and naming conventions.",
+    "guide": "custom-elements",
+    "description": "定义、注册并管理自主自定义元素的生命周期，涵盖构造函数规则、生命周期回调、升级时机、特性与属性的映射及命名约定。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/html/form-associated-custom-elements.md\">form-associated-custom-elements</a></strong>: Make a custom control participate natively in forms with formAssociated and ElementInternals, submitting its own value, integrating with constraint validation, and reacting to reset, disable, and state-restore.",
+    "guide": "form-associated-custom-elements",
+    "description": "使用 formAssociated 和 ElementInternals 让自定义控件原生参与表单，提交自身值、接入约束验证，并响应重置、禁用和状态恢复。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/html/prerendering-custom-elements.md\">prerendering-custom-elements</a></strong>: Server-render a custom element, then hydrate it in place without re-rendering or a flash of unstyled content.",
+    "guide": "prerendering-custom-elements",
+    "description": "在服务器端渲染自定义元素，再原地完成水合，无需重新渲染，也不会闪现无样式内容。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/html/shadow-dom.md\">shadow-dom</a></strong>: Encapsulate a component's DOM and styles with Shadow DOM, construct the tree efficiently with HTML templates, and project consumer content with slots.",
+    "guide": "shadow-dom",
+    "description": "使用 Shadow DOM 封装组件的 DOM 与样式，借助 HTML 模板高效构建节点树，并通过插槽投射使用方提供的内容。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/html/styling-web-components.md\">styling-web-components</a></strong>: Style across the shadow boundary with :host selectors, inherited and custom properties for theming, ::slotted and ::part, and cascade layers and container queries inside components.",
+    "guide": "styling-web-components",
+    "description": "通过 :host 选择器、用于主题的继承属性与自定义属性、::slotted 和 ::part 跨影子边界设置样式，并在组件内使用层叠层和容器查询。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/html/web-components.md\">web-components</a></strong>: Orientation and cross-cutting principles for authoring and using Web Components, covering Custom Elements, Shadow DOM, templates and slots, Declarative Shadow DOM, styling across the shadow boundary, Form-Associated Custom Elements, and accessibility requirements. Use this guide when building reusable UI components, design systems, or server-rendered custom elements.",
+    "guide": "web-components",
+    "description": "介绍编写和使用 Web Components 的整体原则，涵盖自定义元素、Shadow DOM、模板与插槽、声明式 Shadow DOM、跨影子边界样式、表单关联自定义元素及无障碍要求。在构建可复用 UI 组件、设计系统或服务器端渲染的自定义元素时使用。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/js/calculate-event-differentials.md\">calculate-event-differentials</a></strong>: Calculate the duration and time remaining between dates and times.",
+    "guide": "calculate-event-differentials",
+    "description": "计算日期和时间之间的持续时长与剩余时间。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/js/capture-location-agnostic-data.md\">capture-location-agnostic-data</a></strong>: Record chronological data that should not change based on a user's location, such as birthdates, recurring alarms, or national holidays.",
+    "guide": "capture-location-agnostic-data",
+    "description": "记录不应随用户所在地变化的日期时间数据，例如出生日期、周期性闹钟或国家法定节假日。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/js/coordinate-global-events.md\">coordinate-global-events</a></strong>: Schedule future meetings or events by explicitly binding them to a geographical IANA time zone so that event times remain accurate regardless of Daylight Saving Time (DST) transitions, \"skipped\" or \"repeated\" hours during clock changes.",
+    "guide": "coordinate-global-events",
+    "description": "安排未来会议或活动时，明确绑定其所在地区的 IANA 时区，确保夏令时切换及调钟时出现“跳过”或“重复”的小时仍能得到准确的活动时间。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/js/format-human-readable-durations.md\">format-human-readable-durations</a></strong>: Present elapsed time or durations to users in a readable, localized format, with the flexibility to display either detailed unit breakdowns (e.g., \"1 hour and 30 minutes\") or total unit counts (e.g., \"90 minutes\") depending on context.",
+    "guide": "format-human-readable-durations",
+    "description": "以易读的本地化格式向用户显示已用时间或持续时长，并按上下文选择详细单位分解（如“1 小时 30 分钟”）或单位总数（如“90 分钟”）。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/js/manage-recurring-intervals.md\">manage-recurring-intervals</a></strong>: Calculate recurring intervals for subscription billings or payroll cycles, automatically adjusting for edge cases such as month-end transitions (e.g., adding one month to January 31st) to ensure accurate period calculations.",
+    "guide": "manage-recurring-intervals",
+    "description": "计算订阅计费或薪资发放等周期性区间，自动处理月末转换等边界情况（如在 1 月 31 日上增加一个月），确保周期计算准确。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/js/model-partial-time-concepts.md\">model-partial-time-concepts</a></strong>: Model date and time concepts that inherently lack a standard component (such as a specific year, day, or date) without using arbitrary placeholder values that introduce calculation errors.",
+    "guide": "model-partial-time-concepts",
+    "description": "为本身缺少年、日或日期等标准组成部分的日期时间概念建模，避免使用会引入计算错误的任意占位值。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/js/stabilize-reactive-state.md\">stabilize-reactive-state</a></strong>: Manage task deadlines or schedules in data-driven views without unexpected side effects from shared mutable state.",
+    "guide": "stabilize-reactive-state",
+    "description": "在数据驱动视图中管理任务截止时间或日程，避免共享可变状态造成意外副作用。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/js/support-global-calendar-systems.md\">support-global-calendar-systems</a></strong>: Display and calculate dates in non-Gregorian calendar systems (e.g., Islamic, Hebrew, or Chinese) accurately for international users.",
+    "guide": "support-global-calendar-systems",
+    "description": "面向国际用户，准确显示并计算非公历历法中的日期，例如伊斯兰历、希伯来历或农历。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/batch-analytics-events.md\">batch-analytics-events</a></strong>: Debounce and batch multiple analytics events together in a single beacon to minimize network contention and reduce server load, while still delivering real-time updates.",
+    "guide": "batch-analytics-events",
+    "description": "对多个分析事件进行防抖处理，并合并到单次信标请求中发送，减少网络争用与服务器负载，同时仍能提供实时更新。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/break-up-long-tasks.md\">break-up-long-tasks</a></strong>: Break up heavy synchronous processing (complex computations and/or long loops) or DOM updates, to let the browser handle user input and repaint the screen.",
+    "guide": "break-up-long-tasks",
+    "description": "拆分繁重的同步处理（复杂计算或长循环）及 DOM 更新，让浏览器有机会处理用户输入并重绘屏幕。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/calculate-total-foreground-time.md\">calculate-total-foreground-time</a></strong>: Calculate the total time a user actually spent viewing a page, excluding periods when the tab was in the background.",
+    "guide": "calculate-total-foreground-time",
+    "description": "计算用户实际查看页面的总时长，排除标签页处于后台的时间。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/conditional-async-dependencies.md\">conditional-async-dependencies</a></strong>: Conditionally load or initialize async dependencies (such as importing polyfills for missing web features) without requiring complex orchestration across all of a page's script dependencies.",
+    "guide": "conditional-async-dependencies",
+    "description": "有条件地加载或初始化异步依赖（如为缺失的 Web 功能导入 polyfill），无需对页面的所有脚本依赖进行复杂编排。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/defer-rendering-heavy-content.md\">defer-rendering-heavy-content</a></strong>: Reduce rendering times in content-heavy web pages (e.g. pages with long feeds, lots of articles, or complex dashboards), by deferring rendering for any content that is not immediately visible to the user.",
+    "guide": "defer-rendering-heavy-content",
+    "description": "推迟渲染用户暂时看不到的内容，缩短长信息流、大量文章或复杂仪表盘等内容密集页面的渲染时间。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/defer-work-until-scroll-ends.md\">defer-work-until-scroll-ends</a></strong>: Defer expensive operations like DOM updates, data fetching, analytics tracking, or layout recalculation until after scrolling completes to maintain smooth scroll performance.",
+    "guide": "defer-work-until-scroll-ends",
+    "description": "将 DOM 更新、数据获取、分析跟踪或布局重算等高开销操作推迟到滚动结束后执行，保持滚动流畅。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/deliver-optimized-decorative-images.md\">deliver-optimized-decorative-images</a></strong>: Deliver optimized decorative images (such as backgrounds, UI icons, or complex masks) by simultaneously providing next-generation image formats (like AVIF or WebP) alongside multiple pixel densities (like 1x and 2x) so the browser can dynamically negotiate the best combination of file size and visual quality for the user's device capabilities.",
+    "guide": "deliver-optimized-decorative-images",
+    "description": "同时提供 AVIF、WebP 等新一代格式与 1x、2x 等多种像素密度的装饰性图片（背景、UI 图标或复杂蒙版），让浏览器根据设备能力选择文件大小与视觉质量的最佳组合。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/deprioritize-background-fetches.md\">deprioritize-background-fetches</a></strong>: Deprioritize background data fetches made with the Fetch API to prevent network contention with user-initiated requests.",
+    "guide": "deprioritize-background-fetches",
+    "description": "降低通过 Fetch API 发起的后台数据请求优先级，避免与用户发起的请求争用网络。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/detect-initial-visibility-state.md\">detect-initial-visibility-state</a></strong>: Reliably determine whether a page was initially loaded in the background, even in cases where the script is loaded asynchronously after the user foregrounded the page.",
+    "guide": "detect-initial-visibility-state",
+    "description": "可靠判断页面最初是否在后台加载，即使脚本是在用户将页面切到前台后才异步加载，也能正确识别。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/efficient-background-processing.md\">efficient-background-processing</a></strong>: Conserve system resources and battery life by pausing background JavaScript execution (such as <code>&amp;lt;canvas&amp;gt;</code> animations, WebGL rendering, or high-frequency WebSocket data polling) when the component is off-screen and then resume them just-in-time when they scroll back into view.",
+    "guide": "efficient-background-processing",
+    "description": "组件移出屏幕时暂停后台 JavaScript 执行（如 {{0}} 动画、WebGL 渲染或高频 WebSocket 数据轮询），滚回视野时再及时恢复，以节省系统资源和电池电量。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/faster-spa-view-transitions.md\">faster-spa-view-transitions</a></strong>: Enable faster transitions back to previously visited views in a Single-Page Application (SPA) by preserving their structural DOM state instead of destroying and rebuilding them on every navigation.",
+    "guide": "faster-spa-view-transitions",
+    "description": "保留单页应用（SPA）中已访问视图的 DOM 结构状态，避免每次导航都销毁并重建，从而加快返回这些视图的速度。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/flicker-free-client-side-ab-testing.md\">flicker-free-client-side-ab-testing</a></strong>: Deliver and render A/B tests, multi-variate tests, or other experiments using client-side JavaScript to alter or inject HTML, CSS, and JavaScript without the original content showing first before flickering or flashing to show the experiment content.",
+    "guide": "flicker-free-client-side-ab-testing",
+    "description": "使用客户端 JavaScript 修改或注入 HTML、CSS 与 JavaScript 来呈现 A/B 测试、多变量测试等实验，避免先显示原内容再闪烁切换到实验内容。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/full-session-analytics.md\">full-session-analytics</a></strong>: Reliably track analytics, errors, and telemetry data across the user's entire page visit, and defer sending of the data until the user leaves the page.",
+    "guide": "full-session-analytics",
+    "description": "在用户整个页面访问期间可靠跟踪分析、错误与遥测数据，并推迟到用户离开页面时再发送。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/identify-heavy-scripts.md\">identify-heavy-scripts</a></strong>: Identify the scripts most responsible for long animation frames",
+    "guide": "identify-heavy-scripts",
+    "description": "找出造成长动画帧的主要脚本。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/identify-inp-causes.md\">identify-inp-causes</a></strong>: Identify slow running JavaScript that is impacting INP metric",
+    "guide": "identify-inp-causes",
+    "description": "找出影响 INP 指标的运行缓慢的 JavaScript。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/improve-next-page-load-performance.md\">improve-next-page-load-performance</a></strong>: Improve page load performance by prefetching or prerendering pages that the user is likely to visit next.",
+    "guide": "improve-next-page-load-performance",
+    "description": "通过预取或预渲染用户可能接下来访问的页面来提升页面加载性能。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/interaction-paint-timing.md\">interaction-paint-timing</a></strong>: Measure the time it takes for user interactions and client-side navigations to render new contentful updates on screen.",
+    "guide": "interaction-paint-timing",
+    "description": "测量用户交互和客户端导航从发生到屏幕上呈现有实际内容的更新所需的时间。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/interactions-in-complex-layouts.md\">interactions-in-complex-layouts</a></strong>: Make interactions snappier and more responsive (reducing Interaction to Next Paint (INP) scores) by avoiding layout re-calculations in complex layouts, such as data-heavy dashboards or spreadsheet-style grids.",
+    "guide": "interactions-in-complex-layouts",
+    "description": "在数据密集仪表盘或电子表格网格等复杂布局中避免布局重算，提高交互响应速度，降低交互到下一次绘制（INP）延迟。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/lazy-load-video-and-audio.md\">lazy-load-video-and-audio</a></strong>: Defer downloading offscreen video and audio assets, including video poster images and preloaded media data, until the media player approaches the viewport to conserve bandwidth and reduce network contention during initial page load.",
+    "guide": "lazy-load-video-and-audio",
+    "description": "将屏幕外音视频资源（包括视频封面与预加载媒体数据）的下载推迟到播放器接近视口时，以节省带宽并减少页面初始加载时的网络争用。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/optimize-image-priority.md\">optimize-image-priority</a></strong>: Optimize the loading priority of Largest Contentful Paint (LCP) candidate images and deprioritize non-critical images to reduce critical resource load delays.",
+    "guide": "optimize-image-priority",
+    "description": "提高最大内容绘制（LCP）候选图片的加载优先级，降低非关键图片的优先级，减少关键资源的加载延迟。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/optimize-preload-priority.md\">optimize-preload-priority</a></strong>: Optimize the relative priority of preloaded content to reduce critical resource load delays.",
+    "guide": "optimize-preload-priority",
+    "description": "优化预加载内容的相对优先级，减少关键资源的加载延迟。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/optimize-script-priority.md\">optimize-script-priority</a></strong>: Optimize the loading priority of scripts by boosting critical asynchronous scripts and deprioritizing non-essential or late-body scripts to improve sequencing and reduce delays.",
+    "guide": "optimize-script-priority",
+    "description": "提高关键异步脚本的优先级，降低非必要脚本或位于正文后部脚本的优先级，以优化加载顺序并减少延迟。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/out-of-order-html-streaming.md\">out-of-order-html-streaming</a></strong>: Declaratively update a page with content streamed later into the same HTML document or via imperative JavaScript APIs.",
+    "guide": "out-of-order-html-streaming",
+    "description": "通过后续流式传入同一 HTML 文档的内容，或通过命令式 JavaScript API，以声明方式更新页面。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/resolution-optimized-pseudo-elements.md\">resolution-optimized-pseudo-elements</a></strong>: Use resolution-optimized images in CSS pseudo-elements (such as <code>::before</code> and <code>::after</code>) to reduce the number of DOM nodes.",
+    "guide": "resolution-optimized-pseudo-elements",
+    "description": "在 CSS 伪元素（如 {{0}} 和 {{1}}）中使用针对分辨率优化的图片，以减少 DOM 节点数量。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/schedule-tasks-by-priority.md\">schedule-tasks-by-priority</a></strong>: Schedule tasks with different priorities to ensure critical work runs first while background work is deferred.",
+    "guide": "schedule-tasks-by-priority",
+    "description": "按不同优先级调度任务，确保关键工作先执行，并推迟后台工作。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/performance/sequence-distributed-events.md\">sequence-distributed-events</a></strong>: Log and sequence operations in distributed microservices or high-throughput tracing environments by recording timestamps with nanosecond resolution.",
+    "guide": "sequence-distributed-events",
+    "description": "记录纳秒精度的时间戳，在分布式微服务或高吞吐量跟踪环境中记录操作并确定其顺序。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/privacy/privacy.md\">privacy</a></strong>: Action-oriented guidelines for web developers to implement privacy by design, data minimization, third-party audits, and secure data handling. Use this skill when designing applications, integrating third-party services, handling user data, or configuring security headers.",
+    "guide": "privacy",
+    "description": "面向 Web 开发者的实践指南，涵盖隐私设计、数据最小化、第三方审查和安全数据处理。在设计应用、集成第三方服务、处理用户数据或配置安全响应头时使用。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/pwa/migrate-web-app-origin.md\">migrate-web-app-origin</a></strong>: Transfer an installed web app to a new origin while preserving user configuration and OS-level shortcuts.",
+    "guide": "migrate-web-app-origin",
+    "description": "将已安装的 Web 应用迁移到新的源，同时保留用户配置与操作系统级快捷方式。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/client-side-encryption.md\">client-side-encryption</a></strong>: Establish shared secrets using public-key encapsulation or key agreement—including hybrid and post-quantum protection—and encrypt sensitive data in the browser with authenticated encryption.",
+    "guide": "client-side-encryption",
+    "description": "通过公钥封装或密钥协商建立共享秘密，支持混合及后量子保护，并在浏览器中使用认证加密来加密敏感数据。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/digital-signatures.md\">digital-signatures</a></strong>: Sign and verify messages, tokens, or artifacts in the browser using classical or quantum-resistant (post-quantum) asymmetric keys to ensure data integrity and authenticity.",
+    "guide": "digital-signatures",
+    "description": "使用传统或抗量子（后量子）非对称密钥，在浏览器中对消息、令牌或产物进行签名与验证，确保数据完整性和真实性。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/local-network-access.md\">local-network-access</a></strong>: Access resources on a user's local network or loopback interface from a public web application.",
+    "guide": "local-network-access",
+    "description": "从公共 Web 应用访问用户本地网络或回环接口上的资源。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/passkey-authentication.md\">passkey-authentication</a></strong>: Authenticate a returning user with a passkey for primary sign-in.",
+    "guide": "passkey-authentication",
+    "description": "让回访用户使用通行密钥完成主要登录认证。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/passkey-conditional-create.md\">passkey-conditional-create</a></strong>: Silently register a passkey for an existing user after a successful password login.",
+    "guide": "passkey-conditional-create",
+    "description": "在现有用户成功使用密码登录后，静默注册通行密钥。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/passkey-management.md\">passkey-management</a></strong>: Let users view and manage the passkeys registered to their account.",
+    "guide": "passkey-management",
+    "description": "让用户查看并管理已注册到其账号的通行密钥。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/passkey-reauthentication.md\">passkey-reauthentication</a></strong>: Verify a signed-in user's identity using their existing passkeys before a sensitive action.",
+    "guide": "passkey-reauthentication",
+    "description": "在敏感操作前，使用已登录用户现有的通行密钥再次验证身份。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/passkey-registration.md\">passkey-registration</a></strong>: Register a passkey for an existing user account.",
+    "guide": "passkey-registration",
+    "description": "为现有用户账号注册通行密钥。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/passkeys.md\">passkeys</a></strong>: Comprehensive orientation and cross-cutting principles for implementing WebAuthn and Passkeys in web applications. Use this guide when handling passkey registration, authentication, management, or reauthentication.",
+    "guide": "passkeys",
+    "description": "全面介绍在 Web 应用中实现 WebAuthn 与通行密钥的整体原则。在处理通行密钥注册、认证、管理或重新认证时使用。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/restrict-outbound-connections.md\">restrict-outbound-connections</a></strong>: Restrict a page or worker to communicating only with an explicit allowlist of network endpoints to prevent unauthorized third-party requests and client-side data exfiltration.",
+    "guide": "restrict-outbound-connections",
+    "description": "将页面或工作线程的通信限制在明确列出的网络端点白名单内，防止未经授权的第三方请求和客户端数据外传。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/sanitize-untrusted-html.md\">sanitize-untrusted-html</a></strong>: Safely parse and display untrusted HTML content from user input by removing unsafe elements and attributes.",
+    "guide": "sanitize-untrusted-html",
+    "description": "移除不安全的元素与属性，安全解析并显示用户输入中的不可信 HTML 内容。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/trusted-types.md\">trusted-types</a></strong>: Help prevent DOM-based XSS attacks by locking down dangerous DOM sinks so they reject raw strings and only accept policy-validated HTML.",
+    "guide": "trusted-types",
+    "description": "限制危险的 DOM 写入点，使其拒绝原始字符串、仅接受经过策略验证的 HTML，帮助防范基于 DOM 的 XSS 攻击。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/validate-origins.md\">validate-origins</a></strong>: Compare and validate web origins and sites safely across cross-document messages and URLs without error-prone string parsing.",
+    "guide": "validate-origins",
+    "description": "在跨文档消息和 URL 中安全比较并验证 Web 源与站点，避免容易出错的字符串解析。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/security/verify-email-ownership.md\">verify-email-ownership</a></strong>: Verify that a user owns an email address during account creation, sign-in, or recovery without sending a one-time passcode or magic link email.",
+    "guide": "verify-email-ownership",
+    "description": "在账号创建、登录或恢复过程中验证用户对邮箱的所有权，无需发送一次性验证码或魔法链接邮件。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-atoms/carousel-slide-effects.md\">carousel-slide-effects</a></strong>: Create a carousel of slides with images or other visual elements, where each slide animates as they enter/center/exit their scroller. For example, the slides may fade-in/fade-out, rotate, get bigger or smaller, etc.",
+    "guide": "carousel-slide-effects",
+    "description": "创建包含图片等视觉元素的轮播，使每一项在进入、居中或离开滚动容器时播放动画，例如淡入淡出、旋转或缩放。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-atoms/component-specific-light-dark-theme.md\">component-specific-light-dark-theme</a></strong>: Force certain elements to be in light mode or dark mode (e.g. code blocks, media players, etc) independently of the page's color-scheme.",
+    "guide": "component-specific-light-dark-theme",
+    "description": "让代码块、媒体播放器等特定元素独立于页面 color-scheme，固定使用浅色或深色模式。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-atoms/position-aware-tooltips.md\">position-aware-tooltips</a></strong>: Build tooltips and popovers with directional arrows (or other visual styling) that automatically point the correct way when the element flips to a fallback position.",
+    "guide": "position-aware-tooltips",
+    "description": "构建带方向箭头等视觉样式的工具提示和弹出层，在元素翻转到备用位置时自动将箭头调整到正确方向。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-atoms/pull-to-reveal.md\">pull-to-reveal</a></strong>: Build a pull-to-reveal feature that would enable the user to pull down on the screen to reveal more content, like a search bar.",
+    "guide": "pull-to-reveal",
+    "description": "构建下拉揭示功能，让用户向下拉动屏幕以显示搜索栏等更多内容。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-atoms/resilient-context-menus-and-nested-dropdowns.md\">resilient-context-menus-and-nested-dropdowns</a></strong>: Build accessible, responsive menus, tooltips, dropdowns, or contextual overlays that must be tethered to specific UI elements, guaranteeing that the overlay automatically repositions itself (e.g., flipping axes) when it encounters viewport edges, ensuring it never gets cut off.",
+    "guide": "resilient-context-menus-and-nested-dropdowns",
+    "description": "构建无障碍、响应式的菜单、工具提示、下拉菜单或上下文浮层，使其锚定特定 UI 元素，并在触及视口边缘时自动重新定位（如翻转轴向），避免被裁切。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-atoms/responsive-table.md\">responsive-table</a></strong>: Build a data table that presents tabular data with proper header semantics, and remains readable and navigable on small screens and with assistive technologies.",
+    "guide": "responsive-table",
+    "description": "构建具有正确表头语义的数据表，使其在小屏幕和辅助技术下仍易于阅读和导航。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-atoms/scroll-position-aware-elements.md\">scroll-position-aware-elements</a></strong>: Build floating buttons or widgets (back-to-top, scroll-to-bottom, chat launchers, etc.) that appear and disappear based on whether the user has scrolled at all.",
+    "guide": "scroll-position-aware-elements",
+    "description": "构建返回顶部、滚动到底部或聊天入口等浮动按钮或微件，根据用户是否发生滚动来显示或隐藏。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-atoms/scroll-progress-indicator.md\">scroll-progress-indicator</a></strong>: Create a scroll progress bar, stepped progress tracker, or any visual affordance that communicates how far through a page or section the user has scrolled.",
+    "guide": "scroll-progress-indicator",
+    "description": "创建滚动进度条、分步进度指示器或其他视觉提示，展示用户已滚过页面或区段的比例。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-atoms/scrollability-affordance-hints.md\">scrollability-affordance-hints</a></strong>: Build scroll-shadow overlays, gradient fades, or directional arrow indicators that appear only when there's actually more content to scroll to in that direction.",
+    "guide": "scrollability-affordance-hints",
+    "description": "构建滚动阴影、渐变淡出或方向箭头提示，仅在对应方向确实还有可滚动内容时显示。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-atoms/shrinking-header-on-scroll.md\">shrinking-header-on-scroll</a></strong>: Smoothly animate a fixed header or full-page cover on scroll to dynamically shrink, gain shadows, and transform its layout over a predefined scroll distance.",
+    "guide": "shrinking-header-on-scroll",
+    "description": "使固定页头或全页封面在预定的滚动距离内平滑缩小、增加阴影并改变布局。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-atoms/state-aware-sticky-headers.md\">state-aware-sticky-headers</a></strong>: Build sticky section headers or navbars that visually transform when they're actually \"stuck\" at the top, changing their color scheme or gaining a shadow.",
+    "guide": "state-aware-sticky-headers",
+    "description": "构建粘性区段标题或导航栏，在实际吸附到顶部时改变配色或增加阴影。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/anchor-positioning-tab-underline.md\">anchor-positioning-tab-underline</a></strong>: Transition an element seamlessly between two target element positions. For example, moving a selected tab underline between the previously selected tab and the currently selected tab.",
+    "guide": "anchor-positioning-tab-underline",
+    "description": "使元素在两个目标元素的位置之间平滑过渡，例如将选项卡下划线从先前选中项移动到当前选中项。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/animate-element-entry-exit.md\">animate-element-entry-exit</a></strong>: Smoothly hide/show elements as they are added/removed from the DOM or as their display values are toggled.",
+    "guide": "animate-element-entry-exit",
+    "description": "在元素加入或移出 DOM，或切换 display 值时，平滑显示或隐藏元素。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/animate-to-from-top-layer.md\">animate-to-from-top-layer</a></strong>: Animate elements such as dialogs, popovers, and tooltips as they're entering/exiting the top layer.",
+    "guide": "animate-to-from-top-layer",
+    "description": "为对话框、弹出层和工具提示等元素进入或退出顶层的过程添加动画。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/carousel-snap-highlights.md\">carousel-snap-highlights</a></strong>: Visually highlight the currently snapped non-interactive item in scroll-snapping carousels, galleries, or full-page swipe experiences. For example, expanding a card when snapped, or revealing hidden content.",
+    "guide": "carousel-snap-highlights",
+    "description": "在滚动吸附轮播、图库或全页滑动界面中，突出显示当前吸附的非交互项，例如吸附时放大卡片或揭示隐藏内容。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/consistent-cross-document-transitions.md\">consistent-cross-document-transitions</a></strong>: Ensure critical page state is loaded and stable before initiating a cross-document view transition. This means critical CSS styles are loaded and applied, critical JavaScript is loaded and run, and the HTML visible for the user's initial view of the page has been parsed before the transition runs.",
+    "guide": "consistent-cross-document-transitions",
+    "description": "在启动跨文档视图过渡前，确保页面关键状态已加载并稳定：关键 CSS 已加载应用，关键 JavaScript 已加载运行，且用户初始可见区域的 HTML 已解析。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/cross-document-transitions.md\">cross-document-transitions</a></strong>: Create smooth, seamless transitions between full page navigations, such as cross-fades, custom reveal effects, or morphing of content from one page to the next.",
+    "guide": "cross-document-transitions",
+    "description": "在整页导航间创建平滑连贯的过渡，例如交叉淡入淡出、自定义揭示效果，或内容从一个页面到下一个页面的形变。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/custom-button-actions.md\">custom-button-actions</a></strong>: Declaratively connect a button to any element to trigger custom, application-specific actions using declarative button commands, invoker commands, button commands, custom commands, or declarative toggle actions.",
+    "guide": "custom-button-actions",
+    "description": "通过声明式按钮命令、调用器命令、自定义命令或声明式切换动作，将按钮连接到任意元素，以触发应用特定的自定义操作。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/declarative-dialog-popover-control.md\">declarative-dialog-popover-control</a></strong>: Toggle the visibility of a dialog or popover from a button without writing JavaScript.",
+    "guide": "declarative-dialog-popover-control",
+    "description": "通过按钮切换对话框或弹出层的可见性，无需编写 JavaScript。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/directional-navigation-transitions.md\">directional-navigation-transitions</a></strong>: Animate visual state changes to reflect the direction of a user's navigational flow, such as sliding new content in from the right when advancing forward or from the left when returning to a previous screen.",
+    "guide": "directional-navigation-transitions",
+    "description": "根据用户导航方向播放状态变化动画，例如前进时从右侧滑入新内容，返回上一屏时从左侧滑入。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/drag.md\">drag</a></strong>: Support dragging to move a floating element around the page.",
+    "guide": "drag",
+    "description": "支持通过拖动在页面上移动浮动元素。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/dynamic-sibling-animations.md\">dynamic-sibling-animations</a></strong>: Stagger animation or transition timing across sibling elements so each one starts after a computed delay based on its position in the sibling list.",
+    "guide": "dynamic-sibling-animations",
+    "description": "根据元素在同级列表中的位置计算延迟，错开各同级元素的动画或过渡开始时间。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/group-element-transitions.md\">group-element-transitions</a></strong>: Transition a group of similar elements simultaneously using the same transition logic, such as removing a product from a shopping cart and having all the other products animate into their new positions.",
+    "guide": "group-element-transitions",
+    "description": "使用相同过渡逻辑同时移动一组相似元素，例如从购物车移除商品时，其余商品以动画移动到新位置。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/highlight-text-ranges.md\">highlight-text-ranges</a></strong>: Highlight arbitrary text ranges on a page such as search results, spelling errors, or collaborative editing cursors.",
+    "guide": "highlight-text-ranges",
+    "description": "高亮页面中的任意文本范围，例如搜索结果、拼写错误或协同编辑光标。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/interactive-content-reveal.md\">interactive-content-reveal</a></strong>: Create interactive reveal effects, such as a spotlight that follows the user's pointer to uncover details within an image or UI section.",
+    "guide": "interactive-content-reveal",
+    "description": "创建交互式揭示效果，例如聚光灯跟随用户指针，揭示图片或界面区段中的细节。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/interest-triggered-action-previews.md\">interest-triggered-action-previews</a></strong>: Show a live preview of a button's effect when a user signals interest (e.g. hovering, focusing, or long-pressing) but before they commit to clicking.",
+    "guide": "interest-triggered-action-previews",
+    "description": "在用户通过悬停、聚焦或长按表达兴趣、但尚未点击按钮时，实时预览该按钮的效果。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/interest-triggered-tooltips.md\">interest-triggered-tooltips</a></strong>: Show a tooltip or supplemental information when a user hovers over, focuses on, or long-presses an interactive element, without requiring a click.",
+    "guide": "interest-triggered-tooltips",
+    "description": "在用户悬停、聚焦或长按交互元素时显示工具提示或补充信息，无需点击。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/light-dismiss-a-dialog.md\">light-dismiss-a-dialog</a></strong>: Create a modal dialog that can be closed via light dismiss (i.e. clicking or tapping outside of the dialog)",
+    "guide": "light-dismiss-a-dialog",
+    "description": "创建可通过轻触关闭的模态对话框，即点击或轻触对话框外部即可关闭。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/motion.md\">motion</a></strong>: Animate UI with CSS transitions, animations, scroll-driven animations, and view transitions while keeping motion on the compositor and respecting reduced-motion preferences.",
+    "guide": "motion",
+    "description": "使用 CSS 过渡、动画、滚动驱动动画与视图过渡制作界面动效，同时让动画在合成器上运行并遵循减少动态效果的偏好。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/move-dom-element-without-losing-state.md\">move-dom-element-without-losing-state</a></strong>: Move or reparent a DOM element without losing important element state, such as interactivity states (:focus/:active), <code>&amp;lt;iframe&amp;gt;</code> loading state, animation/transition state, etc",
+    "guide": "move-dom-element-without-losing-state",
+    "description": "移动 DOM 元素或改变其父节点时，保留重要状态，例如交互状态（:focus/:active）、{{0}} 加载状态、动画或过渡状态等。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/parallax-scroll-effects.md\">parallax-scroll-effects</a></strong>: Create scroll-based effects (such as parallax) where foreground and background layers move at different rates, creating a sense of depth as the user scrolls.",
+    "guide": "parallax-scroll-effects",
+    "description": "创建视差等滚动效果，让前景与背景图层以不同速率移动，在用户滚动时产生纵深感。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/persistent-top-layer-ui.md\">persistent-top-layer-ui</a></strong>: Keep a modal dialog, fullscreen element, or native popover visibly open and functionally active when its underlying DOM node is moved or reparented in the DOM.",
+    "guide": "persistent-top-layer-ui",
+    "description": "在底层 DOM 节点被移动或改变父节点时，使模态对话框、全屏元素或原生弹出层仍保持可见、打开且功能正常。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/physics-based-easing.md\">physics-based-easing</a></strong>: Create custom, physics-based animation and transition effects, like bounce and spring, that feel more natural and engaging than traditional easing curves.",
+    "guide": "physics-based-easing",
+    "description": "创建弹跳、弹簧等基于物理的自定义动画与过渡，使效果比传统缓动曲线更自然、更生动。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/platform-controls-dismiss-dialog.md\">platform-controls-dismiss-dialog</a></strong>: Create a modal dialog that can be closed via standard platform-specific user actions, such as pressing the <code>Esc</code> key on desktop platforms, or a \"back\" or \"dismiss\" gesture on mobile platforms",
+    "guide": "platform-controls-dismiss-dialog",
+    "description": "创建可通过平台标准操作关闭的模态对话框，例如桌面端按 {{0}} 键，或移动端使用“返回”或“关闭”手势。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/prevent-page-scroll-under-modal-dialog.md\">prevent-page-scroll-under-modal-dialog</a></strong>: Prevent the underlying page from scrolling while a modal dialog is open.",
+    "guide": "prevent-page-scroll-under-modal-dialog",
+    "description": "在模态对话框打开期间，阻止底层页面滚动。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/same-document-transitions.md\">same-document-transitions</a></strong>: Visually connect persisting elements across different page states or navigations in a Single Page Application (SPA) (e.g. expanding a product thumbnail into a full-bleed hero image) by smoothly morphing their size, position, or other styling properties.",
+    "guide": "same-document-transitions",
+    "description": "在单页应用（SPA）的不同页面状态或导航之间，让持续存在的元素通过大小、位置或其他样式属性的平滑形变形成视觉衔接，例如将商品缩略图展开为通栏主图。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/scroll-completion-effects.md\">scroll-completion-effects</a></strong>: Trigger visual effects, animations, or focus changes on a target element only after a smooth programmatic scroll to that element has finished.",
+    "guide": "scroll-completion-effects",
+    "description": "仅在通过程序平滑滚动到目标元素并完全结束后，才在该元素上触发视觉效果、动画或焦点变化。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/scroll-entry-exit-effects.md\">scroll-entry-exit-effects</a></strong>: Create fade-in, scale-up, or other complex reveal-type effects on elements as they enter and exit the scrollport (or viewport) while the user is scrolling.",
+    "guide": "scroll-entry-exit-effects",
+    "description": "在用户滚动时，为进入或离开滚动区域（或视口）的元素创建淡入、放大或其他复杂揭示效果。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/scroll-snap-realtime-feedback.md\">scroll-snap-realtime-feedback</a></strong>: Provide real-time visual feedback in linked UI elements while a user scrolls through snap-aligned content, before the scroll gesture completes.",
+    "guide": "scroll-snap-realtime-feedback",
+    "description": "在用户滚过吸附对齐内容、且滚动手势尚未结束时，在相关联的 UI 元素中提供实时视觉反馈。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/scroll-snap-state-sync.md\">scroll-snap-state-sync</a></strong>: Synchronize navigation indicators, linked content panels, and analytics tracking with the actively snapped item in a scrollable container.",
+    "guide": "scroll-snap-state-sync",
+    "description": "将导航指示器、关联内容面板和分析跟踪与滚动容器中当前吸附的项目保持同步。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/scroll-target-on-load.md\">scroll-target-on-load</a></strong>: Build a scrollable list of elements (e.g. a carousel of images or a chat conversation thread) that can be displayed with a particular element scrolled into view on the initial render.",
+    "guide": "scroll-target-on-load",
+    "description": "构建图片轮播或聊天线程等可滚动列表，使指定元素在首次渲染时就位于可见区域。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/scrollytelling.md\">scrollytelling</a></strong>: Animate visual properties on a target element — such as fading a backdrop, shifting a background color, or to create scrollytelling experiences — driven entirely by the scrollport position of a completely different element.",
+    "guide": "scrollytelling",
+    "description": "完全根据另一个元素的滚动区域位置驱动目标元素的视觉属性动画，例如背景遮罩淡入淡出、背景颜色变化或滚动叙事效果。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/search-hidden-content.md\">search-hidden-content</a></strong>: Hide content from view using patterns such as accordions, tabs, and \"Read more\" sections, while ensuring the hidden text reveals itself during native \"Find in page\" searches, allows search engine indexing, supports URL fragment deep links, and maintains ARIA accessibility.",
+    "guide": "search-hidden-content",
+    "description": "通过手风琴、选项卡或“阅读更多”等模式隐藏内容，同时确保隐藏文字可在原生“在页面中查找”时自动展开、被搜索引擎索引、支持 URL 片段深链接，并保持 ARIA 无障碍支持。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/spatial-navigation.md\">spatial-navigation</a></strong>: Implement accessible spatial navigation using arrow keys that works correctly in different layout modes (grid etc)",
+    "guide": "spatial-navigation",
+    "description": "实现无障碍方向键空间导航，使其在网格等不同布局模式中均能正确工作。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/swipe-to-remove.md\">swipe-to-remove</a></strong>: Let users act on items in a list (remove, archive, mark as read, etc.) with a horizontal swipe gesture, so they can process entries quickly without tapping a separate control.",
+    "guide": "swipe-to-remove",
+    "description": "让用户通过水平滑动来移除、归档或标记列表项为已读等，无需点击独立控件即可快速处理项目。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-behaviors/swipe-to-reveal.md\">swipe-to-reveal</a></strong>: Let users swipe horizontally on a list item or content pane to reveal contextual action buttons or a side menu without automatically triggering an action.",
+    "guide": "swipe-to-reveal",
+    "description": "让用户水平滑动列表项或内容面板，显示上下文操作按钮或侧边菜单，同时不自动触发操作。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-components/checkbox.md\">checkbox</a></strong>: Style checkboxes, including custom icons, layout, colors, check/uncheck animations, while preserving native functionality and accessibility.",
+    "guide": "checkbox",
+    "description": "自定义复选框图标、布局、颜色及选中和取消选中动画，同时保留原生功能和无障碍支持。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-components/dark-mode-toggle.md\">dark-mode-toggle</a></strong>: Build a dark mode toggle component that allows users to override their system color scheme preference for the current site.",
+    "guide": "dark-mode-toggle",
+    "description": "构建深色模式开关，让用户可以为当前网站覆盖系统配色偏好。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-components/hovercard.md\">hovercard</a></strong>: Build a hovercard component that displays an interactive structured preview of the page a certain type of link (e.g. a user profile) will navigate to when hovered over.",
+    "guide": "hovercard",
+    "description": "构建悬浮卡片组件，在悬停特定类型的链接（如用户资料链接）时，显示目标页面的交互式结构化预览。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-components/navigation-drawer.md\">navigation-drawer</a></strong>: Create a navigation drawer component that, when triggered from a menu button, slides in from the side overlaid on top of existing page content, and slides out when dismissed (by swiping away, tapping outside, or pressing escape).",
+    "guide": "navigation-drawer",
+    "description": "创建导航抽屉：菜单按钮触发时从侧面滑入并覆盖现有页面内容；滑走、点击外部或按退出键时滑出关闭。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-components/persistent-app-tours.md\">persistent-app-tours</a></strong>: Create persistent onboarding walkthroughs using tethered native overlays that stay open during user interaction.",
+    "guide": "persistent-app-tours",
+    "description": "使用锚定元素的原生浮层创建持续显示的新手引导，让浮层在用户交互期间保持打开。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-components/persistent-toast-notifications.md\">persistent-toast-notifications</a></strong>: Create non-intrusive toast and overlay notifications for persistent, stackable messaging and state communication.",
+    "guide": "persistent-toast-notifications",
+    "description": "创建不打扰用户的轻提示和浮层通知，支持持续显示、堆叠消息与状态传达。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-components/progress-ring.md\">progress-ring</a></strong>: Build a progress ring component that visually represents the completion status of a task or process, with support for content in the center and brand-consistent styling.",
+    "guide": "progress-ring",
+    "description": "构建直观表示任务或流程完成状态的环形进度组件，支持中心内容与符合品牌的样式。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-components/scrollspy.md\">scrollspy</a></strong>: Highlight the currently visible section of a page in a navigation menu",
+    "guide": "scrollspy",
+    "description": "在导航菜单中高亮页面当前可见的区段。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-components/spinner.md\">spinner</a></strong>: Build a loading spinner that communicates busy state to all users, respects reduced-motion preferences, and animates efficiently.",
+    "guide": "spinner",
+    "description": "构建向所有用户传达忙碌状态的加载指示器，遵循减少动态效果的偏好，并高效播放动画。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/ui-components/stack-drill-down.md\">stack-drill-down</a></strong>: Build full-screen hierarchical navigation that lets users drill down into nested views and swipe or navigate back to return, with browser history kept in sync.",
+    "guide": "stack-drill-down",
+    "description": "构建全屏分层导航，让用户逐层进入嵌套视图，并通过滑动或返回导航逐层退出，同时保持浏览器历史同步。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/adapt-scrollbar-to-contrast-preferences.md\">adapt-scrollbar-to-contrast-preferences</a></strong>: Enhance scrollbar visibility for users who prefer high-contrast interfaces",
+    "guide": "adapt-scrollbar-to-contrast-preferences",
+    "description": "为偏好高对比度界面的用户增强滚动条可见性。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/apply-webgl-shaders.md\">apply-webgl-shaders</a></strong>: Apply custom visual effects with WebGL shaders to HTML content.",
+    "guide": "apply-webgl-shaders",
+    "description": "使用 WebGL 着色器为 HTML 内容应用自定义视觉效果。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/browser-ui-theming.md\">browser-ui-theming</a></strong>: Theme browser-generated UI such as text selection, scrollbars, form controls, and pickers with CSS instead of re-creating it with custom elements.",
+    "guide": "browser-ui-theming",
+    "description": "使用 CSS 为浏览器生成的文本选择、滚动条、表单控件和选择面板等界面设置主题，无需用自定义元素重新实现。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/color.md\">color</a></strong>: Color guidance for the web, including contrast requirements, light and dark color schemes, Forced Colors Mode, and generating tints and shades from a base color.",
+    "guide": "color",
+    "description": "Web 色彩指南，涵盖对比度要求、明暗配色、强制颜色模式，以及根据基色生成明暗色阶。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/complex-shapes.md\">complex-shapes</a></strong>: Clip elements and their content to any free-form shape, like a symbol, brush stroke, or organic texture for more expressive designs.",
+    "guide": "complex-shapes",
+    "description": "将元素及其内容裁剪为符号、笔触或自然纹理等任意自由形状，增强设计表现力。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/contrast-color.md\">contrast-color</a></strong>: Select a readable text color with sufficient contrast on a dynamic background color.",
+    "guide": "contrast-color",
+    "description": "为动态背景色选择对比度充分、易于阅读的文字颜色。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/customize-scrollbar-color-and-thickness.md\">customize-scrollbar-color-and-thickness</a></strong>: Customize the color or thickness of a scrollbar",
+    "guide": "customize-scrollbar-color-and-thickness",
+    "description": "自定义滚动条颜色或粗细。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/dark-mode.md\">dark-mode</a></strong>: Implement dark mode support in a way that respects the user's light/dark theme preference and adapts browser UI (e.g. scrollbars, form controls, etc)",
+    "guide": "dark-mode",
+    "description": "实现遵循用户明暗主题偏好的深色模式，并相应调整滚动条、表单控件等浏览器界面。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/equal-width-text-lines.md\">equal-width-text-lines</a></strong>: Make every line of a multi-line heading or lockup span the same width, as in poster-style or stacked-headline typography. Unlike justified text, the text itself is sized to the width rather than the spacing stretched",
+    "guide": "equal-width-text-lines",
+    "description": "让多行标题或组合字标的每一行具有相同宽度，形成海报式或堆叠标题排版。与两端对齐不同，这里调整文字本身的尺寸以适应宽度，而非拉伸间距。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/export-html-media-from-canvas.md\">export-html-media-from-canvas</a></strong>: Capture and export dynamic HTML content as images or video frames from within canvas.",
+    "guide": "export-html-media-from-canvas",
+    "description": "在 canvas 中将动态 HTML 内容捕获并导出为图片或视频帧。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/expose-canvas-content-to-browser-features.md\">expose-canvas-content-to-browser-features</a></strong>: Expose content rendered in a canvas to browser features like assistive technologies, translation, or reading mode.",
+    "guide": "expose-canvas-content-to-browser-features",
+    "description": "向辅助技术、翻译或阅读模式等浏览器功能开放 canvas 中渲染的内容。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/improve-text-layout-and-legibility.md\">improve-text-layout-and-legibility</a></strong>: Improve the layout and legibility of short standalone text content, such as headings no longer than a few lines, by enabling the browser to apply evenly balanced line breaks when wrapping text.",
+    "guide": "improve-text-layout-and-legibility",
+    "description": "让浏览器在换行时均衡各行长度，改善不超过数行的标题等短篇独立文本的布局与可读性。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/interactive-content-in-3d-scenes.md\">interactive-content-in-3d-scenes</a></strong>: Integrate interactive HTML elements into a 3D scene.",
+    "guide": "interactive-content-in-3d-scenes",
+    "description": "将交互式 HTML 元素集成到 3D 场景中。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/precise-text-alignment.md\">precise-text-alignment</a></strong>: Achieve precise vertical alignment with text of any font. For example, exactly equal visual padding above and below text, or aligning text perfectly flush with adjacent icons or images.",
+    "guide": "precise-text-alignment",
+    "description": "为任意字体的文字实现精确垂直对齐，例如让文字上下的视觉内边距完全相等，或与相邻图标、图片边缘齐平。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/shaped-cutouts.md\">shaped-cutouts</a></strong>: Combine multiple shapes to create complex cutouts or 'knockout' effects in elements, such as adding a notch to an element.",
+    "guide": "shaped-cutouts",
+    "description": "组合多个形状，为元素创建复杂镂空或挖空效果，例如添加凹口。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/soft-edge-content-fade.md\">soft-edge-content-fade</a></strong>: Apply a transparency gradient to content edges to indicate further scrollable areas or to obscure payment-walled text.",
+    "guide": "soft-edge-content-fade",
+    "description": "在内容边缘应用透明渐变，提示还有可滚动区域，或遮蔽付费墙后的文字。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/typography.md\">typography</a></strong>: Typography best practices for the web, including font sizing units, line height, text wrapping and balancing, and fluid type that scales with the viewport.",
+    "guide": "typography",
+    "description": "Web 排版最佳实践，涵盖字号单位、行高、换行与行长均衡，以及随视口缩放的流式字号。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/visual-effects.md\">visual-effects</a></strong>: Visual effects with CSS such as layered shadows, blend modes, gradients with predictable color interpolation, and patterns like stripes, checkerboards, dots, and pie charts built from gradients alone.",
+    "guide": "visual-effects",
+    "description": "使用 CSS 制作多层阴影、混合模式、颜色插值可预测的渐变，以及仅用渐变绘制的条纹、棋盘格、圆点和饼图等视觉效果。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/visually-stable-font-fallbacks.md\">visually-stable-font-fallbacks</a></strong>: Define font styles such that text remains readable and visually consistent in the event that there's a swap between the preferred font and one of the fallbacks (or vice versa).",
+    "guide": "visually-stable-font-fallbacks",
+    "description": "定义字体样式，使首选字体与备用字体相互切换时，文字仍然易读且视觉一致。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/visually-stable-mixed-fonts.md\">visually-stable-mixed-fonts</a></strong>: Define font styles such that text remains readable and visually consistent in situations where multiple fonts are used to render a single block of text.",
+    "guide": "visually-stable-mixed-fonts",
+    "description": "定义字体样式，使同一文本块由多种字体共同渲染时，文字仍然易读且视觉一致。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/visual-design/visually-texture-content.md\">visually-texture-content</a></strong>: Apply realistic weathering and texture patterns to elements to give them an organic, aged, or physical material appearance.",
+    "guide": "visually-texture-content",
+    "description": "为元素应用逼真的风化与纹理图案，呈现自然、陈旧或实体材料质感。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/wasm/cpp-on-the-web.md\">cpp-on-the-web</a></strong>: Compile C/C++ to WebAssembly using Emscripten",
+    "guide": "cpp-on-the-web",
+    "description": "使用 Emscripten 将 C/C++ 编译为 WebAssembly。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/webmcp/agentic-forms.md\">agentic-forms</a></strong>: Expose client-side functionality as tools to AI agents by annotating standard HTML forms with WebMCP attributes.",
+    "guide": "agentic-forms",
+    "description": "使用 WebMCP 属性标注标准 HTML 表单，将客户端功能作为工具开放给 AI 智能体。"
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong><a href=\"https://github.com/GoogleChrome/modern-web-guidance/blob/main/skills/modern-web-guidance/guides/webmcp/agentic-javascript-tools.md\">agentic-javascript-tools</a></strong>: Programmatically register client-side JavaScript functions as tools for AI agents using the WebMCP Imperative API.",
+    "guide": "agentic-javascript-tools",
+    "description": "使用 WebMCP 命令式 API，通过程序将客户端 JavaScript 函数注册为 AI 智能体可用的工具。"
+  },
+  {
+    "plugin": "data-agent-kit-plugin",
+    "sourceHtml": "Log in with your Google Cloud account:",
+    "template": "使用您的 Google Cloud 账号登录：",
+    "labels": {}
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "[!TIP]\n<strong>To Opt-Out:</strong> set the <code>DISABLE_TELEMETRY=1</code> env variable in your shell profile (e.g., <code>.bashrc</code> or <code>.zshrc</code>):",
+    "template": "提示：{{0}}设置 {{1}} 环境变量，并将其写入 Shell 配置文件（例如 {{2}} 或 {{3}}）：",
+    "labels": {
+      "To Opt-Out:": "停用遥测："
+    }
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "Speed optimizations (instant preloading, Interaction to Next Paint (INP) diagnostics, and scheduling tasks via <code>scheduler.yield</code>).",
+    "template": "速度优化，包括即时预加载、交互到下一次绘制（INP）诊断，以及通过 {{0}} 调度任务。",
+    "labels": {}
+  },
+  {
+    "plugin": "android-cli-plugin",
+    "sourceHtml": "Initialize modern Android projects from official templates using <code>android create</code>.",
+    "template": "使用 {{0}} 从官方模板初始化现代 Android 项目。",
+    "labels": {}
+  },
+  {
+    "plugin": "android-cli-plugin",
+    "sourceHtml": "Inspect, create, and launch Android Virtual Devices (AVDs) directly from the terminal with <code>android emulator</code>.",
+    "template": "直接在终端中使用 {{0}} 检查、创建和启动 Android 虚拟设备（AVD）。",
+    "labels": {}
+  },
+  {
+    "plugin": "android-cli-plugin",
+    "sourceHtml": "Search authoritative, up-to-date Android developer documentation directly from the CLI via <code>android docs search \"&lt;query&gt;\"</code>.",
+    "template": "通过 {{0}} 直接在 CLI 中搜索权威、最新的 Android 开发者文档。",
+    "labels": {}
+  },
+  {
+    "plugin": "android-cli-plugin",
+    "sourceHtml": "Fetch full articles and migration guides using <code>android docs fetch kb://...</code>.",
+    "template": "使用 {{0}} 获取完整文章与迁移指南。",
+    "labels": {}
+  },
+  {
+    "plugin": "android-cli-plugin",
+    "sourceHtml": "Returns the active UI layout tree in JSON format (supports <code>--pretty</code> and <code>--diff</code>).",
+    "template": "以 JSON 格式返回当前活动的 UI 布局树（支持 {{0}} 和 {{1}}）。",
+    "labels": {}
+  },
+  {
+    "plugin": "data-agent-kit-plugin",
+    "sourceHtml": "<strong>Google Cloud CLI (<code>gcloud</code>)</strong>, installed and authenticated:",
+    "template": "{{0}}，已安装并完成身份验证：",
+    "labels": {
+      "Google Cloud CLI (gcloud)": "Google Cloud CLI (gcloud)"
+    }
+  },
+  {
+    "plugin": "data-agent-kit-plugin",
+    "sourceHtml": "<a href=\"https://cloud.google.com/sdk/docs/install\">Install the gcloud CLI</a>.",
+    "template": "{{0}}。",
+    "labels": {
+      "Install the gcloud CLI": "安装 gcloud CLI"
+    }
+  },
+  {
+    "plugin": "data-agent-kit-plugin",
+    "sourceHtml": "Log in to\n<a href=\"https://cloud.google.com/docs/authentication/provide-credentials-adc\">Application Default Credentials (ADC)</a>:",
+    "template": "登录{{0}}：",
+    "labels": {
+      "Application Default Credentials (ADC)": "应用程序默认凭据（ADC）"
+    }
+  },
+  {
+    "plugin": "data-agent-kit-plugin",
+    "sourceHtml": "If you see <code>could not find default credentials</code> or other auth errors, ensure you\nare logged into gcloud.",
+    "template": "如果看到 {{0}}（找不到默认凭据）或其他认证错误，请确保已登录 gcloud。",
+    "labels": {}
+  },
+  {
+    "plugin": "data-agent-kit-plugin",
+    "sourceHtml": "Exit your agent, run <code>gcloud auth login</code> followed by\n<code>gcloud auth application-default login</code>, then restart your agent.",
+    "template": "退出智能体，依次运行 {{0}} 和 {{1}}，然后重启智能体。",
+    "labels": {}
+  },
+  {
+    "plugin": "data-agent-kit-plugin",
+    "sourceHtml": "Use\n<a href=\"https://cloud.google.com/iam/docs/principal-access-boundary-policies#use-case-one-project\">Principal Access Boundary policies</a>\nwith a condition in the policy binding to restrict your agent's service\naccounts to intended projects.",
+    "template": "使用{{0}}，在策略绑定中设置条件，将智能体的服务账号限制在预期项目内。",
+    "labels": {
+      "Principal Access Boundary policies": "主体访问边界策略"
+    }
+  },
+  {
+    "plugin": "data-agent-kit-plugin",
+    "sourceHtml": "To opt out, either set <code>DO_NOT_TRACK=1</code> in your environment:",
+    "template": "若要停用，可以在环境中设置 {{0}}：",
+    "labels": {}
+  },
+  {
+    "plugin": "data-agent-kit-plugin",
+    "sourceHtml": "Or create or update <code>~/.data_agent_kit/config.json</code>:",
+    "template": "或者创建或更新 {{0}}：",
+    "labels": {}
+  },
+  {
+    "plugin": "data-agent-kit-plugin",
+    "sourceHtml": "We want your feedback! Please\n<a href=\"https://github.com/GoogleCloudPlatform/data-agent-kit-plugin/issues/new\">open an issue</a>\nto report bugs, file feature requests, or ask questions.",
+    "template": "我们期待您的反馈！请{{0}}来报告错误、提出功能请求或咨询问题。",
+    "labels": {
+      "open an issue": "提交问题"
+    }
+  },
+  {
+    "plugin": "google-cloud-developer",
+    "sourceHtml": "<strong><a href=\"./skills/gcloud\">gcloud</a></strong>: Safety-critical validation, best practices,\nand execution guardrails for <code>gcloud</code> CLI commands.",
+    "template": "{{0}}：针对 {{1}} CLI 命令的关键安全验证、最佳实践与执行防护措施。",
+    "labels": {}
+  },
+  {
+    "plugin": "google-cloud-developer",
+    "sourceHtml": "<strong><a href=\"./rules/google-cloud-discovery.md\">google-cloud-discovery.md</a></strong>:\nAlways-on routing map that guides the agent to discover and suggest deeper\nproduct-specific skills (such as <code>gke-*</code>, <code>agent-platform-*</code>,\n<code>google-cloud-waf-*</code>, and <code>&lt;product&gt;-basics</code>) when a task requires\nspecialized domain knowledge beyond the foundational bundle.",
+    "template": "{{0}}：始终启用的路由图，当任务需要超出基础套件的专业领域知识时，引导智能体发现并推荐更深入的产品专属技能，例如 {{1}}、{{2}}、{{3}} 和 {{4}}。",
+    "labels": {}
+  },
+  {
+    "plugin": "google-cloud-developer",
+    "sourceHtml": "To see how this plugin works, consider a situation where you're bootstrapping a\nnew project as part of working on a script. With the <code>google-cloud-developer</code>\nplugin installed, you can prompt your agent:",
+    "template": "以编写脚本时初始化新项目的场景为例。安装 {{0}} 插件后，可以向智能体提出如下请求：",
+    "labels": {}
+  },
+  {
+    "plugin": "google-developer-knowledge",
+    "sourceHtml": "Enable the API on your Google Cloud project using the\n<a href=\"https://console.cloud.google.com/apis/library/developerknowledge.googleapis.com\">Google Cloud Console</a> or the <code>gcloud</code> CLI:",
+    "template": "通过{{0}}或 {{1}} CLI，在您的 Google Cloud 项目中启用该 API：",
+    "labels": {
+      "Google Cloud Console": "Google Cloud 控制台"
+    }
+  },
+  {
+    "plugin": "google-developer-knowledge",
+    "sourceHtml": "The bundled <code>google-developer-knowledge</code> MCP server configuration uses local\nGoogle Cloud Application Default Credentials (<code>google_credentials</code>)\nautomatically:",
+    "template": "内置的 {{0}} MCP 服务器配置会自动使用本地 Google Cloud 应用程序默认凭据（{{1}}）：",
+    "labels": {}
+  },
+  {
+    "plugin": "google-developer-knowledge",
+    "sourceHtml": "Ensure your account has the <strong>Service Usage Consumer</strong>\n(<code>roles/serviceusage.serviceUsageConsumer</code>) IAM role on <code>YOUR_PROJECT_ID</code>.",
+    "template": "确保您的账号拥有{{0}} IAM 角色（{{1}}），且该角色适用于 {{2}}。",
+    "labels": {
+      "Service Usage Consumer": "Service Usage 使用者"
+    }
+  },
+  {
+    "plugin": "google-developer-knowledge",
+    "sourceHtml": "To authenticate the remote MCP server directly with an API key instead of ADC,\nconfigure the <code>X-Goog-Api-Key</code> header in your MCP server configuration:",
+    "template": "若要使用 API 密钥代替 ADC 直接认证远程 MCP 服务器，请在 MCP 服务器配置中设置 {{0}} 请求头：",
+    "labels": {}
+  },
+  {
+    "plugin": "google-developer-knowledge",
+    "sourceHtml": "Remote MCP Server (<code>google-developer-knowledge</code>)",
+    "template": "远程 MCP 服务器（{{0}}）",
+    "labels": {}
+  },
+  {
+    "plugin": "google-developer-knowledge",
+    "sourceHtml": "Agent Skill (<code>retrieving-developer-knowledge</code>)",
+    "template": "智能体技能（{{0}}）",
+    "labels": {}
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong>Gotchas &amp; Quirks</strong>: We document hidden platform limitations, such as the 64KB payload quota for <code>fetchLater()</code> or macOS-specific scrollbar behaviors.",
+    "template": "{{0}}：我们记录了容易忽略的平台限制，例如 {{1}} 的 64KB 载荷额度，以及 macOS 专属的滚动条行为。",
+    "labels": {
+      "Gotchas & Quirks": "陷阱与特殊行为"
+    }
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong>Activation</strong>: The coding agent activates the <code>modern-web-guidance</code> skill because of a relevant task. The agent is instructed to use the <code>modern-web-guidance</code> CLI for web platform queries.",
+    "template": "{{0}}：编程智能体因相关任务激活 {{1}} 技能，并按指引使用 {{2}} CLI 查询 Web 平台信息。",
+    "labels": {
+      "Activation": "激活"
+    }
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong>Local Semantic Search</strong>: The agent runs <code>modern-web-guidance search \"&lt;query&gt;\"</code>. The tool matches the query to the best guide using an offline, CPU-efficient TensorFlow.js model (no network calls, no API keys).",
+    "template": "{{0}}：智能体运行 {{1}}。工具使用离线、CPU 高效的 TensorFlow.js 模型，将查询匹配到最合适的指南，无需网络调用或 API 密钥。",
+    "labels": {
+      "Local Semantic Search": "本地语义搜索"
+    }
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "<strong>Guide Fetch</strong>: The agent retrieves the guide via <code>modern-web-guidance retrieve &lt;guide-id&gt;</code>, inserting targeted code patterns, gotchas, and fallbacks directly into its context window.",
+    "template": "{{0}}：智能体通过 {{1}} 获取指南，将有针对性的代码模式、注意事项和回退方案直接放入上下文窗口。",
+    "labels": {
+      "Guide Fetch": "获取指南"
+    }
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "[!TIP]\nNote: We use <code>npx</code> to ensure the content doesn't go stale, but the CLI works offline, completely private and local.\nThe npm package is self-contained, with no extra dependencies to ensure both low-latency and supply-chain security.",
+    "template": "提示：我们使用 {{0}} 来保持内容最新，但 CLI 可离线运行，数据完全保留在本地。npm 包自成一体，没有额外依赖，以兼顾低延迟与供应链安全。",
+    "labels": {}
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "If you'd like to contribute to modern-web-guidance, please see the <a href=\"https://github.com/GoogleChrome/modern-web-guidance-src/blob/main/CONTRIBUTING.md\">source repo's <code>CONTRIBUTING.md</code></a>. The <code>modern-web-guidance</code> repo is purely a publish target for clean skills installation.",
+    "template": "如果希望为 modern-web-guidance 做出贡献，请参阅{{0}}。{{1}} 仓库仅作为发布目标，用于干净地安装技能。",
+    "labels": {
+      "source repo's CONTRIBUTING.md": "源码仓库中的 {{0}}"
+    }
+  },
+  {
+    "plugin": "science",
+    "sourceHtml": "As set out in the attached file\n‘<a href=\"SKILL_LICENSES.md\">Skill Licences and Terms of Use</a>’ certain third party data\nsources referenced within individual Skill files have their own applicable\nlicenses and/or terms of use. See the\n‘<a href=\"SKILL_LICENSES.md\">Skill Licences and Terms of Use</a>’ file for more\ninformation. You are responsible for ensuring that your use of individual Skill\nfiles complies with any such applicable licenses/ terms of use.",
+    "template": "正如随附的“{{0}}”文件所述，各技能文件引用的某些第三方数据源具有各自适用的许可或使用条款。更多信息请参阅“{{1}}”文件。您有责任确保使用各技能文件时遵守这些许可或使用条款。",
+    "labels": {
+      "Skill Licences and Terms of Use": "技能许可与使用条款"
+    }
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "sourceHtml": "We cover the past several years of the web platform's new features, all the way up to the cutting edge. The guides are <strong>designed to be token-efficient</strong>; we run evals enabling us to prune lowest-common-denominator content that models already know.",
+    "template": "我们涵盖了过去几年直至最前沿的 Web 平台新特性。指南{{0}}，并通过评测去除模型已熟知的常见内容。",
+    "labels": {
+      "designed to be token-efficient": "以节省 Token 为目标"
+    }
+  }
+]

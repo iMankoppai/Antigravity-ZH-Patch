@@ -23,10 +23,13 @@
     <Compile Include="..\..\..\src\AntigravityZhManager\Services\CompatibilityRepairService.cs" />
     <Compile Include="..\..\..\src\AntigravityZhManager\Services\CdpHotPatcher.cs" />
     <Compile Include="..\..\..\src\AntigravityZhManager\Services\AntigravityDetector.cs" />
+    <Compile Include="..\..\..\src\AntigravityZhManager\Services\UpdateChecker.cs" />
+    <Compile Include="..\..\..\src\AntigravityZhManager\Services\AppUpdater.cs" />
     <EmbeddedResource Include="..\..\..\src\AntigravityZhManager\Assets\zh-bundle.js"
                       LogicalName="AntigravityZhManager.Assets.zh-bundle.js" />
     <EmbeddedResource Include="..\..\..\src\AntigravityZhManager\Assets\translate.js" LogicalName="AntigravityZhManager.Assets.translate.js" />
     <EmbeddedResource Include="..\..\..\src\AntigravityZhManager\Assets\dictionaries.json" LogicalName="AntigravityZhManager.Assets.dictionaries.json" />
+    <EmbeddedResource Include="..\..\..\src\AntigravityZhManager\Assets\skill-details.json" LogicalName="AntigravityZhManager.Assets.skill-details.json" />
     <EmbeddedResource Include="..\..\..\localization\client-baselines.json"
                       LogicalName="AntigravityZhManager.localization.client-baselines.json" />
   </ItemGroup>

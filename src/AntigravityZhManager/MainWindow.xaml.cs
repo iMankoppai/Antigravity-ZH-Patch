@@ -451,8 +451,46 @@ namespace AntigravityZhManager
             {
                 var result = await _repair.RepairAsync(_options, AppendLog);
                 AppendLog((result.Success ? "✅ " : "⚠️ ") + result.Message);
-                MessageBox.Show(result.Message, "新版汉化适配", MessageBoxButton.OK,
-                    result.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+
+                if (result.Success && result.Message.Contains("再点击【新版汉化适配】"))
+                {
+                    string prompt =
+                        $"{result.Message}\n\n" +
+                        "───────────────────────────────\n" +
+                        "【提示】：当前仅临时恢复了打开窗口的中文，重启软件后会变回英文。\n\n" +
+                        "是否需要管理器自动退出 Antigravity 客户端（包括后台托盘），并立即完成永久固化？\n\n" +
+                        "• 【是 (Yes)】：自动退出客户端并写入永久汉化（推荐，一步到位）\n" +
+                        "• 【否 (No)】：仅保持当前窗口临时中文，暂不修改磁盘";
+
+                    var choice = MessageBox.Show(prompt, "新版汉化适配 - 永久生效引导", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                    if (choice == MessageBoxResult.Yes)
+                    {
+                        AppendLog("🔄 用户选择自动退出客户端并执行永久固化汉化...");
+                        if (!string.IsNullOrEmpty(_currentInfo.AsarPath))
+                        {
+                            AppendLog("⏳ 正在安全退出 Antigravity 客户端进程...");
+                            bool closed = await ClientProcessGuard.CloseProcessesForArchiveAsync(_currentInfo.AsarPath);
+                            if (closed)
+                            {
+                                AppendLog("✅ Antigravity 客户端已安全退出，正在写入永久汉化补丁...");
+                                var permResult = await _repair.RepairAsync(_options, AppendLog);
+                                AppendLog((permResult.Success ? "✅ " : "⚠️ ") + permResult.Message);
+                                MessageBox.Show(permResult.Message, "永久汉化结果", MessageBoxButton.OK,
+                                    permResult.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+                            }
+                            else
+                            {
+                                MessageBox.Show("未能完全退出 Antigravity 客户端进程，请手动在右下角系统托盘退出后再次点击【新版汉化适配】。", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(result.Message, "新版汉化适配", MessageBoxButton.OK,
+                        result.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+                }
+
                 await RefreshAppStatusAsync();
             }
             finally { BtnCompatibilityRepair.IsEnabled = true; }
@@ -464,13 +502,108 @@ namespace AntigravityZhManager
             try
             {
                 var info = await UpdateChecker.CheckUpdateAsync(AppendLog);
-                MessageBox.Show(info.Message, "更新状态", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (info.HasUpdate)
+                {
+                    string prompt = 
+                        $"{info.Message}\n" +
+                        "───────────────────────────────\n" +
+                        "【是 (Yes)】：在应用内自动下载并升级重启（推荐）\n" +
+                        "【否 (No)】：在浏览器中打开 GitHub Releases 网页\n" +
+                        "【取消 (Cancel)】：暂不更新";
+
+                    var result = MessageBox.Show(prompt, "发现新版本", MessageBoxButton.YesNoCancel, MessageBoxImage.Information);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        await RunInAppUpdateAsync(info);
+                    }
+                    else if (result == MessageBoxResult.No)
+                    {
+                        try
+                        {
+                            Process.Start(new ProcessStartInfo
+                            {
+                                FileName = info.ReleaseUrl,
+                                UseShellExecute = true
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            AppendLog($"⚠️ 打开下载链接失败: {ex.Message}");
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(info.Message, "更新状态", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
             }
             finally
             {
                 BtnCheckUpdate.IsEnabled = true;
             }
         }
+
+        private async Task RunInAppUpdateAsync(UpdateInfo info)
+        {
+            PnlUpdateProgress.Visibility = Visibility.Visible;
+            PrgUpdate.Value = 0;
+            TxtUpdateProgressTitle.Text = $"🚀 正在下载新版本 v{info.LatestVersion}...";
+            TxtUpdateProgressDetail.Text = "准备中...";
+            TxtUpdateSpeed.Text = "正在连接加速节点...";
+
+            BtnCheckUpdate.IsEnabled = false;
+            BtnCompatibilityRepair.IsEnabled = false;
+            BtnInstallClean.IsEnabled = false;
+            BtnRestoreEnglish.IsEnabled = false;
+
+            try
+            {
+                AppendLog($"🚀 开始执行应用内自动更新 (目标版本: v{info.LatestVersion})...");
+
+                bool ok = await AppUpdater.DownloadAndApplyUpdateAsync(
+                    info,
+                    onProgress: (percent, speed, detail) =>
+                    {
+                        Dispatcher.Invoke(() =>
+                        {
+                            PrgUpdate.Value = percent;
+                            TxtUpdateProgressDetail.Text = detail;
+                            TxtUpdateSpeed.Text = !string.IsNullOrEmpty(speed) ? $"下载速度: {speed}" : "正在处理文件...";
+                        });
+                    },
+                    log: AppendLog,
+                    onShutdown: () => Dispatcher.Invoke(() => System.Windows.Application.Current.Shutdown()));
+
+                if (!ok)
+                {
+                    PnlUpdateProgress.Visibility = Visibility.Collapsed;
+                    var failChoice = MessageBox.Show(
+                        "应用内自动更新未能成功完成。\n是否在默认浏览器中打开 GitHub 下载页面进行手动更新？",
+                        "更新提示",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Warning);
+
+                    if (failChoice == MessageBoxResult.Yes)
+                    {
+                        try
+                        {
+                            Process.Start(new ProcessStartInfo { FileName = info.ReleaseUrl, UseShellExecute = true });
+                        }
+                        catch { }
+                    }
+                }
+            }
+            finally
+            {
+                BtnCheckUpdate.IsEnabled = true;
+                BtnCompatibilityRepair.IsEnabled = true;
+                BtnInstallClean.IsEnabled = true;
+                BtnRestoreEnglish.IsEnabled = true;
+            }
+        }
+
+
 
         private async void BtnBrowsePath_Click(object sender, RoutedEventArgs e)
         {

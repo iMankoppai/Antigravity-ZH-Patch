@@ -312,9 +312,296 @@
           "dist/main.js": "adf9f814ce9a7df067d7c226354f5b5c160797ed6aefc3e45c343d2f91af52f8",
           "dist/utils.js": "6f01d746963c0cd964dbcb057ed34374c129c4381b5ebddd2509ca37b12519a7",
           "dist/tray.js": "6c6b0968b45a1c7088e459657d57a9efd72d3733614349095f17b6ee94b47135",
-          "dist/ideInstall/wizard.js": "20814ba365ceb5f386afe856277f5dc85bf9db994d1a77579430f100f3725666"
+          "dist/ideInstall/wizard.js": "20814ba365ceb5f386afe856277f5dc85bf9db994d1a77579430f100f3725666",
+          "dist/provisionSplash.js": "737f40f02130440a9ec9a3fed83c2e62290029aece6d0ad558136fa510c45f35"
         }
       }
+    },
+    {
+      "productVersion": "2.24.0",
+      "platform": "win32",
+      "arch": "x64",
+      "pristine": {
+        "sha256": "bd10a0054ca3ad469142b2c2757566493ecc0afb934b9a61ce45d38a4d09316e",
+        "bytes": 4486221,
+        "productVersion": "2.24.0",
+        "source": "backup",
+        "path": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar.bak",
+        "recordedAt": "2026-10-18T04:36:26.836Z"
+      },
+      "compatibility": {
+        "packageSignatureSha256": "4e94716a42bba8d0e5b13a6feba539c2b499df4bbcd124a170dde7189524dcc6",
+        "targetSha256": {
+          "dist/ipcHandlers.js": "0a58fe6eba5b985702d5f81ec18e8efd71a9aa017e250cc9446055d8040e9524",
+          "dist/main.js": "adf9f814ce9a7df067d7c226354f5b5c160797ed6aefc3e45c343d2f91af52f8",
+          "dist/utils.js": "6f01d746963c0cd964dbcb057ed34374c129c4381b5ebddd2509ca37b12519a7",
+          "dist/tray.js": "6c6b0968b45a1c7088e459657d57a9efd72d3733614349095f17b6ee94b47135",
+          "dist/ideInstall/wizard.js": "20814ba365ceb5f386afe856277f5dc85bf9db994d1a77579430f100f3725666",
+          "dist/provisionSplash.js": "737f40f02130440a9ec9a3fed83c2e62290029aece6d0ad558136fa510c45f35"
+        }
+      },
+      "requiredTargets": [
+        "dist/ipcHandlers.js",
+        "dist/main.js",
+        "dist/utils.js",
+        "dist/tray.js"
+      ],
+      "requiredEntries": {
+        "dist/ipcHandlers.js": true,
+        "dist/main.js": true,
+        "dist/tray.js": true,
+        "dist/utils.js": true
+      },
+      "requiredAnchors": [
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspace'",
+          "count": 1
+        },
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspaces'",
+          "count": 1
+        },
+        {
+          "target": "dist/main.js",
+          "text": "void win.loadURL(newUrl);",
+          "count": 1
+        },
+        {
+          "target": "dist/utils.js",
+          "text": "void win.loadURL(url);",
+          "count": 1
+        },
+        {
+          "target": "dist/tray.js",
+          "text": "Menu.buildFromTemplate(actions)",
+          "count": 1
+        }
+      ],
+      "missingTargets": [],
+      "knownPatchedSha256": [
+        {
+          "sha256": "cb3e7af1abe255ce38e977a2c0fe9a66f85bb8a45b3f16d4efdcdc349a818847",
+          "kernelSha256": "130006f6ea4cadf25543fc178ebcb9b84579e3ac6061c652f3b73ea1ab0a55da",
+          "bytes": 4847590,
+          "recordedAt": "2026-10-17T01:37:19.257Z"
+        },
+        {
+          "sha256": "c337cdd07439a08f92b2b736d3e0514b29c72d5c59c7d5b61d4d8666f3aa5c0e",
+          "kernelSha256": "b9fc4a8b402e12b4e390554edfd2a5a3e5cfe01b3fc5b64ec44ec595e13bcbeb",
+          "bytes": 4855094,
+          "recordedAt": "2026-10-17T07:59:28.299Z"
+        },
+        {
+          "sha256": "025ac3ba4d2f2d7f7e70844e0d2cb0def0ac1b50edfa81842259888467af5b46",
+          "kernelSha256": "46dc817912869c1eb5bf60db8b1a7a5ef02401529651c9bea59f6b25f508e2bc",
+          "bytes": 4867898,
+          "recordedAt": "2026-10-17T08:23:24.393Z"
+        },
+        {
+          "sha256": "06fced8ac9b317983daf829f1a83a8561558f96d0f8206ac3452c0f1165e477e",
+          "kernelSha256": "068045d681ab6ba942ffc19756b699d7ff9f8cb37ad5bae9c70511202fb4c2d2",
+          "bytes": 4868585,
+          "recordedAt": "2026-10-17T08:29:38.571Z"
+        },
+        {
+          "sha256": "f9ab0a77ef7cb523f248bd80e4d2d164eb37a01cd5a64816f558ce6d79be0b38",
+          "kernelSha256": "96359a8199c7e3b3c02789d10cf6babc3c5796e5b1dead62f7888aeabdf514db",
+          "bytes": 4809902,
+          "recordedAt": "2026-10-17T09:07:00.000Z"
+        },
+        {
+          "sha256": "242d4e7a0004ee3b21da7ab9d73a03a978ec31047b1d1ecda43b582e4fe86845",
+          "kernelSha256": "debb32118eb659ced2c053ce3c223efdd70b0d312dabb6308234b99ffbec1ed0",
+          "bytes": 4826815,
+          "recordedAt": "2026-10-17T09:18:50.326Z"
+        },
+        {
+          "sha256": "53f2a342d0f9d50b38c1af6a520e2e77534fcc7251d0e2d64c4322e89f2fd4e3",
+          "kernelSha256": "1e481f5c9ef0c34995fb286683e649b8495d52d98f248b016e641dd18817c105",
+          "bytes": 4847066,
+          "recordedAt": "2026-10-17T09:31:44.739Z"
+        },
+        {
+          "sha256": "3f2bbd0c488c9dbab00e1561dedf87738d8fe47cab8cd7caab8aa2339093cbcc",
+          "kernelSha256": "e5f966ffa7635d575cd7d7a39281c46fa65ecbcf85011987bd5954896a752ffa",
+          "bytes": 4862631,
+          "recordedAt": "2026-10-17T09:45:48.724Z"
+        },
+        {
+          "sha256": "867c5a21e9c0def221da1b6e70dcffd04a22cdbc4d1d75bd579d82c2b0fd8a92",
+          "kernelSha256": "ea6e188ebd6ad41cbb342dfd353f5752a317f04ea98e9fdd6bb8ccbe0c747f20",
+          "bytes": 4974808,
+          "recordedAt": "2026-10-17T10:06:04.794Z"
+        },
+        {
+          "sha256": "5d93123ac607aaa62083080a01394d3b8f4ce8c7ea2fecb96fbb5696dc6809b9",
+          "kernelSha256": "c46e905ca7e34a8a0227d0e47645124cedd1f0767592db4f34ecee75d39f4fa8",
+          "bytes": 4994266,
+          "recordedAt": "2026-10-17T12:10:44.979Z"
+        },
+        {
+          "sha256": "94ab960762483914c87c129115a3429d7e2e1b9ba07c865be9f680741ecfab62",
+          "kernelSha256": "85810ac87619252f31648b6c394488fe6f5bd4580ceeb1f7ee8ab962d98a9e52",
+          "bytes": 4994498,
+          "recordedAt": "2026-10-17T12:14:05.900Z"
+        },
+        {
+          "sha256": "dbd87852fbc8c34ad699e4373d089d6ab60f4e3ccfb1d71c71e0de8b5ee9e8c8",
+          "kernelSha256": "2b35998d8148b7de2c187a752da5c1cbe50fdd58704eb312d4827b8856dddf0e",
+          "bytes": 5061431,
+          "recordedAt": "2026-10-17T12:49:44.121Z"
+        },
+        {
+          "sha256": "7f022133999317ae609778bcd007a9932222c0f4a40bf28a4cd7738c3b3d68e2",
+          "kernelSha256": "ecd00e230254accb49249b0d0e696d5c183a81ee4070c24e7f26d33a682527bc",
+          "bytes": 5064515,
+          "recordedAt": "2026-10-17T12:54:20.824Z"
+        },
+        {
+          "sha256": "63f448f2c662f90a72ac4ff918695b5bd16d1a5f7a7bf80d168772dc46ffef54",
+          "kernelSha256": "d596f701c39ea01de3b71a273ddeead6248858676bc358d4de9a9adc7cdf46d0",
+          "bytes": 5092297,
+          "recordedAt": "2026-10-17T13:19:51.896Z"
+        },
+        {
+          "sha256": "08a8db97d9cc62b19b415eaa303414dcc0fd178f8431a491fb4000befa3df57e",
+          "kernelSha256": "c3df60295cf7335b837a9584f0b4392f4cad757fe1bf0e0a151f6bb1918063a3",
+          "bytes": 5092358,
+          "recordedAt": "2026-10-17T13:24:21.211Z"
+        },
+        {
+          "sha256": "95c135844037217d08f517c094a66b215fe0979a4605675429c6cdc8cb63e489",
+          "kernelSha256": "a179d0b983c8b15fd4303762709bc02a2408ca13144a6c3e45c622a2fbaa1723",
+          "bytes": 5079967,
+          "recordedAt": "2026-10-17T14:03:01.637Z"
+        },
+        {
+          "sha256": "203cb1df4f8c546b1525caf39f8fbb1404aaa9e0a397c700c18243fcdc81d48c",
+          "kernelSha256": "44ab3a5187059667129b8b85d8cf23256d86326d5b40bb7e246d2da0fdd60451",
+          "bytes": 5083254,
+          "recordedAt": "2026-10-17T14:11:28.689Z"
+        },
+        {
+          "sha256": "559774bbbb62adf0618a4f4981e6d43ebc53e8b1bc51e1cad428ef51e11951c0",
+          "kernelSha256": "a86d008a70a1d92a4fa764ad7c473dc14aca400f8de1422471fa084ec84594db",
+          "bytes": 5119604,
+          "recordedAt": "2026-10-17T14:32:25.297Z"
+        },
+        {
+          "sha256": "3888d2d577615cb9fc60d07328c3de16b65e7ebad3d86fd496ac2a063f92f456",
+          "kernelSha256": "aa9b8987ee6b02fa8b5c4e1cea13e6af131473dae11178c26b1780c92e88617b",
+          "bytes": 5122875,
+          "recordedAt": "2026-10-17T14:51:53.623Z"
+        },
+        {
+          "sha256": "f32283ca521d01a75bd108e12fe2dee7aa4b1547dc47e056e721a8a7f59589de",
+          "kernelSha256": "3bbcbe40e6cf611ac8b95e84ddb2c3532fb2c0d56c617ce73a028d258b730cb0",
+          "bytes": 5145665,
+          "recordedAt": "2026-10-17T15:06:48.425Z"
+        },
+        {
+          "sha256": "68f574bc73c472e6f853ebfdf214a5136efa86bc0f84aabf383faf7d5017e46e",
+          "kernelSha256": "8622df0b0ff529ad6072a4414b095da9ce3dd043baa69baf674fd5b8f96fef4d",
+          "bytes": 5142739,
+          "recordedAt": "2026-10-17T15:37:30.590Z"
+        },
+        {
+          "sha256": "5a2940ced8fc4cd46d22e184cfb4ec77bf10a0a909f3228ad0adeae72ff833ff",
+          "kernelSha256": "6a9266e76d03006c95b5221f4437e1418fe455d5e442f8eb5829bc865a618f3d",
+          "bytes": 5159011,
+          "recordedAt": "2026-10-17T16:02:45.348Z"
+        },
+        {
+          "sha256": "56ffc3b988986b3b57097716caa9c531e9a8ca2730b7e29b22617d641d16f91c",
+          "kernelSha256": "ff2ec514d66e681d0714273c632a05157d355ce26bfb9708bb9993d194e9e142",
+          "bytes": 5161064,
+          "recordedAt": "2026-10-17T16:06:18.531Z"
+        },
+        {
+          "sha256": "d2dd5745707cb873e88cfdbce7d071040343e4d0369d2adf44a99a8203881777",
+          "kernelSha256": "9a0f8fcb4f2bbe53539a8ab1b13ba79c65879353a26779b14108cace2e89045e",
+          "bytes": 5157302,
+          "recordedAt": "2026-10-18T01:42:23.075Z"
+        },
+        {
+          "sha256": "75a4b08f89772f3ddf8ec71e5840fc9daf5f00fd936db1d310d149a3112ce8f0",
+          "kernelSha256": "fe062de607efbecacfc2c425aa535ff43028a9dfb27930a7fef4a3762d90a3b5",
+          "bytes": 5166000,
+          "recordedAt": "2026-10-18T02:28:59.916Z"
+        },
+        {
+          "sha256": "fe3f2a3b552de0830cf76ced330bdb1e8712b11bfce9e840d42445a10d003518",
+          "kernelSha256": "9ff819409eb04b2c6c846d33341a26bbf0fafdac0b3a196ccd9f5cfaab05a875",
+          "bytes": 5166500,
+          "recordedAt": "2026-10-18T02:38:52.913Z"
+        },
+        {
+          "sha256": "129d6e263cabff08aadc941aeb0da3ca94cb27ce6998e74c381c16f320e41f86",
+          "kernelSha256": "f672ab7efeab29c0ffa308e641654833ae209df8ddb12c19352da392079c1027",
+          "bytes": 5166689,
+          "recordedAt": "2026-10-18T02:53:26.995Z"
+        },
+        {
+          "sha256": "ace271c24578122ec7aeec1e9a6bab9d235a20a07cda2c6b8c2fc2155e517a98",
+          "kernelSha256": "7a2bd82393c6beedfdbc2676c2c44563788e37d1307f378a0777112ad2fa62f5",
+          "bytes": 5283406,
+          "recordedAt": "2026-10-18T03:31:35.160Z"
+        },
+        {
+          "sha256": "5d2715e65e9fefe2c6ad8aacfc8ef563c5dd7830d7945d527c28eade0b79119c",
+          "kernelSha256": "d9c9f6a57c0f62718d23a4f2c130f4c23b3c52eb19a9fafe3073f05bcfea3664",
+          "bytes": 5693027,
+          "recordedAt": "2026-10-18T03:42:59.873Z"
+        },
+        {
+          "sha256": "7ee8f5776eb71d1d59b33a606be323ab7cf5e42f924004ea1f3a96bca6038af1",
+          "kernelSha256": "dd040e011067a5c4f82cc2a01811f6b019fc90593823a8670b539c548530002f",
+          "bytes": 5743304,
+          "recordedAt": "2026-10-18T04:36:26.847Z"
+        },
+        {
+          "sha256": "833d25ed1ef9dc114f401d270f76f6123823a96c4b3393c59292f3699dfdfc83",
+          "kernelSha256": "1605f16d79e67f0a8a22ea73a9d9653ca3852a8fb402dabc5478ec5c16724084",
+          "bytes": 5826957,
+          "recordedAt": "2026-10-18T15:51:45.584Z",
+          "note": "v57，与上一轮生产安装器隔离验证归档逐字节一致"
+        },
+        {
+          "sha256": "6c7769c04f180fe13ec03313b04c9c526370526c0bdf357efcb23ae46f202ad3",
+          "kernelSha256": "244e1373108fe734ec307905e2a2d004599852e4832eeb341412e095c88b3396",
+          "bytes": 7415926,
+          "recordedAt": "2026-10-19T01:29:22.668Z",
+          "note": "v58，与上一轮生产安装器隔离验证归档逐字节一致"
+        },
+        {
+          "sha256": "14e343ecfc9587079b60f656b0ce25a0bb53b7d64fe9e577034d8ea4972fbad5",
+          "kernelSha256": "662eab021d95193ffa3747431d7626849b920ee7a3bd91c19c1a45b79af8fc7f",
+          "bytes": 7467392,
+          "recordedAt": "2026-10-19T01:57:43.361Z",
+          "note": "v59，与生产安装器隔离验证归档逐字节一致"
+        },
+        {
+          "sha256": "fa00b1984dace07ce550573cf840953b30c86f35003e45378d44f51bc1164c3f",
+          "kernelSha256": "e7a430a16e35db8d073666792774801bd47bafba05a3edc882f745c466d2c42c",
+          "bytes": 7470854,
+          "recordedAt": "2026-10-19T02:24:42.000Z",
+          "note": "v60，与生产安装器隔离验证归档逐字节一致"
+        },
+        {
+          "sha256": "6c99553cf601d19115dde7167d1b0781d0fc7faa29a1cb358628ee9bb8612050",
+          "kernelSha256": "6410ef3f7c175800132bb9e4f570fdb6c09ac1a5f3e78ef0e51afbf2e4ae888a",
+          "bytes": 7495048,
+          "recordedAt": "2026-10-19T04:29:26.943Z"
+        },
+        {
+          "sha256": "97e2b875611c4c53b7e0d815eb7d854a2ba2a2d719f202aee76387cf5bb26c1c",
+          "kernelSha256": "7b7c1ad17bc22648b472b97943735263f58f7e77beb390e5aa45a48b123c8a9a",
+          "bytes": 7663011,
+          "recordedAt": "2026-10-19T13:05:57.713Z"
+        }
+      ]
     }
   ]
 }

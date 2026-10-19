@@ -1,0 +1,262 @@
+[
+  {
+    "plugin": "data-agent-kit-plugin",
+    "source": "Your agent can run tools and commands on your behalf. Apply the principle of least privilege to every CLI, MCP server, and resource it can access:",
+    "html": "<p>Your agent can run tools and commands on your behalf. Apply the <strong>principle of\nleast privilege</strong> to every CLI, MCP server, and resource it can access:</p>",
+    "expectedPrefix": "智能体可以",
+    "codes": [],
+    "links": []
+  },
+  {
+    "plugin": "data-agent-kit-plugin",
+    "source": "Use service account impersonation instead of end-user credentials.",
+    "html": "<li>Use\n<a href=\"https://cloud.google.com/docs/authentication/use-service-account-impersonation\">service account impersonation</a>\ninstead of end-user credentials.</li>",
+    "expectedPrefix": "使用",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://cloud.google.com/docs/authentication/use-service-account-impersonation",
+        "text": "service account impersonation"
+      }
+    ]
+  },
+  {
+    "plugin": "data-agent-kit-plugin",
+    "source": "Grant the service account only the roles it needs.",
+    "html": "<li>Grant the service account only the\n<a href=\"https://cloud.google.com/iam/docs/roles-overview\">roles it needs</a>.</li>",
+    "expectedPrefix": "仅向",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://cloud.google.com/iam/docs/roles-overview",
+        "text": "roles it needs"
+      }
+    ]
+  },
+  {
+    "plugin": "data-agent-kit-plugin",
+    "source": "Learn how to mitigate prompt injection risks with Google Cloud MCP.",
+    "html": "<p>Learn how to\n<a href=\"https://docs.cloud.google.com/data-cloud-extension/vs-code/prompt-injection-risk\">mitigate prompt injection risks</a>\nwith Google Cloud MCP.</p>",
+    "expectedPrefix": "了解如何",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://docs.cloud.google.com/data-cloud-extension/vs-code/prompt-injection-risk",
+        "text": "mitigate prompt injection risks"
+      }
+    ]
+  },
+  {
+    "plugin": "google-developer-knowledge",
+    "source": "Connects to https://developerknowledge.googleapis.com/mcp and provides tools for documentation retrieval:",
+    "html": "<p>Connects to <code>https://developerknowledge.googleapis.com/mcp</code> and provides tools\nfor documentation retrieval:</p>",
+    "expectedPrefix": "连接到",
+    "codes": [
+      "https://developerknowledge.googleapis.com/mcp"
+    ],
+    "links": []
+  },
+  {
+    "plugin": "google-developer-knowledge",
+    "source": "\"Look up the exact gcloud CLI command and IAM roles needed to deploy a Cloud Run service with Secret Manager.\"",
+    "html": "<li><em>\"Look up the exact <code>gcloud</code> CLI command and IAM roles needed to deploy a\nCloud Run service with Secret Manager.\"</em></li>",
+    "expectedPrefix": "“查找",
+    "codes": [
+      "gcloud"
+    ],
+    "links": []
+  },
+  {
+    "plugin": "google-developer-knowledge",
+    "source": "\"Search official Google documentation for how to implement structured outputs with the Gemini API.\"",
+    "html": "<li><em>\"Search official Google documentation for how to implement structured\noutputs with the Gemini API.\"</em></li>",
+    "expectedPrefix": "“搜索",
+    "codes": [],
+    "links": []
+  },
+  {
+    "plugin": "google-developer-knowledge",
+    "source": "\"Compare Cloud Run, GKE Autopilot, and App Engine based on official Google Cloud architecture guides.\"",
+    "html": "<li><em>\"Compare Cloud Run, GKE Autopilot, and App Engine based on official Google\nCloud architecture guides.\"</em></li>",
+    "expectedPrefix": "“根据",
+    "codes": [],
+    "links": []
+  },
+  {
+    "plugin": "google-developer-knowledge",
+    "source": "\"What are the latest Compose navigation best practices according to official Android developer docs?\"",
+    "html": "<li><em>\"What are the latest Compose navigation best practices according to official\nAndroid developer docs?\"</em></li>",
+    "expectedPrefix": "“根据",
+    "codes": [],
+    "links": []
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "source": "Scroll marker target pseudo-classes",
+    "html": "<td align=\"left\"><a href=\"https://web-platform-dx.github.io/web-features-explorer/features/scroll-marker-targets/\">Scroll marker target pseudo-classes</a></td>",
+    "expectedPrefix": "滚动标记目标伪类",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://web-platform-dx.github.io/web-features-explorer/features/scroll-marker-targets/",
+        "text": "Scroll marker target pseudo-classes"
+      }
+    ]
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "source": "Alt text for generated content",
+    "html": "<td align=\"left\"><a href=\"https://web-platform-dx.github.io/web-features-explorer/features/alt-text-generated-content/\">Alt text for generated content</a></td>",
+    "expectedPrefix": "生成内容的替代文本",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://web-platform-dx.github.io/web-features-explorer/features/alt-text-generated-content/",
+        "text": "Alt text for generated content"
+      }
+    ]
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "source": "Anchor position container queries",
+    "html": "<td align=\"left\"><a href=\"https://web-platform-dx.github.io/web-features-explorer/features/container-anchor-position-queries/\">Anchor position container queries</a></td>",
+    "expectedPrefix": "锚点定位容器查询",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://web-platform-dx.github.io/web-features-explorer/features/container-anchor-position-queries/",
+        "text": "Anchor position container queries"
+      }
+    ]
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "source": "Soft navigation performance entries",
+    "html": "<td align=\"left\"><a href=\"https://web-platform-dx.github.io/web-features-explorer/features/soft-navigations/\">Soft navigation performance entries</a></td>",
+    "expectedPrefix": "软导航性能条目",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://web-platform-dx.github.io/web-features-explorer/features/soft-navigations/",
+        "text": "Soft navigation performance entries"
+      }
+    ]
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "source": "Lazy-loading images and iframes",
+    "html": "<td align=\"left\"><a href=\"https://web-platform-dx.github.io/web-features-explorer/features/loading-lazy/\">Lazy-loading images and iframes</a></td>",
+    "expectedPrefix": "图片与 iframe 的延迟加载",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://web-platform-dx.github.io/web-features-explorer/features/loading-lazy/",
+        "text": "Lazy-loading images and iframes"
+      }
+    ]
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "source": "Long animation frames performance entries",
+    "html": "<td align=\"left\"><a href=\"https://web-platform-dx.github.io/web-features-explorer/features/long-animation-frames/\">Long animation frames performance entries</a></td>",
+    "expectedPrefix": "长动画帧性能条目",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://web-platform-dx.github.io/web-features-explorer/features/long-animation-frames/",
+        "text": "Long animation frames performance entries"
+      }
+    ]
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "source": "Event timing performance entries",
+    "html": "<td align=\"left\"><a href=\"https://web-platform-dx.github.io/web-features-explorer/features/event-timing/\">Event timing performance entries</a></td>",
+    "expectedPrefix": "事件计时性能条目",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://web-platform-dx.github.io/web-features-explorer/features/event-timing/",
+        "text": "Event timing performance entries"
+      }
+    ]
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "source": "User agent client hints",
+    "html": "<td align=\"left\"><a href=\"https://web-platform-dx.github.io/web-features-explorer/features/ua-client-hints/\">User agent client hints</a></td>",
+    "expectedPrefix": "用户代理客户端提示",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://web-platform-dx.github.io/web-features-explorer/features/ua-client-hints/",
+        "text": "User agent client hints"
+      }
+    ]
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "source": "Page visibility state performance entries",
+    "html": "<td align=\"left\"><a href=\"https://web-platform-dx.github.io/web-features-explorer/features/page-visibility-state/\">Page visibility state performance entries</a></td>",
+    "expectedPrefix": "页面可见性状态性能条目",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://web-platform-dx.github.io/web-features-explorer/features/page-visibility-state/",
+        "text": "Page visibility state performance entries"
+      }
+    ]
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "source": "Web app origin migration",
+    "html": "<td align=\"left\"><a href=\"https://web-platform-dx.github.io/web-features-explorer/features/app-migration/\">Web app origin migration</a></td>",
+    "expectedPrefix": "Web 应用来源迁移",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://web-platform-dx.github.io/web-features-explorer/features/app-migration/",
+        "text": "Web app origin migration"
+      }
+    ]
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "source": "Web authentication signal methods",
+    "html": "<td align=\"left\"><a href=\"https://web-platform-dx.github.io/web-features-explorer/features/webauthn-signals/\">Web authentication signal methods</a></td>",
+    "expectedPrefix": "Web 身份验证信号方法",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://web-platform-dx.github.io/web-features-explorer/features/webauthn-signals/",
+        "text": "Web authentication signal methods"
+      }
+    ]
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "source": "Interaction contentful paint performance entries",
+    "html": "<td align=\"left\"><a href=\"https://web-platform-dx.github.io/web-features-explorer/features/interaction-contentful-paint/\">Interaction contentful paint performance entries</a></td>",
+    "expectedPrefix": "交互内容绘制性能条目",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://web-platform-dx.github.io/web-features-explorer/features/interaction-contentful-paint/",
+        "text": "Interaction contentful paint performance entries"
+      }
+    ]
+  },
+  {
+    "plugin": "modern-web-guidance-plugin",
+    "source": "Small, large, and dynamic viewport units",
+    "html": "<td align=\"left\"><a href=\"https://web-platform-dx.github.io/web-features-explorer/features/viewport-unit-variants/\">Small, large, and dynamic viewport units</a></td>",
+    "expectedPrefix": "小型、大型和动态视口单位",
+    "codes": [],
+    "links": [
+      {
+        "href": "https://web-platform-dx.github.io/web-features-explorer/features/viewport-unit-variants/",
+        "text": "Small, large, and dynamic viewport units"
+      }
+    ]
+  }
+]

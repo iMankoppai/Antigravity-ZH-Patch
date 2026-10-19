@@ -49,6 +49,9 @@ else {
   if (JSON.parse(m[2]) !== translate) failures.push('zh-bundle.js 内嵌运行时与 translate.js 不一致');
 }
 const bundleSha = sha256(Buffer.from(bundle));
+const details = JSON.parse(fs.readFileSync(path.join(assets, 'skill-details.json'), 'utf8'));
+const detailConstant = bundle.match(/^const skillDetails = ([^\r\n]+);/m);
+if (!detailConstant || JSON.stringify(JSON.parse(detailConstant[1])) !== JSON.stringify(details)) failures.push('完整技能正文目录与 bundle 不一致');
 notes.push(`bundle sha256 = ${bundleSha}`);
 
 // ---- layer 2: bundle vs installed asar ----

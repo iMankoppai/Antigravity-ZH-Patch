@@ -6,6 +6,18 @@ using AntigravityZhManager.Services;
 // 引擎侧回归：
 //   A. 基线清单判定（安装允许/拒绝、还原允许/拒绝）
 //   B. ASAR 临时归档回读校验（合法通过、各类损坏拒绝）
+if (args.Contains("--apply-installed"))
+{
+    string localAsar = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "antigravity", "resources", "app.asar");
+    if (File.Exists(localAsar))
+    {
+        Console.WriteLine("正在固化安装到本机: " + localAsar);
+        var r = await AsarCleanPatcher.InstallCleanPatchAsync(localAsar, true, true, Console.WriteLine, true);
+        Console.WriteLine("安装结果: " + r.Success + " " + r.Message);
+        return r.Success ? 0 : 1;
+    }
+}
+
 int failures = 0;
 void Check(string name, bool ok, string detail = "")
 {
@@ -228,6 +240,23 @@ Check("DisplayIcon 去掉引号", AntigravityDetector.NormalizeDisplayIcon("\"D:
 Check("DisplayIcon 无序号原样返回", AntigravityDetector.NormalizeDisplayIcon(@"C:\Apps\Antigravity.exe") == @"C:\Apps\Antigravity.exe");
 Check("DisplayIcon 空值返回空串", AntigravityDetector.NormalizeDisplayIcon(null) == "" && AntigravityDetector.NormalizeDisplayIcon("   ") == "");
 Check("DisplayIcon 目录型取值不误伤", AntigravityDetector.NormalizeDisplayIcon(@"D:\Antigravity,1") == @"D:\Antigravity");
+
+// ---------- E. 在线更新检查：版本对比规则验证 ----------
+Check("版本比对：新版本高于当前版本", UpdateChecker.CompareVersions("1.1.2", "1.1.1") > 0);
+Check("版本比对：跨小版本正常识别", UpdateChecker.CompareVersions("1.2.0", "1.1.1") > 0);
+Check("版本比对：跨主版本正常识别", UpdateChecker.CompareVersions("2.0.0", "1.1.1") > 0);
+Check("版本比对：旧版本小于当前版本", UpdateChecker.CompareVersions("1.1.0", "1.1.1") < 0);
+Check("版本比对：相同版本识别为一致", UpdateChecker.CompareVersions("1.1.1", "1.1.1") == 0);
+Check("版本比对：兼容带v前缀的Tag", UpdateChecker.CompareVersions("v1.1.2", "1.1.1") > 0);
+Check("版本比对：两端均带v前缀", UpdateChecker.CompareVersions("v1.1.1", "v1.1.1") == 0);
+
+// ---------- F. 应用内自更新：加速节点与候选清单验证 ----------
+var candidateUrls = AppUpdater.BuildCandidateUrls("https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/download/v1.1.2/Antigravity-ZH-1.1.2.zip");
+Check("应用内更新：加速节点生成包含原生源", candidateUrls.Contains("https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/download/v1.1.2/Antigravity-ZH-1.1.2.zip"));
+Check("应用内更新：自动注入国内高速镜像节点", candidateUrls.Any(u => u.Contains("ghproxy.net") || u.Contains("ghfast.top")));
+Check("应用内更新：空下载地址安全返回空列表", AppUpdater.BuildCandidateUrls("").Count == 0);
+
+
 
 Console.WriteLine();
 failures += await CompatibilityRepairTests.RunAsync();

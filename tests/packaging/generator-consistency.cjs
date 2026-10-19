@@ -4,6 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const vm = require('vm');
 
 const root = path.resolve(__dirname, '..', '..');
 const bundlePath = path.join(root, 'src', 'AntigravityZhManager', 'Assets', 'zh-bundle.js');
@@ -30,8 +31,13 @@ if (beforeHash !== afterHash) failures.push('--check 模式修改了文件（应
 if (checkSummary.changed !== false) failures.push('--check 报告文件不同步');
 
 // 4. 包装器必须保留关键注入契约
-for (const marker of ['module.exports = { attach }', "contents.on('dom-ready'", "contents.on('did-finish-load'", 'allowedOrigin']) {
+for (const marker of ["contents.on('dom-ready'", "contents.on('did-finish-load'", 'allowedOrigin']) {
   if (!onDisk.includes(marker)) failures.push(`包装器缺少关键契约：${marker}`);
+}
+const sandbox = { module: { exports: {} }, URL, WeakSet };
+vm.runInNewContext(onDisk, sandbox);
+for (const name of ['attach', 'installNativeDialogs']) {
+  if (typeof sandbox.module.exports[name] !== 'function') failures.push(`包装器没有导出 ${name}`);
 }
 
 // 5. 两个入口模块都能加载（build-bundle.js 为转发入口）

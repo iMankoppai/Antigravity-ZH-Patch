@@ -69,6 +69,14 @@ ${step('running', 'Ran', 'npm run test, echo &quot;Edited files&quot;')}
 <span id="model-panel-footer">View Usage</span>
 </div>
 <span id="effort-elsewhere">High</span>
+<div class="${header}"><div class="flex items-center gap-1 overflow-hidden whitespace-nowrap text-muted-foreground"><span id="subagent-start">Starting</span><div role="button" class="group/agent-ref inline-flex" aria-label="Open Subagent: Settings"><span id="subagent-name">Settings</span></div></div></div>
+<div class="${header}"><div class="flex items-center gap-1 overflow-hidden whitespace-nowrap text-muted-foreground"><span id="subagent-started">Started</span><span id="subagent-count">2 subagents</span></div></div>
+<div class="${header}"><div class="flex items-center gap-1 overflow-hidden whitespace-nowrap text-muted-foreground"><span>Started</span><span id="subagent-count-split"><span id="subagent-number">2</span> subagents</span></div></div>
+<div data-testid="planner-response-text"><div class="${header}"><div class="flex items-center gap-1 overflow-hidden whitespace-nowrap text-muted-foreground"><span id="authored-subagent">Starting</span></div></div><p id="authored-cloud">Runs in the cloud</p></div>
+<button id="context-window" title="High · Context window">Context window</button>
+<span id="permissions-scope">Inherits your Global Permissions when working in these conversations.</span>
+<button id="refresh-credentials">Refresh all credentials</button>
+<span id="context-cost">512K context uses about 1.3x quota per turn because each request sends more tokens.</span>
 <div data-testid="toast-notification" data-notification-tag="archive-conversation-abc"><p id="archive-toast">View archived in the sidebar (<span class="inline-icon"></span> menu).</p></div>
 <div data-testid="toast-notification" data-notification-tag="archive-conversation-def"><p id="archive-toast-legacy">View archived conversations in <a href="notification://history" id="archive-link">history</a>.</p></div>
 <span id="shortcut-hint">Clear search (Esc)</span>
@@ -124,6 +132,20 @@ async function main() {
   for (const [id, want] of [['agent-prose', 'Analyzed'], ['authored-header', 'Analyzed'], ['authored-header-target', 'Settings'], ['authored-time', 'Thought for 12s'], ['thought-prose', 'Thought for 12s'], ['user-header', 'Analyzed'], ['user-header-target', 'Settings'], ['user-summary', 'Exploring file, running command, editing files'], ['user-prose', 'Thought for 12s'], ['code', 'Analyzed'], ['button-code', 'Settings'], ['terminal', 'Thought for 12s'], ['editor', 'Checked task do not change']]) await eq('content protected ' + id, `document.getElementById('${id}').textContent`, want);
   await eq('prefixless structured filename unchanged', "document.getElementById('prefixless-file').textContent", 'Analyzed');
   await eq('prefixless structured file tooltip unchanged', "document.getElementById('prefixless-file').title", 'Read');
+  await eq('2.24 subagent starting status', "document.getElementById('subagent-start').textContent", '正在启动');
+  await eq('2.24 subagent completed status', "document.getElementById('subagent-started').textContent", '已启动');
+  await eq('2.24 subagent count', "document.getElementById('subagent-count').textContent", '2 个子代理');
+  await eq('2.24 split subagent count', "document.getElementById('subagent-count-split').textContent", '2 个子代理');
+  await evaluate("document.getElementById('subagent-number').firstChild.nodeValue='3'");
+  await until(() => evaluate("document.getElementById('subagent-count-split').textContent==='3 个子代理'"));
+  checks.push('2.24 dynamic subagent count');
+  await eq('2.24 subagent name preserved', "document.getElementById('subagent-name').textContent", 'Settings');
+  await eq('2.24 authored status and prose preserved', "[document.getElementById('authored-subagent').textContent,document.getElementById('authored-cloud').textContent]", ['Starting', 'Runs in the cloud']);
+  await eq('2.24 context selector label', "document.getElementById('context-window').textContent", '上下文窗口');
+  await eq('2.24 context tooltip keeps effort name', "document.getElementById('context-window').title", 'High · 上下文窗口');
+  await eq('2.24 permissions outside project', "document.getElementById('permissions-scope').textContent", '在这些对话中工作时继承你的全局权限。');
+  await eq('2.24 automation credentials', "document.getElementById('refresh-credentials').textContent", '刷新所有凭据');
+  await eq('2.24 context cost', "document.getElementById('context-cost').textContent", dictionary['512K context uses about 1.3x quota per turn because each request sends more tokens.']);
   // 模型名与推理档位属于专名：模型选择器区域保持英文，区域外的档位词仍按词库翻译。
   await eq('model selector name stays English', "document.getElementById('model-name').textContent", 'Gemini 3.8 Flash High');
   await eq('model selector aria translated, name kept', "document.getElementById('model-trigger').getAttribute('aria-label')", '选择模型，当前：Gemini 3.8 Flash High');
@@ -216,6 +238,8 @@ async function main() {
   await eq('upgrade replaces previous controller', "window.savedController.stopped && window.savedController!==window.__antigravityZhPatchController", true);
   await evaluate('window.__antigravityZhPatchRestore()');
   await eq('restore latest count and prefix', "[document.getElementById('time').textContent,document.getElementById('analyzed').textContent,window.late.textContent]", ['Thought for 12s', 'Analyzing', 'Thinking for 3s']);
+  await eq('restore 2.24 subagent labels and latest count', "[document.getElementById('subagent-start').textContent,document.getElementById('subagent-count-split').textContent,document.getElementById('subagent-name').textContent]", ['Starting', '3 subagents', 'Settings']);
+  await eq('restore 2.24 context tooltip', "document.getElementById('context-window').title", 'High · Context window');
   await eq('restore original summary and metadata', "[document.getElementById('summary').textContent,document.getElementById('summary').getAttribute('aria-label'),document.getElementById('summary').firstElementChild.title]", ['Exploring file, running command, editing files', 'Exploring file, running command, editing files', 'Exploring file, running command, editing files']);
   const result = { passed: checks.length, expectedPatchVersion: expectedVersion, chrome: CHROME, checks, baseline: before, repaired: after, scope: 'isolated Chrome, actual current source, current dictionary; production client untouched' };
   fs.writeFileSync(path.join(out, 'regression.json'), JSON.stringify(result, null, 2));

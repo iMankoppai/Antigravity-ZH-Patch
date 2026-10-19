@@ -214,6 +214,8 @@ namespace AntigravityZhManager.Services
                 string utilsJs = GetFileText("dist/utils.js");
                 string trayJs = GetFileText("dist/tray.js");
                 string wizardJs = GetFileText("dist/ideInstall/wizard.js");
+                string? provisionJs = fileEntries.Any(e => e.Path == "dist/provisionSplash.js")
+                    ? GetFileText("dist/provisionSplash.js") : null;
 
                 // 1. ipcHandlers
                 ipcHandlers = ipcHandlers
@@ -221,6 +223,13 @@ namespace AntigravityZhManager.Services
                     .Replace("title: 'Open workspaces'", "title: '选择多个工作区'");
 
                 // 2. mainJs
+                // This must execute before the early WSL warnings, not only after
+                // the first renderer window has opened.
+                const string electronImport = "const electron_1 = require(\"electron\");";
+                if (mainJs.Split(electronImport).Length != 2)
+                    throw new InvalidDataException("原生弹窗注入锚点数量异常，拒绝写入。");
+                mainJs = mainJs.Replace(electronImport, electronImport +
+                    "\nrequire('./zh-bundle.js').installNativeDialogs(electron_1.dialog);");
                 if (!mainJs.Contains("setAppUserModelId"))
                 {
                     mainJs = mainJs.Replace(
@@ -247,7 +256,7 @@ namespace AntigravityZhManager.Services
                 }
 
                 // 洁癖模式内嵌注入点
-                if (!mainJs.Contains("zh-bundle.js"))
+                if (!mainJs.Contains("require('./zh-bundle.js').attach"))
                 {
                     mainJs = mainJs.Replace(
                         "                        void win.loadURL(newUrl);",
@@ -321,11 +330,24 @@ namespace AntigravityZhManager.Services
                     );
                 }
 
+                // WSL provisioning owns a separate data: window. Attach before
+                // loadURL so both its initial heading and subsequent status text
+                // are observed without changing distro names or install behavior.
+                if (provisionJs != null)
+                {
+                    const string provisionLoad = "    void win.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`);";
+                    if (provisionJs.Split(provisionLoad).Length != 2)
+                        throw new InvalidDataException("WSL 准备窗口注入锚点数量异常，拒绝写入。");
+                    provisionJs = provisionJs.Replace(provisionLoad,
+                        "    require('./zh-bundle.js').attach(win, 'data:text/html;charset=utf-8,');\n" + provisionLoad);
+                }
+
                 // 写入前自检：确认每个注入点都真正命中。官方版本更新可能移除或改变
                 // 锚点，此时 String.Replace 会静默空操作却仍报成功，因此校验失败时
                 // 直接拒绝写入，保留原有归档。
                 AssertInjectionApplied("dist/ipcHandlers.js", ipcHandlers, "打开工作区", "选择多个工作区");
                 AssertInjectionApplied("dist/main.js", mainJs, "zh-bundle.js");
+                AssertInjectionApplied("dist/main.js (native dialogs)", mainJs, "installNativeDialogs(electron_1.dialog)");
                 AssertInjectionApplied("dist/utils.js", utilsJs, "zh-bundle.js");
                 AssertInjectionApplied("dist/ideInstall/wizard.js", wizardJs, "zh-bundle.js");
                 if (enableCloseToTray)
@@ -360,6 +382,11 @@ namespace AntigravityZhManager.Services
                     ["dist/ideInstall/wizard.js"] = Encoding.UTF8.GetBytes(wizardJs),
                     ["dist/zh-bundle.js"] = zhBundleBytes
                 };
+                if (provisionJs != null)
+                {
+                    AssertInjectionApplied("dist/provisionSplash.js", provisionJs, "zh-bundle.js");
+                    modifiedEntries["dist/provisionSplash.js"] = Encoding.UTF8.GetBytes(provisionJs);
+                }
 
                 // 在 header 中注册 dist/zh-bundle.js
                 var distFiles = filesNode["dist"]?["files"]?.AsObject()

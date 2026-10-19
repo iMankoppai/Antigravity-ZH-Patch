@@ -96,6 +96,7 @@ function Invoke-Check([string]$Name, [string[]]$CommandArgs, [bool]$Required) {
 
 # ---- 2..4, 6: source-level gates ----
 $null = Invoke-Check 'dictionary-quality' @('tests/localization/dictionary-quality.cjs') $true
+$null = Invoke-Check 'skill-detail-quality' @('tests/localization/skill-detail-quality.cjs') $true
 $null = Invoke-Check 'runtime-syntax' @('--check', 'src/AntigravityZhManager/Assets/translate.js') $true
 $null = Invoke-Check 'regex-safety' @('tests/localization/regex-safety.cjs') $true
 $null = Invoke-Check 'deep-interface-coverage' @('tests/localization/deep-interface-coverage.cjs') $true
@@ -108,6 +109,12 @@ if (-not $SkipBrowser -and $chromeOk) {
         $env:ZH_CHROME_PATH = $chromeExe
         $null = Invoke-Check 'renderer-regression' @('tests/renderer/status-label-regression.cjs') $true
 $null = Invoke-Check 'wrapper-guard' @('tests/renderer/wrapper-guard.cjs') $true
+$null = Invoke-Check 'notification-hook' @('tests/renderer/notification-hook.cjs') $true
+        $null = Invoke-Check 'missing-ui-regression' @('tests/renderer/missing-ui-regression.cjs') $true
+        $null = Invoke-Check 'plugin-readme-regression' @('tests/renderer/plugin-readme-regression.cjs') $true
+        $null = Invoke-Check 'global-localization-regression' @('tests/renderer/global-localization-regression.cjs') $true
+        $null = Invoke-Check 'skill-details-regression' @('tests/renderer/skill-details-regression.cjs') $true
+        $null = Invoke-Check 'skill-detail-react-regression' @('tests/renderer/skill-detail-react-regression.cjs') $true
     } finally { $env:ZH_CHROME_PATH = $old }
 } else {
     Add-Result 'renderer-regression' 'SKIP' '未运行浏览器回归（缺少 Chrome 或显式跳过）'
@@ -122,6 +129,7 @@ if ($null -eq $AsarPath) {
 $asarArgs = @('tests/packaging/bundle-consistency.cjs')
 if ($AsarPath) { $asarArgs += @('--asar', $AsarPath) }
 $null = Invoke-Check 'bundle-consistency' $asarArgs $true
+$null = Invoke-Check 'native-ui' @('tests/renderer/native-ui.cjs') $true
 $null = Invoke-Check 'version-consistency' @('tests/packaging/version-consistency.cjs') $true
 $null = Invoke-Check 'release-consistency' @('tests/packaging/release-consistency.cjs') $true
 $null = Invoke-Check 'baseline-manifest' @('tests/packaging/baseline-manifest.cjs') $true

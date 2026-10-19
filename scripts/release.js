@@ -35,9 +35,23 @@ const zipName = `Antigravity-ZH-${version}-Windows-x64.zip`;
 // 未指定时回退到仓库根目录的正式 EXE。
 const dryRun = process.argv.includes('--dry-run');
 const exeArgIndex = process.argv.indexOf('--exe');
-const candidateExe = exeArgIndex >= 0 ? path.resolve(process.argv[exeArgIndex + 1]) : path.join(root, `${productName}.exe`);
-if (!fs.existsSync(candidateExe)) fail(`未找到候选 EXE：${candidateExe}`);
+let candidateExe = exeArgIndex >= 0 ? path.resolve(process.argv[exeArgIndex + 1]) : null;
+if (!candidateExe) {
+  const tryNames = [productName + '.exe', productName.replace(/\s+/g, '') + '.exe', 'Antigravity汉化管理器.exe'];
+  for (const name of tryNames) {
+    const p = path.join(root, name);
+    if (fs.existsSync(p)) { candidateExe = p; break; }
+  }
+}
+if (!candidateExe || !fs.existsSync(candidateExe)) fail(`未找到候选 EXE：${candidateExe || productName + '.exe'}`);
 if (!fs.existsSync(readmePath)) fail('未找到 README.md');
+if (candidateExe && fs.existsSync(candidateExe) && process.platform === 'win32') {
+  const quoted = candidateExe.replace(/'/g, "''");
+  const actualVersion = execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command',
+    `[Diagnostics.FileVersionInfo]::GetVersionInfo('${quoted}').FileVersion`], { encoding: 'utf8', windowsHide: true }).trim();
+  const expectedVersion = (csproj.match(/<FileVersion>([^<]+)<\/FileVersion>/) || [])[1];
+  if (actualVersion !== expectedVersion) fail(`候选 EXE 版本 ${actualVersion} 与项目 ${expectedVersion} 不一致，拒绝打包旧程序`);
+}
 
 if (failures.length) { console.error('[fail]\n' + failures.join('\n')); process.exit(1); }
 notes.push(`version=${version}, zip=${zipName}`);
@@ -91,7 +105,9 @@ if (failures.length === 0) {
 if (failures.length === 0) {
   const zipBuf = fs.readFileSync(tempZip);
   const zipHash = sha256(zipBuf);
-  const sums = `${zipHash}  ${zipName}\n`;
+  const bundlePath = path.join(root, 'src/AntigravityZhManager/Assets/zh-bundle.js');
+  const bundleHash = fs.existsSync(bundlePath) ? sha256(fs.readFileSync(bundlePath)) : null;
+  const sums = `${sha256(fs.readFileSync(candidateExe))}  ${exeName}\n${zipHash}  ${zipName}\n` + (bundleHash ? `${bundleHash}  zh-bundle.js\n` : '');
   const metadata = {
     productName,
     version,

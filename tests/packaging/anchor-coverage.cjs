@@ -40,6 +40,7 @@ const anchors = [
 ];
 
 const cache = new Map();
+if (archive.read('dist/provisionSplash.js')) anchors.push({ file: 'dist/provisionSplash.js', needle: '    void win.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`);', label: 'WSL 准备窗口' });
 for (const a of anchors) {
   if (!cache.has(a.file)) cache.set(a.file, text(a.file));
   const content = cache.get(a.file);

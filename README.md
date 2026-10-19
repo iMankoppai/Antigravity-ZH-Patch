@@ -1,14 +1,14 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.1.0-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
-[![Antigravity](https://img.shields.io/badge/Antigravity-2.23.1-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Release](https://img.shields.io/badge/Release-v1.2.0-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.2.0)
+[![Antigravity](https://img.shields.io/badge/Antigravity-2.24.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.1.0 适配 Google Antigravity 2.23.1（Windows x64）**，汉化内核 v40、词条 3,513 条。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
+> **当前版本 v1.2.0 适配 Google Antigravity 2.24.0（Windows x64）**，汉化内核 v62、界面词条 5,638 条，另含 17 个官方插件、140 份完整技能详情正文及 6 份规则／智能体详情。此前本地 v1.1.7 构建统一以 v1.2.0 发布，见 [v1.2.0 发布说明](docs/v1.2.0-发布说明.md)。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
 
 ---
 
@@ -45,7 +45,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`Antigravity汉化管理器.exe`** 或 **`Antigravity-ZH-1.1.0-Windows-x64.zip`**；
+2. 下载 **`Antigravity汉化管理器.exe`** 或 **`Antigravity-ZH-1.2.0-Windows-x64.zip`**；
 3. 双击运行 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -67,8 +67,8 @@ Antigravity ZH/
 ```
 
 ### 技术规格
-- **适配软件**：**Google Antigravity 2.23.1**（Windows x64）
-- **汉化内核**：v40（词条 3,513 条）
+- **适配软件**：**Google Antigravity 2.24.0**（Windows x64）
+- **汉化内核**：v62（词条 5,638 条）
 - **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、工作状态、插件市场与主题设置）
 - **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入
 
@@ -81,11 +81,65 @@ Antigravity ZH/
 
 汉化范围与保留项说明：`docs/汉化范围说明-哪些不翻译.md`（为什么内容、专名与程序内部标识故意保留英文）。
 
-本次 2.23.1 适配的完整说明：`docs/2.23.1-适配说明.md`。
+本次 2.24.0 适配的完整说明：`docs/2.24.0-适配说明.md`。
 
 ---
 
 ## 📦 版本记录
+
+### v1.2.0 — 完整技能汉化与全局错翻、漏翻复核
+
+- 汇总此前本地 v1.1.2–v1.1.7 的修复并正式发布，适配 Antigravity 2.24.0；内核保持 v62。
+- 覆盖 17 个官方插件、140 份技能详情，以及 6 份规则／智能体详情；修复 Markdown 表格续行与截断预览匹配。
+- 按原文重译 180 条 Web 指南概览，修复日期、时区、后台任务等含义错误和短名称误匹配。
+- 修复 43 处代码标签、7 处链接文字清空，以及段落重复；完整保留命令、链接和英文还原行为。
+- 校订 36 段技术正文，补充 207 条固定界面文案和 154 类动态提示；增加全部官方 README 的结构回归。
+
+### v1.1.6 — 规则与智能体详情汉化
+
+- 补齐 Flutter 热重载规则、Google Cloud 路由规则、Science 可视化规则及 Flutter／Firestore 智能体详情，共 6 份源文件。
+- 翻译 35 类代码样式中的策略、自然语言示例与进度模板，保留真实命令、参数及 API 标识。
+- 修正 Google Cloud 概览重复段落与技能发现说明。详见 `docs/v1.1.6-规则与智能体详情汉化.md`。
+
+### v1.1.5 — 修复长技能预览漏译与删除提示
+
+- 支持精确匹配 24,000 字节的官方截断预览，解决 9 份长文档简介中文、正文英文的问题。
+- 使用 React 当前提交的正文，避免复用窗口时匹配到旧文档；新增真实 React 18.3.1 回归。
+- 修复删除卡片对话数量漏译、Gemini 概览重复文字与空代码标签，并人工校订 46 处视频技能译文。
+- 说明：`docs/v1.1.5-预览漏译与动态提示修复.md`。本地交付，未上传 GitHub。
+
+### v1.1.4 — 技能详情表格和段落翻译修复
+
+- 140 份正文改用完整段落和表格单元格翻译，避免逐文字节点拼接。
+- 整理 13 份文档中的 250 行非标准表格续行；修复占位符、嵌套反引号和命令帮助文本的解析。
+- 保留官方原始节点、链接事件和代码复制，支持精确英文还原。
+- 回归检查表格实际行列、动态切换、原始代码与链接；自动化通过不代表全部译文已逐句人工校对。
+- 说明：`docs/v1.1.4-技能详情排版与段落翻译.md`。本地交付，未上传 GitHub。
+
+### v1.1.3 — 完整技能详情正文汉化（2026-10-18）
+
+- 内核 v58；新增独立正文目录，覆盖 17 个官方插件中 140 份 SKILL.md 的完整展示内容，含 15,203 个文本片段（其中技术标识、网址等按清单保留）。
+- 修复旧规则把父列表项简化成一句译文、导致嵌套代码和列表被清空的问题；按精确节点匹配译文，保留文档结构和代码。
+- SDK 安装、认证和主题索引单独校对；GraphQL、Google Maps 信息依据等术语按语境处理。
+- 140 份真实正文共 982 项结构、译文、代码、链接和英文还原断言通过；支持恢复旧版已清空节点的热升级场景。
+- 本地交付，未上传 GitHub。详见 [完整技能详情修复说明](docs/v1.1.3-完整技能详情汉化.md)。
+
+### v1.1.2 — 漏译补全（2026-10-18）
+
+- 内核 v57，词库 5,422 条；修复固定导航、上传快捷键、媒体标签、子代理状态、设置说明、动态通知与文件提示的漏译。
+- 自定义项面包屑仅放行固定页面名称，继续保护项目/文件名、模型名和用户正文。
+- 原生退出确认、更新提示、WSL 警告接入翻译；WSL 准备窗口支持初始标题及下载、安装状态汉化。
+- 补齐 22 处官方插件说明，保留链接、代码与还原能力；新增界面、文档和原生对话框回归。
+- 当前窗口可热加载网页修复；原生弹窗及重启后的持久生效需在退出客户端后安装新版管理器内的永久补丁。
+- 本地交付，未发布至 GitHub。详见 [v1.1.2 修复说明](docs/v1.1.2-漏译修复说明.md)。
+
+### v1.1.1 — 适配 Antigravity 2.24.0（2026-10-17）
+
+- 登记 2.24.0 官方归档基线，支持永久汉化与对应版本的英文还原。
+- 内核 v41，词条 3,613 条；新增 100 条上下文窗口、云端运行、凭据刷新、通知、浏览器菜单及新版引导文案。
+- 适配不含 `flex-row` 的新版子代理状态行，翻译启动状态与动态计数，保留子代理名称和用户正文。
+- 补齐项目之外的权限说明、上下文窗口提示；推理档位和模型名称保留原文。
+- 100 项渲染断言与 106 项引擎检查通过；真实原版副本安装、重复安装和还原逐字节验证通过。
 
 ### v1.1.0 — 新版汉化适配（2026-10-15）
 

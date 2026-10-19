@@ -181,7 +181,7 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Antigravity 汉化管理器" FontSize="19" FontWeight="Bold" Foreground="#FFFFFF"/>
                         <Border Background="#1E293B" CornerRadius="4" Padding="7,2" Margin="10,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="v1.1.0" Foreground="#94A3B8" FontSize="11"/>
+                            <TextBlock Text="v1.2.0" Foreground="#94A3B8" FontSize="11"/>
                         </Border>
                     </StackPanel>
                     <TextBlock Text="纯净 ASAR 原生内嵌架构 · 支持免重启临时汉化与一键恢复默认" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
@@ -198,6 +198,18 @@
         <!-- 1. 状态信息横幅（包含完整路径显示与自动扫描） -->
         <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,12" Padding="14,10">
             <StackPanel>
+                <!-- 应用内自动更新进度条（更新时显示） -->
+                <Border x:Name="PnlUpdateProgress" Visibility="Collapsed" Background="#0B132B" BorderBrush="#3B82F6" BorderThickness="1" CornerRadius="6" Padding="12,10" Margin="0,0,0,10">
+                    <StackPanel>
+                        <Grid Margin="0,0,0,6">
+                            <TextBlock x:Name="TxtUpdateProgressTitle" Text="🚀 正在下载新版本..." FontSize="12" FontWeight="SemiBold" Foreground="#60A5FA"/>
+                            <TextBlock x:Name="TxtUpdateProgressDetail" HorizontalAlignment="Right" Text="0%" FontSize="12" Foreground="#94A3B8"/>
+                        </Grid>
+                        <ProgressBar x:Name="PrgUpdate" Height="6" Minimum="0" Maximum="100" Value="0" Background="#1E293B" Foreground="#3B82F6" BorderThickness="0"/>
+                        <TextBlock x:Name="TxtUpdateSpeed" Text="正在连接加速下载节点..." FontSize="11" Foreground="#64748B" Margin="0,4,0,0"/>
+                    </StackPanel>
+                </Border>
+
                 <!-- 第一行：运行状态 -->
                 <Grid Margin="0,0,0,8">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">

@@ -24,11 +24,14 @@ public static class CdpHotPatcher
         using var reader = new StreamReader(stream, Encoding.UTF8);
         return reader.ReadToEnd();
     }
-    private static readonly Lazy<(string Dictionary, string Runtime, int Version, int Count)> Resources = new(() =>
+    private static readonly Lazy<(string Dictionary, string Runtime, string SkillDetails, int DetailCount, int Version, int Count)> Resources = new(() =>
     {
         string dictionary = Resource("dictionaries.json"), runtime = Resource("translate.js");
         using var parsed = JsonDocument.Parse(dictionary);
-        return (dictionary, runtime, int.Parse(Regex.Match(runtime, @"const patchVersion = (\d+)").Groups[1].Value), parsed.RootElement.EnumerateObject().Count());
+        string details = Resource("skill-details.json");
+        using var validatedDetails = JsonDocument.Parse(details);
+        int detailCount = validatedDetails.RootElement.GetProperty("documents").GetArrayLength();
+        return (dictionary, runtime, details, detailCount, int.Parse(Regex.Match(runtime, @"const patchVersion = (\d+)").Groups[1].Value), parsed.RootElement.EnumerateObject().Count());
     });
 
     private static async Task<List<Uri>> TargetsAsync(CancellationToken token)
@@ -88,7 +91,7 @@ public static class CdpHotPatcher
         return await ReceiveResultAsync(socket, 1, token);
     }
 
-    private static string HealthExpression => $"Boolean(window.__antigravityZhPatchInstalled && window.__antigravityZhPatchVersion === {Resources.Value.Version} && window.__antigravityZhPatchDictionarySize === {Resources.Value.Count} && document.documentElement.lang === 'zh-CN')";
+    private static string HealthExpression => $"Boolean(window.__antigravityZhPatchInstalled && window.__antigravityZhPatchVersion === {Resources.Value.Version} && window.__antigravityZhPatchDictionarySize === {Resources.Value.Count} && window.__antigravityZhSkillDetails?.documents?.length === {Resources.Value.DetailCount} && document.documentElement.lang === 'zh-CN')";
 
     public static async Task<bool> CheckIsHotInjectedAsync()
     {
@@ -110,12 +113,13 @@ public static class CdpHotPatcher
         try
         {
             var resources = Resources.Value;
-            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(12));
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             var pages = await TargetsAsync(timeout.Token);
             string script = "(async () => {" +
-                "if (!document.querySelector('[data-testid=\"model-selector-trigger\"], [data-testid^=\"conversation-row-\"], [data-testid=\"planner-response-text\"]')) throw new Error('主界面尚未就绪或结构已变化');" +
+                "if (!document.body || (document.body.childElementCount === 0 && !document.getElementById('root') && !document.querySelector('[data-testid], main, nav, header'))) throw new Error('主界面尚未就绪或结构已变化');" +
                 "window.__antigravityZhPatchHotActive = true; window.__antigravityZhNativeAutoload = true;" +
                 "window.__antigravityZhPatchDictionary = " + resources.Dictionary + "; window.__antigravityZhPatchDictionaryRevision = Date.now();\n" +
+                "window.__antigravityZhSkillDetails = " + resources.SkillDetails + ";\n" +
                 resources.Runtime + "\nfor (let i=0;i<100;i++) {if (" + HealthExpression + ") return true; await new Promise(r=>setTimeout(r,20));} throw new Error('汉化内核未完成初始化');})()";
             foreach (var page in pages)
             {
@@ -123,7 +127,7 @@ public static class CdpHotPatcher
                 if (!value.TryGetProperty("value", out var success) || success.ValueKind != JsonValueKind.True)
                     throw new IOException("页面未确认汉化成功。");
             }
-            string message = $"已验证 {pages.Count} 个窗口实时汉化生效（v{resources.Version} / {resources.Count} 条）。";
+            string message = $"已验证 {pages.Count} 个窗口实时汉化生效（v{resources.Version} / {resources.Count} 条，含 {resources.DetailCount} 份完整技能正文）。";
             log?.Invoke("⚡ " + message);
             return new() { Success = true, TermCount = resources.Count, Message = message };
         }
@@ -143,7 +147,7 @@ public static class CdpHotPatcher
             foreach (var page in await TargetsAsync(timeout.Token))
             {
                 // Use saved originals: no conversation reload or draft loss.
-                var result = await EvaluateAsync(page, "(() => { if (window.__antigravityZhPatchInstalled && typeof window.__antigravityZhPatchRestore !== 'function') throw new Error('缺少英文恢复接口'); window.__antigravityZhPatchRestore?.(); delete window.__antigravityZhPatchHotActive; delete window.__antigravityZhPatchDictionary; delete window.__antigravityZhNativeAutoload; return !window.__antigravityZhPatchInstalled; })()", timeout.Token);
+                var result = await EvaluateAsync(page, "(() => { if (window.__antigravityZhPatchInstalled && typeof window.__antigravityZhPatchRestore !== 'function') throw new Error('缺少英文恢复接口'); window.__antigravityZhPatchRestore?.(); delete window.__antigravityZhPatchHotActive; delete window.__antigravityZhPatchDictionary; delete window.__antigravityZhSkillDetails; delete window.__antigravityZhNativeAutoload; return !window.__antigravityZhPatchInstalled; })()", timeout.Token);
                 if (!result.TryGetProperty("value", out var ok) || ok.ValueKind != JsonValueKind.True) return false;
             }
             log?.Invoke("已恢复窗口英文，保留当前会话与输入内容。");

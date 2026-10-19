@@ -90,6 +90,15 @@ static class CompatibilityRepairTests
             var changed = contents.ToDictionary(x => x.Key, x => x.Value);
             changed["dist/main.js"] = Encoding.UTF8.GetBytes("changed native");
             Check("任一原生模块变化立即拒绝", !ArchiveCompatibility.CheckPristine(ArchiveSnapshot.Read(Build(changed)), true, new[] { reference }).Allowed);
+            var withSplash = contents.ToDictionary(x => x.Key, x => x.Value);
+            withSplash["dist/provisionSplash.js"] = Encoding.UTF8.GetBytes("official splash");
+            Check("新增待修改窗口没有哈希基线时拒绝", !ArchiveCompatibility.CheckPristine(ArchiveSnapshot.Read(Build(withSplash)), true, new[] { reference }).Allowed);
+            var expandedHashes = reference.Targets.ToDictionary(x => x.Key, x => x.Value);
+            expandedHashes["dist/provisionSplash.js"] = ArchiveSnapshot.Hash(withSplash["dist/provisionSplash.js"]);
+            var expanded = reference with { Targets = expandedHashes };
+            Check("WSL 准备窗口哈希一致时允许兼容", ArchiveCompatibility.CheckPristine(ArchiveSnapshot.Read(Build(withSplash)), true, new[] { expanded }).Allowed);
+            withSplash["dist/provisionSplash.js"] = Encoding.UTF8.GetBytes("changed splash");
+            Check("WSL 准备窗口变化时拒绝兼容", !ArchiveCompatibility.CheckPristine(ArchiveSnapshot.Read(Build(withSplash)), true, new[] { expanded }).Allowed);
             package["version"] = "2.24.0"; changed = contents.ToDictionary(x => x.Key, x => x.Value); changed["package.json"] = Encoding.UTF8.GetBytes(package.ToJsonString());
             Check("跨系列升级即使锚点相同也拒绝", !ArchiveCompatibility.CheckPristine(ArchiveSnapshot.Read(Build(changed)), true, new[] { reference }).Allowed);
             package["version"] = "2.23.0"; changed["package.json"] = Encoding.UTF8.GetBytes(package.ToJsonString());
@@ -116,7 +125,7 @@ static class CompatibilityRepairTests
             if (pristinePath != null)
             {
                 var original = ArchiveSnapshot.Read(await File.ReadAllBytesAsync(pristinePath));
-                if (original.Version == "2.23.1")
+                if (BaselineManifest.PristineForVersion(original.Version) == original.Sha256)
                 {
                     string target = Path.Combine(temporaryRoot, "app.asar");
                     await File.WriteAllBytesAsync(target, original.Bytes);
@@ -125,7 +134,12 @@ static class CompatibilityRepairTests
                     result = await AsarCleanPatcher.InstallCleanPatchAsync(target, false, false);
                     var installed = ArchiveSnapshot.Read(await File.ReadAllBytesAsync(target));
                     Check("重复安装按原件重建并保留新选项", result.Success && installed.Text("dist/main.js").Contains("hideWindowOnClose = false") && !installed.Text("dist/tray.js").Contains("localizedMenuOptions"));
-                    var futurePackage = original.Package.DeepClone().AsObject(); futurePackage["version"] = "2.23.2";
+                    var currentVersion = Version.Parse(original.Version);
+                    int futureBuild = currentVersion.Build + 1;
+                    string futureVersion;
+                    do { futureVersion = $"{currentVersion.Major}.{currentVersion.Minor}.{futureBuild++}"; }
+                    while (BaselineManifest.HasVersion(futureVersion));
+                    var futurePackage = original.Package.DeepClone().AsObject(); futurePackage["version"] = futureVersion;
                     var futureBytes = Rewrite(original, new() { ["package.json"] = Encoding.UTF8.GetBytes(futurePackage.ToJsonString()) });
                     await File.WriteAllBytesAsync(target, futureBytes);
                     var future = ArchiveSnapshot.Read(futureBytes);
