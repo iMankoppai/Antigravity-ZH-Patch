@@ -11,17 +11,17 @@
   "installDir": "C:/Users/24844/AppData/Local/Programs/antigravity",
   "officialBackup": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar.bak",
   "officialAsarSha256": "8ce27ff7c2defa10ed1ed2817288a61c546690f4cae1b1a8c91d4e69e0851e4d",
-  "installedAsarSha256": "b679abd5f233fea23c140b0397115b86b07237633d03766923bbe4af8a5263a2",
+  "installedAsarSha256": "cf9aa5de1f5b5b424116158cd2214d9d359f2a65f2a1fb7f84725fb437a95853",
   "isolatedAsarSha256": "cf9aa5de1f5b5b424116158cd2214d9d359f2a65f2a1fb7f84725fb437a95853",
   "isolatedAsarNote": "work/v69/client/resources/app.asar：以官方原版为起点的 v69 隔离安装演习产物，全套门禁以此归档验证。",  "installedKernelSha256": "fc849bd3e90ba154402bdd62ac8ade5ddd4fac9ba82ae95417440a6f8186eb3b",
   "managerExeSha256": "2dfabe87326ffc827cc08be04a3b54e74253eadc03adcf06f653df7a001cf36c",
-  "managerExeNote": "v1.3.0（内核 v69，5,894 条）已发布至 GitHub Releases；当前安装的客户端仍为 v68，升级安装待用户执行。",
+  "managerExeNote": "v1.3.0（内核 v69，5,894 条）已发布至 GitHub Releases；2026-10-27 用户已完成升级安装，安装归档与隔离验证归档逐字节一致，官方备份未变（见 v69Verification）。",
   "releaseZip": "Antigravity-ZH-1.3.0-Windows-x64.zip",
   "releaseZipSha256": "77aec75028dd69be6b988ed384daf58d8596bdc01715ebcab5087dff89ddf996",
   "publishedInfo": "v1.3.0；发布目标：GitHub Releases v1.3.0。",
-  "updatedAt": "2026-10-27T03:00:00.000Z",
+  "updatedAt": "2026-10-27T03:12:00.000Z",
   "patchVersion": 69,
-  "installedPatchVersion": 68,
+  "installedPatchVersion": 69,
   "statusLabelRegressionChecks": 100,
   "flickerFixChecksReport": "work/flicker-fix/checks.json",
   "statusLabelRepairReport": "work/status-label-repair-report.md",
@@ -83,7 +83,7 @@
   "previousReleaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.2.0",
   "localOnly": false,
   "sourceKernelSha256": "8bcf7a044d2b8a89ce07651df4f5209ff30bb3e131c204426691bb73240a8875",
-  "permanentInstallPending": true,
+  "permanentInstallPending": false,
   "hotfixReport": "docs/v1.2.0-发布说明.md",
   "localizationFix": {
     "version": "1.1.2",
@@ -348,9 +348,10 @@
     "rendererAssertions": 107,
     "uiCases": 102,
     "hotInjection": false,
-    "installedToClient": false,
+    "installedToClient": true,
+    "installedVerifiedAt": "2026-10-27T03:10:00.000Z",
     "report": "work/v69/check-current.json",
     "auditEvidence": "work/audit-v68-fresh/summary.md",
-    "note": "基于 work/audit-v68-fresh 全局漏译排查（缓存 bundle 提取、真引擎覆盖测试、版本差分、实机只读扫描）新增 20 条词条、1 条 display-limit 动态模板，并扩展状态前缀白名单。隔离归档安装演习通过，统一门禁 30/30；EXE 与 ZIP 已重建。实际客户端保持 v68，升级安装待用户执行。基线清单已补登记 v68（b679abd5…）与 v69（cf9aa5de…）两个补丁版哈希。"
+    "note": "基于 work/audit-v68-fresh 全局漏译排查（缓存 bundle 提取、真引擎覆盖测试、版本差分、实机只读扫描）新增 20 条词条、1 条 display-limit 动态模板，并扩展状态前缀白名单。隔离归档安装演习通过，统一门禁 30/30；EXE 与 ZIP 已随 v1.3.0 发布。2026-10-27 用户升级安装后复核：安装归档 SHA256 与隔离验证归档逐字节一致（cf9aa5de…），官方备份未变；CDP 只读抽查确认运行中客户端原生自动加载 v69（5,894 条），抽查的新词条均在活页词典中。"
   }
 }
