@@ -1,6 +1,6 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.3.0-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.0)
+[![Release](https://img.shields.io/badge/Release-v1.3.1-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.1)
 [![Antigravity](https://img.shields.io/badge/Antigravity-2.26.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
@@ -8,7 +8,7 @@
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.3.0（汉化内核 v69）适配 Google Antigravity 2.26.0（Windows x64）**，界面词条 **5,894 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。此前本地 v1.1.7 构建统一以 v1.2.0 发布，见 [v1.2.0 发布说明](docs/v1.2.0-发布说明.md)。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
+> **当前版本 v1.3.1（汉化内核 v70）适配 Google Antigravity 2.26.0（Windows x64）**，界面词条 **5,894 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。此前本地 v1.1.7 构建统一以 v1.2.0 发布，见 [v1.2.0 发布说明](docs/v1.2.0-发布说明.md)。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
 
 本地最新 **v70 实机漏译修复**：基于计算机控制实机审计（work/live-audit/），修复 3 处漏译——会话列表相对时间（`34m` ➔ `34 分钟前`，侧栏与历史页）、历史页归档横幅的 `(⌘ menu).` 尾节点切分、SPA 软导航后输入框工具条 aria-label 漏翻（pushState/popstate 补扫）。详见 `work/live-audit/summary.md`。此为本地构建，尚未发布到 GitHub。
 
@@ -55,7 +55,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.3.0-Windows-x64.zip`**；
+2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.3.1-Windows-x64.zip`**；
 3. 双击下载的 EXE，或解压 ZIP 后运行其中的 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -97,7 +97,7 @@ Antigravity ZH/
 
 ## 📦 版本记录
 
-### v1.3.0 (内核 v70) — 实机审计漏译修复
+### v1.3.1 (内核 v70) — 实机审计漏译修复
 
 - **来源**：计算机控制实机审计（CDP DOM 扫描 + 真实智能体动作两轮），详见 `work/live-audit/summary.md`。
 - **修复**：① 会话列表相对时间生肉（侧栏/历史页行，根因为 2.26.0 行结构与侧栏地标变更 + identitySelector 守卫吞行）；② 历史页归档横幅 `(⌘ menu).` 尾节点切分漏译（非 Toast 变体）；③ SPA 软导航后输入框工具条 aria-label 漏翻（新增 pushState/replaceState/popstate 补扫钩子，沙箱环境安全降级）。

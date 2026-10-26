@@ -1,6 +1,6 @@
 {
   "project": "Antigravity-ZH",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "adaptedAppVersion": "2.26.0",
   "termsCount": 5894,
   "architecture": "C# .NET 8 WPF Single-File Self-Contained EXE",
@@ -15,12 +15,12 @@
   "isolatedAsarSha256": "2d4efe9ad28e17d82908a58caf6c70d4ae48cbe98bac51aa51a2b9acb2bd6799",
   "isolatedAsarNote": "work/v70/client/resources/app.asar：以官方原版为起点的 v70 隔离安装演习产物，全套门禁以此归档验证。",
   "installedKernelSha256": "fc849bd3e90ba154402bdd62ac8ade5ddd4fac9ba82ae95417440a6f8186eb3b",
-  "managerExeSha256": "b25f2d6d4b13058afe2e294eb6e269d11a3115ff4bc36293da616d649a815b96",
-  "managerExeNote": "本地已构建 v70（修复实机审计的 3 处漏译）；当前安装的客户端仍为 v69，升级安装待用户执行。",
-  "releaseZip": "Antigravity-ZH-1.3.0-Windows-x64.zip",
-  "releaseZipSha256": "1c34970cac93628c20bbe29195a01e1acc72eaf44e3da9fa2e0165d51c5a14cd",
-  "publishedInfo": "v1.3.0；发布目标：GitHub Releases v1.3.0。",
-  "updatedAt": "2026-10-27T06:15:00.000Z",
+  "managerExeSha256": "cf18e87c8b7490000d5a68a1dfa2f838e459d5fc4b04be0bb103476123707127",
+  "managerExeNote": "v1.3.1（内核 v70）已发布至 GitHub Releases；当前安装的客户端仍为 v69，升级安装待用户执行。",
+  "releaseZip": "Antigravity-ZH-1.3.1-Windows-x64.zip",
+  "releaseZipSha256": "bb83d457ce188733355b3da19d7ca6043369d94a17b0ecfc5fb02e1bc66b414d",
+  "publishedInfo": "v1.3.1；发布目标：GitHub Releases v1.3.1。",
+  "updatedAt": "2026-10-27T07:00:00.000Z",
   "patchVersion": 70,
   "installedPatchVersion": 69,
   "statusLabelRegressionChecks": 100,
@@ -49,7 +49,7 @@
     "sourceCompiledInstalledResourcesMatch": true,
     "note": "v67 源码、编译内嵌资源与 2.26.0 隔离归档完全一致，运行中 2.26.0 客户端已实时热加载 v67。"
   },
-  "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.0",
+  "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.1",
   "trayIcon": {
     "palette": "violet-purple",
     "bitDepth": 32,
@@ -81,7 +81,7 @@
     "managerProcessId": null,
     "managerRunning": false
   },
-  "previousReleaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.2.0",
+  "previousReleaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.0",
   "localOnly": false,
   "sourceKernelSha256": "41ee170bce8735cacbd630b47097eda93bbec691558437f2f075eff1a960667f",
   "permanentInstallPending": true,
@@ -373,6 +373,7 @@
     ],
     "auditEvidence": "work/live-audit/summary.md",
     "report": "work/v70/check-current.json",
-    "note": "三处修复来自 2026-10-27 实机审计（work/live-audit/）。界面回归 102 用例 232 断言、通知钩子、全套门禁 30/30 通过；隔离归档安装演习通过，基线清单已登记 v70 哈希。实际客户端保持 v69，升级安装待用户执行。"
+    "note": "三处修复来自 2026-10-27 实机审计（work/live-audit/）。界面回归 102 用例 232 断言、通知钩子、全套门禁 30/30 通过；隔离归档安装演习通过，基线清单已登记 v70 哈希。随 v1.3.1 发布至 GitHub Releases；实际客户端保持 v69，升级安装待用户执行。",
+    "released": true
   }
 }
