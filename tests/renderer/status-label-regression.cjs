@@ -49,6 +49,11 @@ ${step('running', 'Ran', 'npm run test, echo &quot;Edited files&quot;')}
  ${step('failedBuild', 'Failed to build', 'a.csproj')}${step('testFailed', 'Test failed', 'suite')}
 <div class="${header}"><div class="${title}"><span class="truncate text-muted-foreground" id="task">Checked task 执行dotnet publish重新编译</span></div></div>
 <div class="${header}"><div class="${title}"><span class="truncate text-muted-foreground" id="named-summary">重新发布带有管理员清单的单文件管理器</span></div></div>
+ ${step('canceledCreate', 'Canceled creation of', 'main.ts')}
+<div class="${header}"><div class="${title}"><span class="truncate text-muted-foreground" id="read-page">Read page</span></div></div>
+<div class="${header}"><div class="${title}"><span class="truncate text-muted-foreground" id="reading-page">Reading page</span></div></div>
+<div class="${header}"><div class="${title}"><span class="truncate text-muted-foreground" id="proceeded">Auto-proceeded with</span></div></div>
+<div class="${header}"><div class="${title}"><span class="truncate text-muted-foreground" id="removed-bookmark">Removed bookmark</span></div></div>
 <p id="agent-prose">Analyzed</p>
 <div data-testid="planner-response-text">${step('authored-header', 'Analyzed', 'Settings')}<button id="authored-time" data-testid="thinking-collapsible-trigger">Thought for 12s</button></div>
 <div class="cursor-edit group relative text-secondary-foreground pl-2"><p id="thought-prose">Thought for 12s</p></div>
@@ -125,8 +130,8 @@ async function main() {
   await eq('split completed timer', "document.getElementById('time').textContent", '已思考 11 秒');
   await eq('whole timer and caret', "document.getElementById('whole-time').textContent", '已思考 12 秒 ›');
   await eq('duration units longest first', "document.getElementById('mixed-time').textContent", '已思考 1 小时 2 分钟 3 秒');
-  for (const [id, want] of [['analyzed', '已分析'], ['edited', '已编辑'], ['identity', '已分析'], ['running', '已运行'], ['task', '已检查任务 执行dotnet publish重新编译'], ['building', '正在构建'], ['built', '已构建'], ['testing', '正在测试'], ['tested', '已测试'], ['executing', '正在执行'], ['runPrefix', '运行'], ['failedBuild', '构建失败'], ['testFailed', '测试失败']]) await eq('application prefix ' + id, `document.getElementById('${id}').textContent`, want);
-  for (const [id, want] of [['analyzed-target', 'CdpHotPatcher.cs#L1-306'], ['edited-target', 'app.manifest'], ['identity-target', 'Settings'], ['running-target', 'npm run test, echo "Edited files"']]) { await eq('payload text ' + id, `document.getElementById('${id}').textContent`, want); await eq('payload title ' + id, `document.getElementById('${id}').title`, want); }
+  for (const [id, want] of [['analyzed', '已分析'], ['edited', '已编辑'], ['identity', '已分析'], ['running', '已运行'], ['task', '已检查任务 执行dotnet publish重新编译'], ['building', '正在构建'], ['built', '已构建'], ['testing', '正在测试'], ['tested', '已测试'], ['executing', '正在执行'], ['runPrefix', '运行'], ['failedBuild', '构建失败'], ['testFailed', '测试失败'], ['canceledCreate', '已取消创建'], ['read-page', '已读取网页'], ['reading-page', '正在读取网页'], ['proceeded', '已自动继续处理'], ['removed-bookmark', '已移除书签']]) await eq('application prefix ' + id, `document.getElementById('${id}').textContent`, want);
+  for (const [id, want] of [['analyzed-target', 'CdpHotPatcher.cs#L1-306'], ['edited-target', 'app.manifest'], ['identity-target', 'Settings'], ['running-target', 'npm run test, echo "Edited files"'], ['canceledCreate-target', 'main.ts']]) { await eq('payload text ' + id, `document.getElementById('${id}').textContent`, want); await eq('payload title ' + id, `document.getElementById('${id}').title`, want); }
   await eq('raw command summary preserves quoted actions', "document.getElementById('raw-command').textContent", '正在运行 echo "Edited files", printf "Exploring file"');
   await eq('generated Chinese title preserved', "document.getElementById('named-summary').textContent", '重新发布带有管理员清单的单文件管理器');
   for (const [id, want] of [['agent-prose', 'Analyzed'], ['authored-header', 'Analyzed'], ['authored-header-target', 'Settings'], ['authored-time', 'Thought for 12s'], ['thought-prose', 'Thought for 12s'], ['user-header', 'Analyzed'], ['user-header-target', 'Settings'], ['user-summary', 'Exploring file, running command, editing files'], ['user-prose', 'Thought for 12s'], ['code', 'Analyzed'], ['button-code', 'Settings'], ['terminal', 'Thought for 12s'], ['editor', 'Checked task do not change']]) await eq('content protected ' + id, `document.getElementById('${id}').textContent`, want);

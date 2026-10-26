@@ -1,0 +1,24 @@
+{
+  "dictionary": {
+    "Ask anything, @ to mention": "提出任何问题，输入 @ 提及",
+    "Name is required": "名称为必填项",
+    "Name must be folder-safe (alphanumeric, underscores, hyphens; must start with alphanumeric)": "名称必须可安全用作文件夹名（可使用字母、数字、下划线和连字符，且须以字母或数字开头）",
+    "Working copy": "工作副本",
+    "Create a JJ worktree": "创建 JJ 工作树",
+    "Cannot revert this message": "无法还原此消息",
+    "Read page": "已读取网页",
+    "Reading page": "正在读取网页",
+    "Auto-proceeded with": "已自动继续处理",
+    "Proceeded with": "已继续处理",
+    "Bookmarking": "正在添加书签",
+    "Bookmarked": "已添加书签",
+    "Removing bookmark": "正在移除书签",
+    "Removed bookmark": "已移除书签",
+    "Canceled bookmark of": "已取消添加书签",
+    "Canceled removal of bookmark": "已取消移除书签",
+    "Canceled creation of": "已取消创建",
+    "Canceled deletion of": "已取消删除",
+    "Loading harnesses…": "正在加载实验配置…",
+    "Couldn't load harnesses.": "无法加载实验配置。"
+  }
+}

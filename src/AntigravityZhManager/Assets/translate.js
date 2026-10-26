@@ -1,5 +1,5 @@
 (() => {
-  const patchVersion = 68;
+  const patchVersion = 69;
   const skillDetails = window.__antigravityZhSkillDetails || { documents: [], translations: {} };
   const detailDocuments = [...skillDetails.documents, ...(skillDetails.additionalDocuments || []), ...(skillDetails.builtinDocuments || [])];
   const reviewedReadmeBlocks = new Map((skillDetails.readmeBlocks || []).map(b => [b.source, b]));
@@ -804,7 +804,7 @@
     if (elapsed) return leading + elapsed + trailing;
     const fixed = {'Retrieving Browser Pages':'正在获取浏览器页面','Retrieved Browser Pages':'已获取浏览器页面','Semantic searching':'正在进行语义搜索','Semantic searched':'已完成语义搜索'};
     if (Object.hasOwn(fixed, core)) return leading + fixed[core] + trailing;
-    if (/^(Thinking|Thought Process|Working|Done|Unknown (?:file )?edit|Analyz(?:ing|ed) (?:Task Log|content)|Check(?:ing|ed) command status|Fetch(?:ing|ed) network requests?(?: for page\.)?|Extract(?:ing|ed) DOM elements|Failed to (?:build|edit|execute|read)|Test failed|(?:Searching|Searched) Moma for|(?:Retrieving|Retrieved) findings for|Build Cleaner (?:is running on|completed for))$/i.test(core) && translations.has(core))
+    if (/^(Thinking|Thought Process|Working|Done|Unknown (?:file )?edit|Analyz(?:ing|ed) (?:Task Log|content)|Check(?:ing|ed) command status|Fetch(?:ing|ed) network requests?(?: for page\.)?|Extract(?:ing|ed) DOM elements|Failed to (?:build|edit|execute|read)|Test failed|(?:Searching|Searched) Moma for|(?:Retrieving|Retrieved) findings for|Build Cleaner (?:is running on|completed for)|(?:Auto-)?proceeded with|(?:reading|read) page|bookmarking|bookmarked|removing bookmark|removed bookmark|canceled (?:bookmark of|removal of bookmark|creation of|deletion of|edit to))$/i.test(core) && translations.has(core))
       return leading + translations.get(core) + trailing;
     const single = core.match(/^([A-Za-z]+)$/);
     if (single && statusVerbs[single[1].toLowerCase()]) return leading + statusVerbs[single[1].toLowerCase()] + trailing;

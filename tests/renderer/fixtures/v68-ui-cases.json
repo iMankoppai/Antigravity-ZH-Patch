@@ -322,5 +322,89 @@
   {
     "original": "Semantic searched",
     "expected": "已完成语义搜索"
+  },
+  {
+    "original": "File exceeds the 20MB display limit (72MB).",
+    "expected": "文件超过 20MB 的展示限制（实际 72MB）。"
+  },
+  {
+    "original": "Ask anything, @ to mention",
+    "expected": "提出任何问题，输入 @ 提及"
+  },
+  {
+    "original": "Name is required",
+    "expected": "名称为必填项"
+  },
+  {
+    "original": "Name must be folder-safe (alphanumeric, underscores, hyphens; must start with alphanumeric)",
+    "expected": "名称必须可安全用作文件夹名（可使用字母、数字、下划线和连字符，且须以字母或数字开头）"
+  },
+  {
+    "original": "Working copy",
+    "expected": "工作副本"
+  },
+  {
+    "original": "Create a JJ worktree",
+    "expected": "创建 JJ 工作树"
+  },
+  {
+    "original": "Cannot revert this message",
+    "expected": "无法还原此消息"
+  },
+  {
+    "original": "Read page",
+    "expected": "已读取网页"
+  },
+  {
+    "original": "Reading page",
+    "expected": "正在读取网页"
+  },
+  {
+    "original": "Auto-proceeded with",
+    "expected": "已自动继续处理"
+  },
+  {
+    "original": "Proceeded with",
+    "expected": "已继续处理"
+  },
+  {
+    "original": "Bookmarking",
+    "expected": "正在添加书签"
+  },
+  {
+    "original": "Bookmarked",
+    "expected": "已添加书签"
+  },
+  {
+    "original": "Removing bookmark",
+    "expected": "正在移除书签"
+  },
+  {
+    "original": "Removed bookmark",
+    "expected": "已移除书签"
+  },
+  {
+    "original": "Canceled bookmark of",
+    "expected": "已取消添加书签"
+  },
+  {
+    "original": "Canceled removal of bookmark",
+    "expected": "已取消移除书签"
+  },
+  {
+    "original": "Canceled creation of",
+    "expected": "已取消创建"
+  },
+  {
+    "original": "Canceled deletion of",
+    "expected": "已取消删除"
+  },
+  {
+    "original": "Loading harnesses…",
+    "expected": "正在加载实验配置…"
+  },
+  {
+    "original": "Couldn't load harnesses.",
+    "expected": "无法加载实验配置。"
   }
 ]

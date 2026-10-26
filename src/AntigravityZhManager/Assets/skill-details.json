@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "revision": "2dd02dee50cd393edcb09808c719ca8e52bd7cff249744060bc9481787a06a31",
+  "revision": "28ebb8de319d946050631280add1d80cafae14ca1766c5e3cc1d830906570c0e",
   "scope": "official-plugin-and-builtin-detail-view",
   "documents": [
     {
@@ -4929,6 +4929,7 @@
     "Enter {0}...": "输入 {0}…",
     "New {0}": "新建 {0}",
     "Add {0}": "添加 {0}",
-    "Copy {0}": "复制 {0}"
+    "Copy {0}": "复制 {0}",
+    "File exceeds the {0} display limit ({1}).": "文件超过 {0} 的展示限制（实际 {1}）。"
   }
 }
