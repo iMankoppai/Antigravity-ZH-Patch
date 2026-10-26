@@ -602,6 +602,158 @@
           "recordedAt": "2026-10-19T13:05:57.713Z"
         }
       ]
+    },
+    {
+      "productVersion": "2.25.0",
+      "platform": "win32",
+      "arch": "x64",
+      "pristine": {
+        "sha256": "ad7fb1a177a11522490cba910c0970a117bec568cd9ad85233fa62873361ed05",
+        "bytes": 4502673,
+        "productVersion": "2.25.0",
+        "source": "target",
+        "path": "work/localization-v64/official-app.asar",
+        "recordedAt": "2026-10-21T18:33:42.419Z"
+      },
+      "compatibility": {
+        "packageSignatureSha256": "dd534ff5211df214041d89c743c21ce7cd3df62ec5ae26f7a71376a5ad1b67cf",
+        "targetSha256": {
+          "dist/ipcHandlers.js": "0a58fe6eba5b985702d5f81ec18e8efd71a9aa017e250cc9446055d8040e9524",
+          "dist/main.js": "afadfbb9c0880f081dd763caa2b9525b2590631ab8fd58cd82e2d67075df1a42",
+          "dist/utils.js": "6f01d746963c0cd964dbcb057ed34374c129c4381b5ebddd2509ca37b12519a7",
+          "dist/tray.js": "6c6b0968b45a1c7088e459657d57a9efd72d3733614349095f17b6ee94b47135",
+          "dist/ideInstall/wizard.js": "20814ba365ceb5f386afe856277f5dc85bf9db994d1a77579430f100f3725666",
+          "dist/provisionSplash.js": "737f40f02130440a9ec9a3fed83c2e62290029aece6d0ad558136fa510c45f35"
+        }
+      },
+      "requiredTargets": [
+        "dist/ipcHandlers.js",
+        "dist/main.js",
+        "dist/utils.js",
+        "dist/tray.js"
+      ],
+      "requiredEntries": {
+        "dist/ipcHandlers.js": true,
+        "dist/main.js": true,
+        "dist/tray.js": true,
+        "dist/utils.js": true
+      },
+      "requiredAnchors": [
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspace'",
+          "count": 1
+        },
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspaces'",
+          "count": 1
+        },
+        {
+          "target": "dist/main.js",
+          "text": "void win.loadURL(newUrl);",
+          "count": 1
+        },
+        {
+          "target": "dist/utils.js",
+          "text": "void win.loadURL(url);",
+          "count": 1
+        },
+        {
+          "target": "dist/tray.js",
+          "text": "Menu.buildFromTemplate(actions)",
+          "count": 1
+        }
+      ],
+      "missingTargets": [],
+      "knownPatchedSha256": [
+        {
+          "sha256": "b0e613e9046a0a0a3c9176b08ce5923844d3ba6a9b6a33184a9d515b192cf6d4",
+          "kernelSha256": "2aa9563f415648072c5390d596ee6bbba183905401699fffe0cff98fc60ff439",
+          "bytes": 7687581,
+          "recordedAt": "2026-10-21T18:35:56.064Z",
+          "note": "v64，生产安装器隔离验证归档"
+        },
+        {
+          "sha256": "900f47df6be21597d2ebd3c8d11a0e6b20d34f60d8b889971e4ebf8582594e96",
+          "kernelSha256": "3923a2fc54b411700437ab6ebf383c04bdd23efa081bd85bf4aae432a67c0ea9",
+          "bytes": 7694843,
+          "recordedAt": "2026-10-23T17:15:15.000Z",
+          "note": "v65，生产安装器隔离验证归档"
+        }
+      ]
+    },
+    {
+      "productVersion": "2.26.0",
+      "platform": "win32",
+      "arch": "x64",
+      "pristine": {
+        "sha256": "8ce27ff7c2defa10ed1ed2817288a61c546690f4cae1b1a8c91d4e69e0851e4d",
+        "bytes": 4387714,
+        "productVersion": "2.26.0",
+        "source": "backup",
+        "path": "work/localization-v66/official-app.asar",
+        "recordedAt": "2026-10-24T03:32:23.864Z"
+      },
+      "compatibility": {
+        "packageSignatureSha256": "dd534ff5211df214041d89c743c21ce7cd3df62ec5ae26f7a71376a5ad1b67cf",
+        "targetSha256": {
+          "dist/ipcHandlers.js": "c9af195d82aba20300d48c763c002e277db226336e0529f2d9d26e64c5d7d078",
+          "dist/main.js": "66535c0baffe1c0e3a71e9980c198bceb746bdd733df3e528e2452574f2691d0",
+          "dist/utils.js": "38bfb7a46abb219ec4f0a76dbd2f79c0f0f9161181ea84ff6874bbefd5bb36fb",
+          "dist/tray.js": "6c6b0968b45a1c7088e459657d57a9efd72d3733614349095f17b6ee94b47135",
+          "dist/ideInstall/wizard.js": "20814ba365ceb5f386afe856277f5dc85bf9db994d1a77579430f100f3725666",
+          "dist/provisionSplash.js": "737f40f02130440a9ec9a3fed83c2e62290029aece6d0ad558136fa510c45f35"
+        }
+      },
+      "requiredTargets": [
+        "dist/ipcHandlers.js",
+        "dist/main.js",
+        "dist/utils.js",
+        "dist/tray.js"
+      ],
+      "requiredEntries": {
+        "dist/ipcHandlers.js": true,
+        "dist/main.js": true,
+        "dist/tray.js": true,
+        "dist/utils.js": true
+      },
+      "requiredAnchors": [
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspace'",
+          "count": 1
+        },
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspaces'",
+          "count": 1
+        },
+        {
+          "target": "dist/main.js",
+          "text": "void win.loadURL(newUrl);",
+          "count": 1
+        },
+        {
+          "target": "dist/utils.js",
+          "text": "void win.loadURL(url);",
+          "count": 1
+        },
+        {
+          "target": "dist/tray.js",
+          "text": "Menu.buildFromTemplate(actions)",
+          "count": 1
+        }
+      ],
+      "missingTargets": [],
+      "knownPatchedSha256": [
+        {
+          "sha256": "e3a2b6323b4f8f8a63524e38af2182deaaacea3d965e3732c7a51c5fde30dcbf",
+          "kernelSha256": "fc849bd3e90ba154402bdd62ac8ade5ddd4fac9ba82ae95417440a6f8186eb3b",
+          "bytes": 7597343,
+          "recordedAt": "2026-10-24T04:19:40.201Z"
+        }
+      ]
     }
   ]
 }

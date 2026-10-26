@@ -111,6 +111,10 @@ if (-not $SkipBrowser -and $chromeOk) {
 $null = Invoke-Check 'wrapper-guard' @('tests/renderer/wrapper-guard.cjs') $true
 $null = Invoke-Check 'notification-hook' @('tests/renderer/notification-hook.cjs') $true
         $null = Invoke-Check 'missing-ui-regression' @('tests/renderer/missing-ui-regression.cjs') $true
+        $null = Invoke-Check 'delete-dialog-regression' @('tests/renderer/delete-dialog-regression.cjs') $true
+        $null = Invoke-Check 'v225-ui-regression' @('tests/renderer/v225-ui-regression.cjs') $true
+        $null = Invoke-Check 'v68-localization-regression' @('tests/renderer/v68-localization-regression.cjs') $true
+        $null = Invoke-Check 'builtin-skills-regression' @('tests/renderer/builtin-skills-regression.cjs') $true
         $null = Invoke-Check 'plugin-readme-regression' @('tests/renderer/plugin-readme-regression.cjs') $true
         $null = Invoke-Check 'global-localization-regression' @('tests/renderer/global-localization-regression.cjs') $true
         $null = Invoke-Check 'skill-details-regression' @('tests/renderer/skill-details-regression.cjs') $true
@@ -130,11 +134,17 @@ $asarArgs = @('tests/packaging/bundle-consistency.cjs')
 if ($AsarPath) { $asarArgs += @('--asar', $AsarPath) }
 $null = Invoke-Check 'bundle-consistency' $asarArgs $true
 $null = Invoke-Check 'native-ui' @('tests/renderer/native-ui.cjs') $true
+$null = Invoke-Check 'native-context-menu' @('tests/renderer/native-context-menu.cjs') $true
 $null = Invoke-Check 'version-consistency' @('tests/packaging/version-consistency.cjs') $true
 $null = Invoke-Check 'release-consistency' @('tests/packaging/release-consistency.cjs') $true
 $null = Invoke-Check 'baseline-manifest' @('tests/packaging/baseline-manifest.cjs') $true
 $null = Invoke-Check 'anchor-coverage' @('tests/packaging/anchor-coverage.cjs') $true
-$null = Invoke-CheckFile 'engine-baseline' 'tests/packaging/run-engine-tests.ps1' $true
+# Run the same test project with the SDK already detected above. Invoking a
+# second .ps1 can be blocked by Windows file-signing policy even when this
+# entry point is allowed; executing dotnet does not change that policy.
+& $sdkExe run --project 'tests/packaging/engine-tests/EngineTests.csproj' -c Release --nologo
+if ($LASTEXITCODE -eq 0) { Add-Result 'engine-baseline' 'PASS' 'exit 0' }
+else { Add-Result 'engine-baseline' 'FAIL' "exit $LASTEXITCODE" }
 
 $failed = @($results | Where-Object { $_.status -eq 'FAIL' }).Count
 $skipped = @($results | Where-Object { $_.status -eq 'SKIP' }).Count

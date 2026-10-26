@@ -11,6 +11,8 @@ const {marked}=require(deps+'marked');
 const {normalizeSkillMarkdown}=require('./skill-markdown.cjs');
 const fixtures=require('../tests/renderer/fixtures/official-skill-bodies.json');
 const extras=require('../tests/renderer/fixtures/official-plugin-extras.json');
+const builtinFixtures=require('../tests/renderer/fixtures/builtin-skill-bodies.json');
+const {fingerprint}=require('./builtin-skill-documents.cjs');
 const proseCode=require('../localization/skill-detail-prose-code.json');
 const proseBlocks=require('../localization/skill-detail-prose-code-blocks.json');
 const proofreadFile='localization/skill-detail-sdk-proofread.json';
@@ -65,11 +67,34 @@ const proofread=fs.existsSync(proofreadFile)?JSON.parse(fs.readFileSync(proofrea
   const signature=await page.evaluate(()=>document.body.textContent.replace(/\s+/g,' ').trim().slice(0,220));
   additionalDocuments.push({plugin:extra.plugin,skill:extra.skill,kind:extra.kind,source:extra.source,sourceSha256:extra.sourceSha256,heading:markdown.match(/^# (.+)$/m)?.[1]||'',signature,markdownLength:markdown.length,markdownFingerprint:fingerprint.toString(16),overrides:extra.description?{[extra.description]:extra.descriptionTranslation}:{},renderedHtml});
  }
+ const builtinDocuments=[];
+ for(const source of builtinFixtures){
+  const translation=JSON.parse(fs.readFileSync('localization/builtin-documents/'+source.skill+'.json','utf8'));
+  if(translation.sourceSha256!==source.sourceSha256)throw Error('Builtin source changed; review translation: '+source.skill);
+  const values=translation.units;
+  if(values.length!==source.units.length)throw Error('Builtin paragraph count: '+source.skill);
+  let html=source.template;
+  for(const unit of source.units){
+   const value=values[unit.id];
+   if(typeof value!=='string'||!value.trim())throw Error('Missing builtin paragraph: '+source.skill+'/'+unit.id);
+   const tokens=[...value.matchAll(/\{\{CODE(\d+)\}\}/g)].map(m=>Number(m[1])).sort((a,b)=>a-b);
+   if(JSON.stringify(tokens)!==JSON.stringify(unit.codes.map((_,i)=>i)))throw Error('Builtin code placeholders: '+source.skill+'/'+unit.id);
+   const translated=value.replace(/\{\{CODE(\d+)\}\}/g,(_,i)=>unit.codes[Number(i)]);
+   html=html.replace('<!--ZHBUILTIN'+unit.id+'-->',()=>translated);
+  }
+  if(/ZHBUILTIN\d+|\{\{CODE\d+\}\}/.test(html))throw Error('Unresolved builtin paragraph');
+  const markdown=source.markdown.replace(/\r\n/g,'\n').trim();
+  // Require the full source fingerprint. A custom or changed built-in document
+  // must never receive a stale translation just because its heading matches.
+  builtinDocuments.push({plugin:'builtin',skill:source.skill,source:source.source,sourceSha256:source.sourceSha256,
+   requireExact:true,markdownLength:markdown.length,markdownFingerprint:fingerprint(markdown),
+   paragraphs:source.units.length,renderedHtml:await finalizeHtml(html)});
+ }
  const translations={},identities=[];
  const readmeBlocks=await require('./compile-readme-review.cjs').compileReadmeReview(page);
  const uiTemplates=require('../localization/ui-audit-additions.json').templates;
- const revision=crypto.createHash('sha256').update(JSON.stringify({documents,additionalDocuments,translations,readmeBlocks,uiTemplates})).digest('hex');
- const catalogue={schema:2,revision,scope:'official-plugin-detail-view',documents,additionalDocuments,translations,identities,readmeBlocks,uiTemplates};
+ const revision=crypto.createHash('sha256').update(JSON.stringify({documents,additionalDocuments,builtinDocuments,translations,readmeBlocks,uiTemplates})).digest('hex');
+ const catalogue={schema:2,revision,scope:'official-plugin-and-builtin-detail-view',documents,additionalDocuments,builtinDocuments,translations,identities,readmeBlocks,uiTemplates};
  fs.writeFileSync('src/AntigravityZhManager/Assets/skill-details.json',JSON.stringify(catalogue,null,2)+'\n');
- console.log(JSON.stringify({documents:documents.length,additionalDocuments:additionalDocuments.length,proseExamples:Object.keys(proseCode).length+Object.keys(proseBlocks).length,paragraphs:Object.keys(input.units).length,repairedRows:documents.reduce((n,d)=>n+d.repairedContinuations,0),revision},null,2));
+ console.log(JSON.stringify({documents:documents.length,additionalDocuments:additionalDocuments.length,builtinDocuments:builtinDocuments.length,builtinParagraphs:builtinDocuments.reduce((n,d)=>n+d.paragraphs,0),proseExamples:Object.keys(proseCode).length+Object.keys(proseBlocks).length,paragraphs:Object.keys(input.units).length,repairedRows:documents.reduce((n,d)=>n+d.repairedContinuations,0),revision},null,2));
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

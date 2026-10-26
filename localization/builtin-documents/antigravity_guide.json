@@ -1,0 +1,30 @@
+{
+  "sourceSha256": "9fc5f6570e91dd792dab582d4e1cc7e7bd25b303c1583c6f118a07ec6bb3dd1d",
+  "units": [
+    "Google Antigravity（AGY）指南与站点地图",
+    "Google Antigravity 是以 AI 为核心的开发平台。根据用户询问的产品形态，你<strong>必须</strong>阅读本技能 {{CODE0}} 目录下对应的子文档：",
+    "1. 产品形态索引（离线子文档）",
+    "<strong>Antigravity CLI（{{CODE0}}）</strong>：<a href=\"references/cli.md\">references/cli.md</a>",
+    "提供公开权威 CLI 文档的入口，涵盖斜杠命令、功能、设置与最佳实践。",
+    "<strong>Antigravity IDE</strong>：<a href=\"references/ide.md\">references/ide.md</a>",
+    "介绍独立的 AI 优先 IDE、侧边栏对话面板和行内 CodeLens。",
+    "<strong>Antigravity 2.0</strong>：<a href=\"references/app.md\">references/app.md</a>",
+    "介绍支持并行工作的桌面应用、左侧栏、对话画布和 HTML 辅助面板（子代理、后台任务、成果、文件更改、终端）。",
+    "<strong>Antigravity SDK</strong>：<a href=\"references/sdk.md\">references/sdk.md</a>",
+    "介绍公开的 Python SDK（<a href=\"https://github.com/google-antigravity/antigravity-sdk-python\">https://github.com/google-antigravity/antigravity-sdk-python</a>），用于以编程方式租用代理、调用编排 API 和开放自定义工具。",
+    "2. 智能混合检索：何时获取在线文档",
+    "离线子文档适合快速查阅。但如果用户询问最新更新、进阶 Vertex AI 集成或此处未涵盖的复杂配置，你<strong>必须</strong>从官方站点地图动态获取对应的在线页面：",
+    "<strong>文档主页</strong>：{{CODE0}}",
+    "<strong>技能</strong>：{{CODE0}}",
+    "<strong>规则</strong>：{{CODE0}}",
+    "<strong>钩子</strong>：{{CODE0}}",
+    "<strong>插件</strong>：{{CODE0}}",
+    "<strong>Sidecar</strong>：{{CODE0}}",
+    "<strong>模型上下文协议（MCP）</strong>：{{CODE0}}",
+    "<strong>浏览器自动化与测试</strong>：{{CODE0}}",
+    "<strong>代理权限与安全</strong>：{{CODE0}}",
+    "<strong>终端沙箱</strong>：{{CODE0}}",
+    "<strong>更新日志与发行说明</strong>：{{CODE0}}",
+    "<strong>故障排查与支持</strong>：{{CODE0}}<!-- LINT.ThenChange(//depot/google3/third_party/gemini_coder/agent_ui_toolkit/dev/appVariant/externalAppVariant.ts:custom_links) -->"
+  ]
+}

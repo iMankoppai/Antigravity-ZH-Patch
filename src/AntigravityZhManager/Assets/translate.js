@@ -1,7 +1,7 @@
 (() => {
-  const patchVersion = 62;
+  const patchVersion = 68;
   const skillDetails = window.__antigravityZhSkillDetails || { documents: [], translations: {} };
-  const detailDocuments = [...skillDetails.documents, ...(skillDetails.additionalDocuments || [])];
+  const detailDocuments = [...skillDetails.documents, ...(skillDetails.additionalDocuments || []), ...(skillDetails.builtinDocuments || [])];
   const reviewedReadmeBlocks = new Map((skillDetails.readmeBlocks || []).map(b => [b.source, b]));
   const dictionary = window.__antigravityZhPatchDictionary || {};
   const identity = window.__antigravityZhPatchDictionarySignature || JSON.stringify(dictionary);
@@ -82,7 +82,7 @@
       const exact = sourceDocument(detailSource(root));
       const withoutAlerts = value => normalizeDetail(value).replace(/\[!(?:NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*/g, '');
       const original = withoutAlerts(originalElementText(root));
-      const doc = exact !== undefined ? exact : detailDocuments.find(d => d.signature && original.includes(withoutAlerts(d.signature)) &&
+      const doc = exact !== undefined ? exact : detailDocuments.find(d => !d.requireExact && d.signature && original.includes(withoutAlerts(d.signature)) &&
         (!d.heading || original.includes(d.heading))) || null;
       detailRoots.set(root, doc);
     }
@@ -101,6 +101,8 @@
     const key = normalizeDetail(core);
     let translated;
     const doc = detailDocument(parent);
+    const source = detailSource(root);
+    if (!doc && source?.contains(node)) { restoreNode(node); return true; }
     if (doc?.overrides && Object.hasOwn(doc.overrides, key)) translated = doc.overrides[key];
     else if (doc && Object.hasOwn(skillDetails.translations, key)) translated = skillDetails.translations[key];
     // The modal's short description is independently localized, even when a
@@ -116,6 +118,8 @@
     if (element.closest('[data-antigravity-zh-detail-view]')) return true;
     ensureDetailView(element);
     for (const source of detailViews.keys()) if (source === element || source.contains(element)) return true;
+    const root = element.closest('[data-testid="doc-row-modal"]'), source = detailSource(root);
+    if (!detailDocument(element) && source?.contains(element)) { restoreNode(element); return true; }
     for (const attr of translatableAttributes) {
       if (!element.hasAttribute(attr)) continue;
       const original = originalAttribute(element, attr), key = normalizeDetail(original || '');
@@ -230,7 +234,60 @@
     return rule;
   });
   const regexTranslations = [
+    [/^Resets in (<1m|\d+[dhms](?:\s+\d+[dhms])*)$/, m => m[1] === '<1m' ? '不到 1 分钟后重置' : `${m[1].replace(/(\d+)([dhms])/g, (_, n, u) => `${n} ${{d:'天',h:'小时',m:'分钟',s:'秒'}[u]}`)}后重置`],
+    [/^Included by (.+)$/, m => `由 ${m[1]} 引入`],
+    [/^Installed in (.+)$/, m => `安装于 ${m[1]}`],
+    [/^(.+?)([’'])s server IP address could not be found\.$/, m => `找不到 ${m[1]} 的服务器 IP 地址。`],
+    [/^(.+) refused to connect\.$/, m => `${m[1]} 拒绝了连接。`],
+    [/^(.+) took too long to respond\.$/, m => `${m[1]} 响应超时。`],
+    [/^Requires manual confirmation: ([\s\S]+)$/, m => `需要手动确认：${m[1]}`],
+    [/^(Minimum|Maximum) length is (\d+)$/, m => `${m[1] === 'Minimum' ? '最短' : '最长'}长度为 ${m[2]}`],
+    [/^(Side question failed|Attachment error|Upload error|MCP error): ([\s\S]+)$/, m => `${{'Side question failed':'附加问题处理失败','Attachment error':'附件错误','Upload error':'上传错误','MCP error':'MCP 错误'}[m[1]]}：${m[2]}`],
+    [/^Message queued\.(?: (\d+) messages in queue\.)? Sends after agent finishes working\. Actions available: Send Now, Edit, Delete\.$/, m => `消息已排队。${m[1] ? `队列中有 ${m[1]} 条消息。` : ''}代理完成工作后发送。可用操作：立即发送、编辑、删除。`],
+    [/^Filter skills and rules: (All|Skills|Rules)$/, m => `筛选技能与规则：${{All:'全部',Skills:'技能',Rules:'规则'}[m[1]]}`],
+    [/^Enter Time Zone(?:\.\.\.|…)$/, () => '输入时区…'],
+    [/^See (more|less) in Build with Google$/, m => `${m[1] === 'more' ? '查看更多' : '收起'}“基于 Google 构建”内容`],
+    [/^Show (\d+) breakdowns?$/, m => `显示 ${m[1]} 项明细`],
     ...reviewedUiTemplateRules.filter(rule => !rule.fallback),
+    [/^Make (.+) the default (.+) account$/, m => `将 ${m[1]} 设为默认的 ${m[2]} 账号`],
+    [/^(\d+) accounts$/, m => `${m[1]} 个账号`],
+    [/^Install folder "(.+)" is already in use$/, m => `安装文件夹“${m[1]}”已被占用`],
+    [/^Configure (.+), values missing$/, m => `配置 ${m[1]}，缺少配置值`],
+    [/^New secret for (.+)$/, m => `${m[1]} 的新密钥`],
+    [/^Reconnect (.+)$/, m => `重新连接 ${m[1]}`],
+    [/^Disconnect (.+)$/, m => `断开 ${m[1]} 的连接`],
+    [/^Connect (?!to\b|an?\b)(.+)$/, m => `连接 ${m[1]}`],
+    [/^Couldn't load apps: ([\s\S]+)$/, m => `无法加载应用：${m[1]}`],
+    [/^No apps found for "(.+)"\.$/, m => `未找到与“${m[1]}”匹配的应用。`],
+    [/^Cancel Questionnaire and Stop the Agent \((.+)\)$/, m => `取消问卷并停止智能体（${m[1]}）`],
+    [/^Sort and filter conversations \((\d+) active\)$/, m => `排序与筛选对话（${m[1]} 项已启用）`],
+    [/^Turn (\d+)$/, m => `第 ${m[1]} 轮`],
+    [/^Turns (\d+)\u2013(\d+)$/, m => `第 ${m[1]}–${m[2]} 轮`],
+    [/^(\d+) turns?$/, m => `${m[1]} 轮`],
+    [/^Go to turn (\d+) of (\d+)$/, m => `转到第 ${m[1]} 轮（共 ${m[2]} 轮）`],
+    [/^The selected (project|workspace|environment) can't be found\. Pick another \1 from the \1 selector to send\.$/, m => {
+      const s = { project: '项目', workspace: '工作区', environment: '环境' }[m[1]] || m[1];
+      return `找不到所选的${s}。请从${s}选择器中选择其他${s}后再发送。`;
+    }],
+    [/^Not a plain relative artifact path: (.+)$/, m => `不是普通的相对成果路径：${m[1]}`],
+    [/^Not a type the pane opens: (.+)$/, m => `不是面板支持打开的类型：${m[1]}`],
+    [/^HTML opens only from cos_canvas\/: (.+)$/, m => `仅支持从 cos_canvas/ 打开 HTML：${m[1]}`],
+    [/^Not a canvas page name: (.+)$/, m => `不是有效的画布页面名称：${m[1]}`],
+    [/^Set up (.+)$/, m => `设置 ${m[1]}`],
+    [/^Review permissions for (.+)$/, m => `检查 ${m[1]} 的权限`],
+    [/^(.+), (\d+) grants?$/, m => `${translations.get(m[1]) || m[1]}，${m[2]} 项授权`],
+    [/^Adding plugins from (.+)$/, m => `正在从 ${m[1]} 添加插件`],
+    [/^Add (\d+) plugins? from (.+)$/, m => `从 ${m[2]} 添加 ${m[1]} 个插件`],
+    [/^Add all \u00b7 (\d+)$/, m => `全部添加 · ${m[1]}`],
+    [/^(Disable|Enable) (.+) tool for (.+)$/, m => `为 ${m[3]} ${m[1] === 'Disable' ? '禁用' : '启用'} ${m[2]} 工具`],
+    [/^(\d+) tools$/, m => `${m[1]} 个工具`],
+    [/^App view for (.+)$/, m => `${m[1]} 的应用视图`],
+    [/^\((\d+) steps?\)$/, m => `（${m[1]} 步）`],
+    [/^\+(\d+) more$/, m => `另有 ${m[1]} 项`],
+    [/^See (\d+) more (?!in\s)(.+)$/, m => `再查看 ${m[1]} 项${translations.get(m[2]) || m[2]}`],
+    [/^See more (?!in\s)(.+)$/, m => `查看更多${translations.get(m[1]) || m[1]}`],
+    [/^gates (.+) \+(\d+) more$/, m => `控制 ${m[1]} 等另外 ${m[2]} 项`],
+    [/^gates (.+)$/, m => `控制 ${m[1]}`],
     [/^(\d+) demoted$/, m => `${m[1]} 项已降级`],
     [/^(\d+) excluded$/, m => `${m[1]} 项已排除`],
     [/^(\d+) rules? exceeded the rules budget and (?:was|were) demoted from full inline content to a file-path pointer\.$/, m => `${m[1]} 条规则超出规则预算，已从完整内嵌内容降级为文件路径引用。`],
@@ -631,7 +688,7 @@
     [/^(\d+:\d+(?::\d+)?) of (\d+:\d+(?::\d+)?)$/, m => `${m[1]} / ${m[2]}`],
     [/^Wait for (\d+)s$/, m => `等待 ${m[1]} 秒`]
   );
-  const translatableAttributes = ["aria-label", "aria-valuetext", "placeholder", "data-placeholder", "title", "alt"];
+  const translatableAttributes = ["aria-label", "aria-valuetext", "placeholder", "data-placeholder", "title", "alt", "data-tooltip"];
   const opaqueSelector = "script, style, code, pre, [data-antigravity-user-content='true'], " +
     ".monaco-editor .view-lines, .xterm-screen, .line-content, .token, " +
     ".rounded-xl.border.overflow-hidden.p-4.font-mono.text-sm.leading-relaxed, " +
@@ -745,6 +802,8 @@
     const core = value.trim(), leading = value.match(/^\s*/)?.[0] || '', trailing = value.match(/\s*$/)?.[0] || '';
     const elapsed = elapsedStatus(core);
     if (elapsed) return leading + elapsed + trailing;
+    const fixed = {'Retrieving Browser Pages':'正在获取浏览器页面','Retrieved Browser Pages':'已获取浏览器页面','Semantic searching':'正在进行语义搜索','Semantic searched':'已完成语义搜索'};
+    if (Object.hasOwn(fixed, core)) return leading + fixed[core] + trailing;
     if (/^(Thinking|Thought Process|Working|Done|Unknown (?:file )?edit|Analyz(?:ing|ed) (?:Task Log|content)|Check(?:ing|ed) command status|Fetch(?:ing|ed) network requests?(?: for page\.)?|Extract(?:ing|ed) DOM elements|Failed to (?:build|edit|execute|read)|Test failed|(?:Searching|Searched) Moma for|(?:Retrieving|Retrieved) findings for|Build Cleaner (?:is running on|completed for))$/i.test(core) && translations.has(core))
       return leading + translations.get(core) + trailing;
     const single = core.match(/^([A-Za-z]+)$/);
@@ -852,6 +911,12 @@
   }
   function shouldSkipTextNode(node) {
     const parent = node.parentElement;
+    // New MCP panes concatenate a fixed prefix, an app-supplied title and
+    // diagnostic text. Only the first text node is application UI.
+    if (parent?.closest('[data-testid="mcp-app-pane-loading"], [data-testid="mcp-app-pane-error"]')) {
+      const firstText = [...parent.childNodes].find(n => n.nodeType === Node.TEXT_NODE);
+      if (node !== firstText || !['Loading', 'Could not load'].includes(originalText(node)?.trim())) return true;
+    }
     return !parent || isOpaque(parent) || Boolean(parent.closest('.xterm-screen')) || parent.isContentEditable ||
       Boolean(parent.closest('.line-content') && !parent.closest('button[data-testid="gutter-comment-button"]')) ||
       Boolean(parent.closest("textarea, input")) || isConversationContent(parent) ||
@@ -886,10 +951,21 @@
     else nodeOriginals.set(node, { original, applied: value });
     if (node.nodeValue !== value) node.nodeValue = value;
   }
-  const reviewedFragments = new Set(['s', ').', 'Agents created by', 'this plugin', 'run in a dedicated', 'project', 'workspace', 'environment', 'two', 'three', 'insertion', 'deletion', 'lint error']);
+  const reviewedFragments = new Set([
+    '', 's', ').', 'space).', 'Agents created by', 'this plugin', 'run in a dedicated', 'project', 'workspace', 'environment',
+    'two', 'three', 'insertion', 'deletion', 'lint error',
+    'Commit', 'file', 'files', 'change', 'changes', 'to', 'need', 'needs', 'input',
+    'more', 'less', 'line', 'lines', '… (', 'above hidden)', 'above hidden', '...and',
+    'Review', 'comment', 'comments', 'subagent', 'subagents', 'updated',
+    'plugin', 'plugins', 'image', 'images', 'result', 'results', 'finding', 'findings',
+    'question', 'questions', 'page', 'pages', 'of', 'partial:', 'steps loaded',
+    'navigate', 'select', 'close', 'for', 'or',
+    'A', 'with this name already exists.', 'This', 'is managed by the',
+    'automation and can only be deleted by deleting that automation.'
+  ]);
   function translateReviewedUiFragment(node) {
     const original = originalText(node), core = original?.trim();
-    if (!reviewedFragments.has(core) && !/^\d+s$/.test(core)) return false;
+    if (!reviewedFragments.has(core) && !/^\d+s?$/.test(core)) return false;
     const parent = node.parentElement;
     const outer = originalElementText(parent.parentElement).replace(/\s+/g, ' ');
     let translated;
@@ -914,6 +990,78 @@
     if (context.startsWith('Select one of the ') && context.includes('options. Agent settings')) {
       if (core === 'two' || core === 'three') translated = original.replace(core, core === 'two' ? '两项' : '三项');
     }
+    if (/^Commit \d+ files? changes? to$/.test(sentence)) {
+      const count = sentence.match(/^Commit (\d+)/)[1];
+      const walker = document.createTreeWalker(parent, NodeFilter.SHOW_TEXT); let part, first = true;
+      while ((part = walker.nextNode())) { writeText(part, first ? `将 ${count} 个文件的更改提交到` : '', originalText(part)); first = false; }
+      return true;
+    }
+    if (/^\d+ needs? input$/.test(sentence)) {
+      const fragments = { need: '项需要', needs: '项需要', s: '', input: '输入' };
+      if (Object.hasOwn(fragments, core)) translated = core === 'input' ? '输入' : original.replace(core, fragments[core]);
+    }
+    if (/^\+\d+ more lines?$/.test(sentence)) {
+      const fragments = { more: '更多', line: '行', lines: '行' };
+      if (Object.hasOwn(fragments, core)) translated = original.replace(core, fragments[core]);
+    }
+    if (/^\.\.\. \d+ lines?$/.test(sentence) && parent.matches('[data-testid^="folded-badge-"]')) {
+      if (core === 'line' || core === 'lines') translated = original.replace(core, '行');
+    }
+    if (/^(?:… \()?\d+ lines? above hidden\)?$/.test(sentence)) {
+      const fragments = { '… (': '…（', line: '行', lines: '行', 'above hidden)': '上方内容已隐藏）', 'above hidden': '上方内容已隐藏' };
+      if (Object.hasOwn(fragments, core)) translated = original.replace(core, fragments[core]);
+    }
+    if (/^\.\.\.and \d+ more$/.test(sentence)) {
+      const fragments = { '...and': '...另有', more: '项' };
+      if (Object.hasOwn(fragments, core)) translated = original.replace(core, fragments[core]);
+    }
+    if (/^Review \d+ comments?$/.test(sentence)) {
+      const fragments = { Review: '审阅', comment: '条评论', comments: '条评论', s: '' };
+      if (Object.hasOwn(fragments, core)) translated = original.replace(core, fragments[core]);
+    }
+    if (/^\(\d+ subagents?\)$/.test(sentence)) {
+      const fragments = { subagent: '个子代理', subagents: '个子代理', s: '' };
+      if (Object.hasOwn(fragments, core)) translated = original.replace(core, fragments[core]);
+    }
+    if (/^\d+ files? updated$/.test(sentence)) {
+      const fragments = { file: '个文件', files: '个文件', updated: '已更新' };
+      if (Object.hasOwn(fragments, core)) translated = original.replace(core, fragments[core]);
+    }
+    if (/^\d+ (?:plugins?|images?|results?|findings?|questions?|pages?)$/.test(sentence)) {
+      const fragments = { plugin: '个插件', plugins: '个插件', image: '张图片', images: '张图片', result: '个结果', results: '个结果', finding: '项发现', findings: '项发现', question: '个问题', questions: '个问题', page: '个页面', pages: '个页面', s: '' };
+      if (Object.hasOwn(fragments, core)) translated = original.replace(core, fragments[core]);
+    }
+    if (/^\d+ of \d+$/.test(sentence) && core === 'of') {
+      translated = original.replace('of', '/');
+    }
+    if (/^partial: [\d,]+ of [\d,]+ steps loaded$/.test(sentence)) {
+      const fragments = { 'partial:': '部分加载：已加载', of: '/', 'steps loaded': '步' };
+      if (Object.hasOwn(fragments, core)) translated = original.replace(core, fragments[core]);
+    }
+    if (parent.matches('span') && parent.querySelector(':scope > kbd')) {
+      const kbdLabels = { navigate: '导航', select: '选择', close: '关闭' };
+      if (Object.hasOwn(kbdLabels, core)) translated = original.replace(core, kbdLabels[core]);
+    }
+    if (core === 'for' && parent.matches('span.text-xs.text-muted-foreground.shrink-0') && node === parent.firstChild && /^for\s+\S/.test(sentence)) {
+      translated = original.replace('for', '来自');
+    }
+    if (core === 'or' && sentence.startsWith('Many external websites (such as Google Search')) {
+      translated = original.replace('or', '或');
+    }
+    if (core === 'space).' && sentence.startsWith("This step's invocation metadata is not available")) {
+      translated = original.replace('space).', '）。');
+    }
+    if (/^A (?:project|workspace) with this name already exists\.$/.test(sentence)) {
+      const fragments = { A: '使用此名称的', project: '项目', workspace: '工作区', 'with this name already exists.': '已存在。' };
+      if (Object.hasOwn(fragments, core)) translated = fragments[core];
+    }
+    if (/^This (?:project|workspace) is managed by the .+ automation and can only be deleted by deleting that automation\.$/.test(sentence)) {
+      const fragments = { This: '此', project: '项目', workspace: '工作区', 'is managed by the': '由 ', 'automation and can only be deleted by deleting that automation.': ' 自动化任务管理，只能通过删除该自动化任务来删除。' };
+      if (Object.hasOwn(fragments, core)) translated = fragments[core];
+    }
+    if ((core === 'less' || core === 'more') && parent.matches('button') && ['Collapse string', 'Expand long string'].includes(originalAttribute(parent, 'title'))) {
+      translated = original.replace(core, core === 'less' ? '收起' : '展开');
+    }
     if (translated === undefined) return false;
     writeText(node, translated, original); return true;
   }
@@ -922,8 +1070,10 @@
     if (shouldSkipTextNode(node)) { restoreNode(node); return; }
     const parent = node.parentElement;
     if (translateDetailText(node)) return;
+    if (translatePermissionSentence(node)) return;
     if (translateReviewedPluginBlock(parent)) return;
     if (translateReviewedUiFragment(node)) return;
+    if (translatePlatformUi(node)) return;
     if (translateSkillAndPluginCard(node)) return;
     if (translateElapsedContainer(parent)) return;
     translateOnboardingContainer(parent);
@@ -957,11 +1107,6 @@
     const screen = settingsScreen(parent);
     if (core === "Type" && parent.closest('[data-testid="plan-command-fyi-alert"]')) translated = original.replace("Type", "输入");
     if (core === "Plan" && parent.matches('h3') && screen === "Models & Usage") translated = original.replace("Plan", "订阅方案");
-    if (screen === "Application" && /Win/.test(navigator.platform)) {
-      if (core === "Keep In Menu Bar") translated = "保留在系统托盘";
-      if (core === "Keep the app accessible from the menu bar and running in the background when all windows are closed.")
-        translated = "所有窗口关闭后，仍可从系统托盘访问应用并保持后台运行。";
-    }
     if (screen === "Conversations" && core === "when working in this project.") translated = "（用于非项目对话）。";
     if (parent.matches('.markdown-alert-title') || parent.closest('.markdown-alert-title')) {
       const alertMap = { 'NOTE': '注意', 'TIP': '提示', 'IMPORTANT': '重要', 'WARNING': '警告', 'CAUTION': '小心' };
@@ -973,7 +1118,7 @@
     if (themeControl && (themePresetNames.has(core) || elementOriginals.get(themeControl)?.get('title')?.themePreset)) updateThemePresetTooltip(themeControl);
   }
   function settingsScreen(element) {
-    const wrapper = element.closest('.p-6.flex.flex-col.gap-4');
+    const wrapper = element.closest('.p-6.flex.flex-col.gap-4, .p-4.flex.flex-col.gap-4');
     const heading = wrapper?.querySelector('h2');
     if (!heading) return null;
     return originalElementText(heading);
@@ -984,6 +1129,40 @@
     let text = '', node;
     while ((node = walker.nextNode())) text += originalText(node);
     return text.trim();
+  }
+  function translatePermissionSentence(node) {
+    const core = originalText(node)?.trim();
+    if (!['','Also includes','Global Permissions','when working','in this project','in these conversations','.','Learn more'].includes(core)) return false;
+    let parent = node.parentElement;
+    for (let depth = 0; parent && depth < 3; depth++, parent = parent.parentElement) {
+      const sentence = originalElementText(parent).replace(/\s+/g, ' ').trim();
+      const match = sentence.match(/^Also includes Global Permissions when working (in this project|in these conversations)\.(?: Learn more\.)?$/);
+      if (!match) continue;
+      const context = match[1] === 'in this project' ? '在此项目中' : '在这些对话中';
+      const fragments = {'Also includes':`${context}工作时，也会应用`,'Global Permissions':'全局权限','when working':'','in this project':'','in these conversations':'','.':'。','Learn more':'了解更多'};
+      const walker = document.createTreeWalker(parent, NodeFilter.SHOW_TEXT); let text;
+      while ((text = walker.nextNode())) {
+        const original = originalText(text), key = original.trim();
+        if (Object.hasOwn(fragments, key)) writeText(text, fragments[key], original);
+        else if (!key) writeText(text, '', original);
+      }
+      return true;
+    }
+    return false;
+  }
+  function translatePlatformUi(node) {
+    const original = originalText(node), core = original?.trim(), parent = node.parentElement;
+    if (!core) return false;
+    let translated;
+    if (['Keep In Menu Bar','Keep the app accessible from the menu bar and running in the background when all windows are closed.'].includes(core) &&
+        /Win/.test(navigator.platform) && settingsScreen(parent) === 'Application')
+      translated = core === 'Keep In Menu Bar' ? '保留在系统托盘' : '所有窗口关闭后，仍可从系统托盘访问应用并保持后台运行。';
+    if (/^.+ (Weekly|Daily|5-hour) Limit$/.test(core) && settingsScreen(parent) === 'Models & Usage')
+      translated = core.replace(/ (Weekly|Daily|5-hour) Limit$/, (_, period) => ` ${{Weekly:'每周额度',Daily:'每日额度','5-hour':'五小时额度'}[period]}`);
+    if (/^(\d+)([mhd])$/.test(core) && parent.closest('nav[aria-label="Sidebar"], nav[aria-label="侧边栏"]') && !parent.closest('a, button'))
+      translated = core.replace(/^(\d+)([mhd])$/, (_, n, u) => `${n} ${{m:'分钟',h:'小时',d:'天'}[u]}前`);
+    if (translated === undefined) return false;
+    writeText(node, translated, original); return true;
   }
   function translateOnboardingFragment(parent, original, translated) {
     const core = original.trim();
@@ -1072,14 +1251,24 @@
     const dialog = element.closest('[role="dialog"]');
     return dialog?.querySelector('[data-testid="new-sidecar-modal"]') ? dialog : null;
   }
+  function scheduledContainer(element) {
+    return scheduledDialog(element) ||
+      element.closest('[data-testid="schedule-editor-panel"], [data-testid="cloud-trigger-editor-panel"], [data-testid="trigger-option-selector"]') ||
+      (element.closest('[role="listbox"]') && document.querySelector('[data-testid="schedule-editor-panel"], [data-testid="cloud-trigger-editor-panel"], [data-testid="schedule-frequency-trigger"]'));
+  }
   function translateScheduledText(parent, original, translated) {
-    const dialog = scheduledDialog(parent);
-    if (!dialog) return translated;
     const core = original.trim();
+    if (core === 'Prompt' && parent.matches('div.text-muted-foreground.text-sm.mb-0\\.5, h6.uppercase.tracking-wider')) {
+      return original.replace(core, translations.get(core) || core);
+    }
+    const container = scheduledContainer(parent);
+    const summaryEl = parent.matches('span.font-semibold') ? parent.parentElement : parent;
+    const isScheduleSummary = summaryEl?.matches?.('span') && /^(?:Daily around|Weekly on [A-Za-z]+ around) \d{1,2}:\d{2} (?:AM|PM)$/.test(originalElementText(summaryEl).replace(/\s+/g, ' '));
+    if (!container && !isScheduleSummary) return translated;
     if (core === 'Schedule' || core === 'Prompt') return original.replace(core, translations.get(core) || core);
     if (core === 'around') return original.replace(core, '约在');
     if (core === 'on') {
-      const frequency = dialog.querySelector('[data-testid="schedule-frequency-trigger"]')?.getAttribute('data-frequency');
+      const frequency = container?.querySelector?.('[data-testid="schedule-frequency-trigger"]')?.getAttribute('data-frequency');
       return original.replace(core, frequency === 'custom' ? '规则' : '在');
     }
     // React splits this fixed sentence into three text nodes. Keep that structure.
@@ -1088,7 +1277,7 @@
       if (parts[core]) return parts[core];
     }
     const time = /^(\d{1,2}):(\d{2}) (AM|PM)$/.exec(core);
-    if (time && parent.closest('[role="combobox"], [role="option"]')) {
+    if (time && (isScheduleSummary || parent.closest('[role="combobox"], [role="option"]'))) {
       const hour = Number(time[1]) % 12 + (time[3] === 'PM' ? 12 : 0);
       return original.replace(core, `${String(hour).padStart(2, '0')}:${time[2]}`);
     }
@@ -1099,12 +1288,16 @@
     const nav = element.closest('[data-testid^="settings-nav-item-"]');
     if (nav && /^(Projects?|Workspaces?)$/.test(originalElementText(nav.parentElement?.previousElementSibling?.querySelector('h2')))) return true;
     if (element.matches('span') && ['Edit project name', 'Edit workspace name'].includes(originalAttribute(element.parentElement?.querySelector(':scope > button[aria-label]'), 'aria-label'))) return true;
-    if (element.matches('strong')) {
-      const first = element.parentElement.firstChild;
-      // Only the first emphasized value is the project/workspace name. Later
-      // strong siblings contain the dynamic conversation count, which is UI.
+    const strong = element.closest('strong');
+    if (strong) {
+      const first = strong.parentElement.firstChild;
+      // Only the name in the confirmation question is user content. The next
+      // paragraph also uses strong, but contains a translatable conversation count.
+      // Protect descendants too: a project name can be wrapped in a nested span.
       if ((first?.nodeType === Node.TEXT_NODE && originalText(first).trim() === 'Permanently delete' &&
-           element === element.parentElement.querySelector(':scope > strong')) || isDeleteConfirmation(element)) return true;
+           strong === strong.parentElement.querySelector(':scope > strong')) ||
+          (isDeleteConfirmation(strong) && first?.nodeType === Node.TEXT_NODE &&
+           /^Are you sure you want to delete the(?:\s+(?:project|workspace))?\s*$/.test(originalText(first)))) return true;
     }
     // The scheduled-task selector shows the user's project names, including names
     // that happen to equal dictionary keys. Its popup is portalled into the dialog.
@@ -1165,7 +1358,7 @@
   }
   function translateArchivedNotification(element) {
     const paragraph = element.closest('p');
-    const toast = paragraph?.closest('[data-testid="toast-notification"][data-notification-tag^="archive-conversation-"]');
+    const toast = paragraph?.closest('[data-testid="toast-notification"][data-notification-tag^="archive-conversation-"], [data-testid="toast-notification"][data-notification-tag="archive-project-success"]');
     if (!toast || isOpaque(paragraph) || isConversationContent(paragraph)) return false;
     const walker = document.createTreeWalker(paragraph, NodeFilter.SHOW_TEXT);
     const nodes = []; let node;
@@ -3231,10 +3424,11 @@ return false;
   }
 
   const controller = {
-    stopped: false, observer: null, timers: new Set(), frames: new Set(), removables: new Set(), badge: null, settingsClick: null,
+    stopped: false, observer: null, timers: new Set(), frames: new Set(), removables: new Set(), badge: null, settingsClick: null, restoreAlert: null,
     stop() {
       this.stopped = true;
       this.observer?.disconnect();
+      this.restoreAlert?.();
       if (this.settingsClick) document.removeEventListener('click', this.settingsClick, true);
       for (const id of this.timers) clearTimeout(id);
       for (const id of this.frames) cancelAnimationFrame(id);
@@ -3244,6 +3438,17 @@ return false;
     },
   };
   window.__antigravityZhPatchController = controller;
+  // alert() has no DOM. Limit this hook to a known application message; never
+  // translate arbitrary diagnostics or strings from embedded/user content.
+  if (typeof window.alert === 'function') {
+    const originalAlert = window.alert;
+    const patchedAlert = function (...args) {
+      if (!controller.stopped && args[0] === 'Configuration saved successfully!') args[0] = translateValue(args[0]);
+      return originalAlert.apply(this, args);
+    };
+    window.alert = patchedAlert;
+    controller.restoreAlert = () => { if (window.alert === patchedAlert) window.alert = originalAlert; };
+  }
   function schedule(callback) {
     let done = false, frame, timer;
     const run = () => {
@@ -3258,27 +3463,120 @@ return false;
     }
     timer = setTimeout(run, 50); controller.timers.add(timer);
   }
+  const contextMenuLabels = new Set([
+    'Copy', 'Cut', 'Paste', 'Select All', 'Undo', 'Redo', 'Rename', 'Pin', 'Unpin',
+    'Mark Read', 'Mark Unread', 'Archive', 'Restore', 'Delete', 'Delete Permanently',
+    'Fork', 'Split', 'Share', 'Stop', 'View Debug', 'Telemetry', 'Move to Group',
+    'New Group', 'Remove from Group', 'Rename Group', 'Delete Group', 'Move Up', 'Move Down',
+    'Sort By', 'Last Updated', 'Last Prompt', 'Custom Order',
+    'Copy Project Name', 'Copy Workspace Name', 'Copy Worktree Name',
+    'Project Settings', 'Workspace Settings', 'Worktree Settings',
+    'Delete Project', 'Delete Workspace', 'Delete Worktree',
+    'Archive Project', 'Archive Workspace', 'Archive Worktree',
+    'Show in File Explorer', 'Reveal in Finder', 'Show in Finder', 'Open in File Manager',
+    'Open in Cider', 'Conversation Name', 'Conversation ID', 'Trajectory ID',
+    'Project Name', 'Workspace Name', 'Worktree Name',
+    'Copy Conversation ID', 'Copy Conversation Name', 'Copy Trajectory ID',
+    'Copy Link', 'Copy Path', 'Copy Relative Path', 'Open Link', 'Open in Browser',
+    'Open in New Tab', 'Open in New Window', 'Open in New Conversation',
+    'Split Right', 'Split Down', 'Replace with New', 'Remove from Split', 'New Conversation',
+    'Copy Image', 'Close Tab', 'Close Other Tabs', 'Close Tabs to the Right',
+    'New Project', 'New Workspace', 'Create Project', 'Create Cloud Project', 'Quick Start',
+    'Group By Workspace', 'Group By Project', 'Undo to Here', 'Mention', 'Copy debug info',
+    'About', 'Check for Updates', 'Command Palette', 'Toggle Fullscreen',
+    'Zoom In', 'Zoom Out', 'Reset Zoom', 'Minimize', 'Maximize', 'Close',
+    'Save Video', 'Save Image', 'Open in Tab', 'New Tab', 'See more results',
+    'Delete Hook', 'Add Hook Card', 'Delete Handler', 'Show Terminal', 'Hide Terminal',
+    'Open Link in New Tab', 'Open Link in External Browser', 'Copy Link Address',
+    'Open Image in New Tab', 'Copy Image Address', 'Open in External Browser',
+    'Back', 'Forward', 'Reload', 'Copy Message', 'Fork in Current Workspace',
+    'Fork in Shared Workspace', 'Fork in New Workspace', 'New Remote Project',
+    'Toggle Status Bar', 'Give Feedback', 'Pin Tab', 'Unpin Tab',
+    'Add to Chat', 'Copy File Path', 'Copy File Name',
+    'Send Message', 'Queue Message', 'Send Immediately',
+  ]);
   function installNotificationHooks() {
+    const translateMenuItem = (label, item) => {
+      if (controller.stopped || typeof label !== 'string') return label;
+      if (item?.type === 'checkbox' && typeof item.id === 'string' && item.id.startsWith('group-')) return label;
+      return contextMenuLabels.has(label) && translations.has(label) ? translations.get(label) : label;
+    };
+    const currentMap = Array.prototype.map;
+    if (currentMap.__antigravityZhMenuHook) {
+      currentMap.__antigravityZhMenuHook.translateMenuItem = translateMenuItem;
+    } else {
+      const menuDelegate = { translateMenuItem };
+      const patchedMap = function (callback, thisArg) {
+        const res = currentMap.call(this, callback, thisArg);
+        if (res.length > 0) {
+          const first = res[0];
+          if (first && typeof first === 'object' && 'accelerator' in first && 'label' in first && 'id' in first &&
+              (('checked' in first && 'disabled' in first && 'type' in first) || ('enabled' in first && 'click' in first))) {
+            for (let i = 0; i < res.length; i++) {
+              const item = res[i];
+              if (item && typeof item === 'object' && typeof item.label === 'string') {
+                item.label = menuDelegate.translateMenuItem(item.label, item);
+              }
+            }
+          }
+        }
+        return res;
+      };
+      Object.defineProperty(patchedMap, '__antigravityZhMenuHook', { value: menuDelegate });
+      Object.defineProperty(Array.prototype, 'map', {
+        value: patchedMap,
+        writable: true,
+        configurable: true,
+        enumerable: false,
+      });
+    }
     const translateNotification = value => controller.stopped ? value : translateValue(value);
+    const localizeNotification = opts => {
+      if (controller.stopped || !opts || typeof opts !== 'object') return opts;
+      const next = { ...opts };
+      if (typeof opts.title === 'string') next.title = translateNotification(opts.title);
+      if (typeof opts.body !== 'string') return next;
+      // YEa / lGa uses the application name as title and the authored conversation
+      // summary as body. Its id (Web Notification: tag) identifies completion.
+      const id = opts.id ?? opts.tag;
+      if (typeof id === 'string' && id.startsWith('agent-finished-')) {
+        const summary = opts.body.replace(/^Agent finished:\s*/, '');
+        next.body = summary && summary !== 'Agent finished' ? `任务已完成：${summary}` : '任务已完成';
+      } else {
+        const prefix = {
+          'Requesting your permission in Terminal:': ['Command: ', '命令：'],
+          'Requesting your permission to execute JavaScript:': ['Code: ', '代码：'],
+          'Requesting your permission to open URL:': ['URL: ', '网址：'],
+        }[opts.title];
+        if (prefix) next.body = opts.body.startsWith(prefix[0]) ? prefix[1] + opts.body.slice(prefix[0].length) : opts.body;
+        else if (/^The agent has (?:a question|questions) for you:$/.test(opts.title))
+          next.body = /^Click to respond to the questions?\.$/.test(opts.body) ? translateNotification(opts.body) : opts.body;
+        else if (opts.title === 'Requesting your permission:') next.body = opts.body;
+        else next.body = translateNotification(opts.body);
+      }
+      return next;
+    };
     function hookNative(target) {
       if (!target) return target;
-      if (target.__antigravityZhHooked && typeof target.__antigravityZhHooked === 'object') {
+      if (target.__antigravityZhHooked?.localize) {
         target.__antigravityZhHooked.translate = translateNotification;
+        target.__antigravityZhHooked.localize = localizeNotification;
         return target;
       }
+      // v62 bridges only expose translate. Their stopped wrapper passes through
+      // unchanged, so one new wrapper upgrades them to options-aware translation.
       const originalSend = target.send;
       if (typeof originalSend === 'function') {
-        const delegate = { translate: translateNotification };
-        target.send = function (opts) {
-          if (opts && typeof opts === 'object') {
-            const cloned = { ...opts };
-            if (typeof cloned.title === 'string') cloned.title = delegate.translate(cloned.title);
-            if (typeof cloned.body === 'string') cloned.body = delegate.translate(cloned.body);
-            return originalSend.call(this, cloned);
-          }
-          return originalSend.apply(this, arguments);
-        };
-        target.__antigravityZhHooked = delegate;
+        const delegate = { translate: translateNotification, localize: localizeNotification };
+        try {
+          target.send = function (opts) {
+            if (opts && typeof opts === 'object') {
+              return originalSend.call(this, delegate.localize(opts));
+            }
+            return originalSend.apply(this, arguments);
+          };
+          target.__antigravityZhHooked = delegate;
+        } catch (_) {}
       }
       return target;
     }
@@ -3296,17 +3594,23 @@ return false;
 
     const OriginalNotification = window.Notification;
     if (typeof OriginalNotification === 'function') {
+      if (OriginalNotification.__antigravityZhNotificationHook) {
+        OriginalNotification.__antigravityZhNotificationHook.localize = localizeNotification;
+        return;
+      }
+      const delegate = { localize: localizeNotification };
       const PatchedNotification = function (title, options) {
-        const transTitle = typeof title === 'string' ? translateNotification(title) : title;
-        let transOptions = options;
+        const localized = delegate.localize({ ...(options || {}), title });
+        let transOptions;
         if (options && typeof options === 'object') {
-          transOptions = { ...options };
-          if (typeof transOptions.body === 'string') transOptions.body = translateNotification(transOptions.body);
-        }
-        return Reflect.construct(OriginalNotification, [transTitle, transOptions], new.target || PatchedNotification);
+          const { title: ignored, ...rest } = localized;
+          transOptions = rest;
+        } else transOptions = options;
+        return Reflect.construct(OriginalNotification, [localized.title, transOptions], new.target || PatchedNotification);
       };
       PatchedNotification.prototype = OriginalNotification.prototype;
       Object.setPrototypeOf(PatchedNotification, OriginalNotification);
+      PatchedNotification.__antigravityZhNotificationHook = delegate;
       window.Notification = PatchedNotification;
     }
   }

@@ -77,6 +77,9 @@ const structSource = pristine || installed;
 if (pristine) {
   if (pristine.pkg.version !== version) throw new Error('备份版本与目标版本不一致，拒绝登记');
   const targets = requiredTargets.concat('dist/ideInstall/wizard.js');
+  // Optional windows are also rewritten by the installer. Omitting their hash
+  // makes an otherwise identical future build fail the compatibility check.
+  if (pristine.archive.read('dist/provisionSplash.js')) targets.push('dist/provisionSplash.js');
   const pkg = pristine.pkg;
   const signature = pkg.name + '\n' + pkg.main + '\n' + Object.keys(pkg.dependencies || {}).sort().map(k => k + '=' + pkg.dependencies[k]).join('\n');
   baseline.compatibility = {

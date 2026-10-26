@@ -72,7 +72,7 @@ function buildBundle(dict, translateSrc) {
     "  inject();",
     "}",
     "",
-    "module.exports = { attach, installNativeDialogs: nativeUi.installNativeDialogs };",
+    "module.exports = { attach, installNativeDialogs: nativeUi.installNativeDialogs, translateContextMenuLabel: nativeUi.translateContextMenuLabel };",
     ""
   ];
   return bundleLines.join('\n');

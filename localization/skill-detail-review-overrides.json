@@ -205,5 +205,7 @@
   "db83ee2dc529b42b1ce86f343e5ca55bdfdbb47b721a0f362b557c8cf4007584": "为确保使用最新的产品专属实现细节，您<strong>必须</strong>遵循这套统一的技能路由和信息依据流程，不要依赖硬编码路径或模型自身记忆。",
   "5fcc9397029198fbca6d0245dd8285ee58d5caf1c390e268d52448fb5e53ec57": "<strong>替换</strong>：使用 <code>@deck.gl/aggregation-layers</code> 中的deck.gl <code>HeatmapLayer</code> 和 <code>GoogleMapsOverlay</code>。",
   "a310e82e0c1335e114d1a5fb30b67fa31f3e31b30be1b140e0759ae71d2d1c96": "<strong>CF3 — 无头 GPU/WebGL 陷阱：</strong>无头测试和屏幕截图环境通常<strong>没有 WebGL</strong> 支持。依赖于 GPU 的功能（真实感 3D、deck.gl）将无法渲染（抛出 <code>WebGL2 is not available</code>）。",
-  "79b2c07b4e29f82143a1621754073a6dc1b2cb0d8d788e4341bf683099654779": "<a href=\"https://ai.google.dev/gemini-api/docs/tokens.md.txt\">Token（词元）</a>"
+  "79b2c07b4e29f82143a1621754073a6dc1b2cb0d8d788e4341bf683099654779": "<a href=\"https://ai.google.dev/gemini-api/docs/tokens.md.txt\">Token（词元）</a>",
+  "5dfd62614c9c7ea976f53af53f523839395cc23f6aca9f9279ef60ce2a6505e9": "第三阶段：反方质疑与压力检验",
+  "60bc726e31ca222cba0366adf7c5024d6773edb9b6eeafa386c412bdee392445": "第四轮：范围与结构"
 }
