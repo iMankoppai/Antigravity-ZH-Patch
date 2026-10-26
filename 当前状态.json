@@ -320,6 +320,16 @@
     "officialBackupSha256": "8ce27ff7c2defa10ed1ed2817288a61c546690f4cae1b1a8c91d4e69e0851e4d",
     "officialBackupUnchanged": true,
     "onSiteAcceptance": "pending",
-    "note": "2026-10-27 复核：直接计算安装归档与官方备份哈希，并从归档提取 dist/zh-bundle.js 校验，与 v68 隔离验证归档及源码 bundle 一致。现场人工验收（docs/现场验收清单.md）尚未执行。"
+    "liveSmokeCheck": {
+      "checkedAt": "2026-10-26T17:33:00.000Z",
+      "method": "CDP 只读探针（work/v68/live-probe.cjs），无 DOM 写入、无注入",
+      "clientVersion": "2.26.0",
+      "kernelInstalled": true,
+      "nativeAutoload": true,
+      "dictionarySize": 5874,
+      "restoreFunctionPresent": true,
+      "menuBarSample": "文件 | 查看 | 窗口 | 新建对话 | 对话历史 | 自动化 | 自定义项 | 项目 | 设置"
+    },
+    "note": "2026-10-27 复核：直接计算安装归档与官方备份哈希，并从归档提取 dist/zh-bundle.js 校验，与 v68 隔离验证归档及源码 bundle 一致。同日对运行中客户端做 CDP 只读抽查：内核原生自动加载、词库 5,874 条、菜单栏为中文。深层界面现场验收（docs/现场验收清单.md）尚未执行。"
   }
 }
