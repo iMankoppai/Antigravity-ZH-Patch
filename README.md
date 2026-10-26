@@ -1,6 +1,6 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.2.0-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.2.0)
+[![Release](https://img.shields.io/badge/Release-v1.3.0-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.0)
 [![Antigravity](https://img.shields.io/badge/Antigravity-2.26.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
@@ -8,9 +8,9 @@
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.2.0（汉化内核 v69）适配 Google Antigravity 2.26.0（Windows x64）**，界面词条 **5,894 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。此前本地 v1.1.7 构建统一以 v1.2.0 发布，见 [v1.2.0 发布说明](docs/v1.2.0-发布说明.md)。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
+> **当前版本 v1.3.0（汉化内核 v69）适配 Google Antigravity 2.26.0（Windows x64）**，界面词条 **5,894 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。此前本地 v1.1.7 构建统一以 v1.2.0 发布，见 [v1.2.0 发布说明](docs/v1.2.0-发布说明.md)。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
 
-本地最新 **v69 低频界面补漏**：基于全局漏译排查（缓存 bundle 提取、真引擎覆盖测试、版本差分与实机只读扫描），新增 20 条低频界面词条（输入框占位符短变体、书签操作状态、执行环境加载、表单校验等）、1 条文件展示上限动态模板，并扩展状态前缀白名单（读取网页、自动继续处理等）。详见 [v69 补漏说明](docs/v69-低频界面补漏.md)。此为本地构建，尚未发布到 GitHub。
+本地最新 **v69 低频界面补漏**：基于全局漏译排查（缓存 bundle 提取、真引擎覆盖测试、版本差分与实机只读扫描），新增 20 条低频界面词条（输入框占位符短变体、书签操作状态、执行环境加载、表单校验等）、1 条文件展示上限动态模板，并扩展状态前缀白名单（读取网页、自动继续处理等）。详见 [v69 补漏说明](docs/v69-低频界面补漏.md)。
 
 本地最新 **v68 全局漏译修复**：补齐 9 个内置技能的 488 个正文翻译单元，修复原生错误弹窗、配置保存提示、动态文案和无障碍标签；修正 Windows 系统托盘措辞、权限说明与 Git 提交栏语序。详见 [v68 修复与验证](docs/v68-全局漏译修复.md)。此为本地构建，尚未发布到 GitHub。
 
@@ -53,7 +53,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.2.0-Windows-x64.zip`**；
+2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.3.0-Windows-x64.zip`**；
 3. 双击下载的 EXE，或解压 ZIP 后运行其中的 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -95,7 +95,7 @@ Antigravity ZH/
 
 ## 📦 版本记录
 
-### v1.2.0 (内核 v69) — 全局漏译排查与低频界面补漏
+### v1.3.0 (内核 v69) — 全局漏译排查收口与低频界面补漏
 
 - **排查方法**：从 Chromium 缓存提取 2.26.0 现役前端 bundle，抽取 2,491 条 UI 候选灌入无头 Chrome 跑真实引擎测定覆盖；排除第三方库数据区后做版本差分，并对运行中客户端做 CDP 只读扫描。
 - **结论**：2.26.0 新增界面零缺口；实机确认 1 条真漏译（`File exceeds the … display limit (…)`），另有 13 条低频候选经 bundle 上下文核实。

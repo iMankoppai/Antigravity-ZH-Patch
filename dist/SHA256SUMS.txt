@@ -1,3 +1,3 @@
-ef28b04707ca000a28f3cb5688bc77ef26552f9547aef55a9dda0b2cbcb2d170  AntigravityZhManager.exe
-3d89121b22b85994670031f1133528f672886c066ef9eea67ea948591b61f1ab  Antigravity-ZH-1.2.0-Windows-x64.zip
+2dfabe87326ffc827cc08be04a3b54e74253eadc03adcf06f653df7a001cf36c  AntigravityZhManager.exe
+77aec75028dd69be6b988ed384daf58d8596bdc01715ebcab5087dff89ddf996  Antigravity-ZH-1.3.0-Windows-x64.zip
 8bcf7a044d2b8a89ce07651df4f5209ff30bb3e131c204426691bb73240a8875  zh-bundle.js
