@@ -3,7 +3,7 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 const bundle=fs.readFileSync('src/AntigravityZhManager/Assets/zh-bundle.js','utf8');
 const box={module:{exports:{}},URL,WeakSet,console};vm.runInNewContext(bundle,box);
 const calls=[];const promise=Promise.resolve({response:1,checkboxChecked:true});
-const dialog={showMessageBox(...args){calls.push({receiver:this,args});return promise;},showMessageBoxSync(...args){calls.push({receiver:this,args});return 1;}};
+const dialog={showMessageBox(...args){calls.push({receiver:this,args});return promise;},showMessageBoxSync(...args){calls.push({receiver:this,args});return 1;},showErrorBox(...args){calls.push({receiver:this,args});return 'error-return';}};
 box.module.exports.installNativeDialogs(dialog);const wrapped=dialog.showMessageBox;box.module.exports.installNativeDialogs(dialog);assert.equal(wrapped,dialog.showMessageBox);
 let checks=1;
 const check=(a,b,label)=>{assert.equal(a,b,label);checks++;};
@@ -15,4 +15,10 @@ for(const [message,expected]of [['Are you sure you want to quit?','确定要退�
  check(dialog.showMessageBoxSync(opts),1,'同步响应编号保持');check(calls.at(-1).args[0].message,expected,'无父窗口重载');
 }
 const opts={message:'Unexpected diagnostic Example.txt'};dialog.showMessageBox(opts);check(calls.at(-1).args[0].message,opts.message,'未知错误和路径保持');
+for(const [title,translated]of [['Cannot open folder','无法打开文件夹'],['Binary not found','未找到可执行文件'],['WSL setup failed','WSL 设置失败'],['Startup failed','启动失败']]){
+ const detail='Startup failed: C:\\Copy\\Delete\\trace.js';
+ check(dialog.showErrorBox(title,detail),'error-return','错误弹窗返回值');
+ check(calls.at(-1).receiver,dialog,'错误弹窗 this');check(calls.at(-1).args[0],translated,'错误弹窗标题');check(calls.at(-1).args[1],detail,'技术诊断不翻译');
+}
+dialog.showErrorBox('Custom diagnostic Copy','Unknown content');check(calls.at(-1).args[0],'Custom diagnostic Copy','未知错误标题保持');
 console.log('native UI regression: '+checks+' PASS');

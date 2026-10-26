@@ -63,6 +63,7 @@ function createEnvironment(initialNative = true) {
 
   sandbox.window = sandbox;
   sandbox.window.__antigravityZhPatchDictionary = {
+    ...require('../../src/AntigravityZhManager/Assets/dictionaries.json'),
     'Task Completed': '任务已完成',
     'Antigravity has finished the requested task.': 'Antigravity 已完成请求的任务。',
     'Build failed': '构建失败'
@@ -139,15 +140,63 @@ let failures = 0;
   }
 }
 
+// Real YEa notifications use the brand as title and an arbitrary summary as body.
+// Localize the completion status while preserving the whole conversation name.
+{
+  const assert = require('node:assert/strict');
+  const env = createEnvironment(true);
+  for (const summary of ['GitHub Repository Analysis Lemo Opusoar', 'Settings', '1 archived conversation', '中文会话']) {
+    const options = { id: 'agent-finished-cascade-123', title: 'Antigravity', body: summary,
+      payload: { cascadeId: 'cascade', type: 'request_action' }, silent: true };
+    const before = JSON.stringify(options);
+    env.mockNative.send(options);
+    assert.equal(env.getNativeSent().body, '任务已完成：' + summary);
+    assert.equal(env.getNativeSent().title, 'Antigravity');
+    assert.equal(env.getNativeSent().payload, options.payload);
+    assert.equal(JSON.stringify(options), before, '不修改调用方数据');
+    new env.sandbox.Notification('Antigravity', { body: summary, tag: options.id, silent: true });
+    assert.equal(env.getWebSent().options.body, '任务已完成：' + summary);
+    assert.equal(env.getWebSent().options.tag, options.id);
+  }
+  env.mockNative.send({ id: 'agent-finished-empty-1', title: 'Antigravity', body: 'Agent finished' });
+  assert.equal(env.getNativeSent().body, '任务已完成');
+  const actionCases = [
+    ['Requesting your permission in Terminal:', 'Command: echo Settings && git status', '命令：echo Settings && git status'],
+    ['Requesting your permission to execute JavaScript:', 'Code: window.title = "Settings"', '代码：window.title = "Settings"'],
+    ['Requesting your permission to open URL:', 'URL: https://example.com/Settings?q=High', '网址：https://example.com/Settings?q=High'],
+    ['The agent has a question for you:', 'Settings', 'Settings'],
+    ['The agent has questions for you:', 'Click to respond to the questions.', '点击以回答这些问题。'],
+    ['Requesting your permission:', 'Settings', 'Settings'],
+    ['Action requires your attention', 'The agent is waiting for your input.', '智能体正在等待您的输入。']
+  ];
+  for (const [title, body, expected] of actionCases) {
+    env.mockNative.send({ title, body, payload: { type: 'request_action' } });
+    assert.equal(env.getNativeSent().body, expected, title);
+    assert.notEqual(env.getNativeSent().title, title, '固定通知标题已翻译');
+    new env.sandbox.Notification(title, { body });
+    assert.equal(env.getWebSent().options.body, expected, 'Web 通知：' + title);
+  }
+  env.sandbox.__antigravityZhPatchController.stop();
+  env.mockNative.send({ id: 'agent-finished-disabled-1', title: 'Antigravity', body: 'Settings' });
+  assert.equal(env.getNativeSent().body, 'Settings', '停用后不再添加中文状态');
+  console.log('PASS  真实任务完成、权限、问题通知及动态内容保护（原生与 Web）');
+}
+
 // Hot reload must refresh the already-installed native bridge's dictionary.
 {
   const env = createEnvironment(true);
   const before = env.mockNative.send;
+  const beforeWeb = env.sandbox.Notification;
   env.sandbox.__antigravityZhPatchDictionary = { 'New phrase': '新文案' };
   new vm.Script(translateSrc).runInContext(env.sandbox);
   env.mockNative.send({title:'New phrase'});
   if (env.getNativeSent()?.title === '新文案' && env.mockNative.send === before) console.log('PASS  热加载更新既有通知翻译器且不重复包装');
   else { console.error('FAIL 热加载通知词库'); failures++; }
+  env.mockNative.send({ id: 'agent-finished-reload-1', title: 'Antigravity', body: 'Settings' });
+  new env.sandbox.Notification('Antigravity', { tag: 'agent-finished-reload-1', body: 'Settings' });
+  if (env.getNativeSent()?.body === '任务已完成：Settings' && env.getWebSent()?.options.body === '任务已完成：Settings' && env.sandbox.Notification === beforeWeb)
+    console.log('PASS  热加载原生与 Web 通知只添加一次状态且保留标题');
+  else { console.error('FAIL 热加载通知重复前缀'); failures++; }
   env.sandbox.__antigravityZhPatchController.stop();
   env.mockNative.send({title:'New phrase'});
   new env.sandbox.Notification('New phrase', {body:'New phrase'});

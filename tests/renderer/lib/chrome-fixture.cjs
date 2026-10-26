@@ -15,9 +15,14 @@ module.exports=async function withChromeFixture(html,run){
       `http://127.0.0.1:${server.address().port}/customizations/marketplaces/test/plugins/example`
     ],{windowsHide:true,stdio:'ignore'});
     const portFile=path.join(profile,'DevToolsActivePort');
-    for(let i=0;i<100&&!fs.existsSync(portFile);i++){if(chrome.exitCode!==null)throw Error('Chrome exited');await pause(50);}
-    if(!fs.existsSync(portFile))throw Error('Chrome debugger timeout');
-    const port=Number(fs.readFileSync(portFile,'utf8').split('\n')[0]);
+    let port;
+    for(let i=0;i<100;i++){
+      if(chrome.exitCode!==null)throw Error('Chrome exited');
+      try{const value=Number(fs.readFileSync(portFile,'utf8').split('\n')[0]);if(Number.isInteger(value)&&value>0){port=value;break;}}
+      catch(error){if(!['ENOENT','EBUSY','EPERM'].includes(error.code))throw error;}
+      await pause(50);
+    }
+    if(!port)throw Error('Chrome debugger timeout');
     const pages=await(await fetch(`http://127.0.0.1:${port}/json/list`,{signal:AbortSignal.timeout(5000)})).json();
     const target=pages.find(p=>p.type==='page');if(!target)throw Error('No fixture page');
     ws=new WebSocket(target.webSocketDebuggerUrl);

@@ -1,0 +1,62 @@
+'use strict';
+const fs=require('fs'),assert=require('node:assert/strict');
+const {chromium}=require('C:/Users/24844/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const additions=require('../../localization/v64-ui-additions.json');
+const dictionary=require('../../src/AntigravityZhManager/Assets/dictionaries.json');
+const runtime=fs.readFileSync('src/AntigravityZhManager/Assets/translate.js','utf8');
+let checks=0;const check=(a,b,label)=>{assert.deepEqual(a,b,label);checks++;};
+(async()=>{const browser=await chromium.launch({executablePath:process.env.ZH_CHROME_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});try{
+ const page=await browser.newPage();await page.route('**/*',r=>r.abort());
+ await page.setContent('<!doctype html><body><main id="ui"></main><div data-testid="planner-response-text" id="authored">Make default<code>Copy</code></div><button id="model" data-testid="model-selector-trigger">Gemini 3.8 Flash High</button><div id="mcp" data-testid="mcp-app-pane-error"></div><div id="accounts"></div><button id="voice" data-testid="voice-start-button" aria-label="Start voice"></button>');
+ await page.evaluate(entries=>{
+  for(const [i,[en]]of entries.entries()){const p=document.createElement('p');p.id='entry-'+i;p.textContent=en;document.querySelector('#ui').append(p);}
+  document.querySelector('#mcp').append(...['Could not load ','Copy',': ','Delete'].map(v=>document.createTextNode(v)));
+  document.querySelector('#accounts').append(...['Credentials never leave your machine and are only sent to the domains listed.',' If you add multiple accounts, MCP servers use the one marked Default.'].map(v=>document.createTextNode(v)));
+ },Object.entries(additions));
+ const before=await page.locator('body').innerHTML();
+ await page.evaluate(d=>{window.__antigravityZhPatchDictionary=d;},dictionary);await page.addScriptTag({content:runtime});
+ await page.waitForFunction(()=>window.__antigravityZhPatchInstalled);await page.waitForTimeout(150);
+ for(const [i,[en,zh]]of Object.entries(additions).entries())check(await page.locator('#entry-'+i).textContent(),zh,en);
+ check(await page.locator('#voice').getAttribute('aria-label'),'开始语音','新版语音无障碍标签');
+ check(await page.locator('#mcp').textContent(),'无法加载 Copy: Delete','MCP 应用名与诊断原样保留');
+ check(await page.locator('#authored').textContent(),'Make defaultCopy','用户内容与代码不翻译');
+ check(await page.locator('#model').textContent(),'Gemini 3.8 Flash High','模型名保持');
+ check(await page.locator('#accounts').evaluate(e=>e.lastChild.nodeValue),' 如果添加多个账号，MCP 服务器将使用标记为“默认”的账号。','拆分的多账号说明');
+ await page.evaluate(()=>{const e=document.createElement('button');e.id='default-account';e.setAttribute('aria-label','Make user@example.com the default Google account');document.querySelector('#ui').append(e);document.querySelector('#voice').setAttribute('aria-label','End voice');const n=document.createElement('span');n.id='account-count';n.textContent='12 accounts';document.querySelector('#ui').append(n);});await page.waitForTimeout(100);
+ check(await page.locator('#default-account').getAttribute('aria-label'),'将 user@example.com 设为默认的 Google 账号','动态账号及提供商保持');
+ check(await page.locator('#account-count').textContent(),'12 个账号','动态账号数量');
+ check(await page.locator('#voice').getAttribute('aria-label'),'结束语音','动态语音状态');
+ await page.evaluate(()=>{
+  const ui=document.querySelector('#ui');
+  const commit=document.createElement('span');commit.id='git-commit';
+  commit.append(...['Commit ','3',' file',' ','changes',' to'].map(v=>document.createTextNode(v)));
+  const need=document.createElement('span');need.id='need-input';
+  need.append(...['2',' need','',' input'].map(v=>document.createTextNode(v)));
+  const sched=document.createElement('span');sched.id='sched-summary';
+  const s1=document.createElement('span');s1.className='font-semibold';s1.textContent='Daily';
+  const s2=document.createElement('span');s2.className='font-semibold';s2.textContent='9:00 AM';
+  sched.append(s1,document.createTextNode(' around'),document.createTextNode(' '),s2);
+  const kbd=document.createElement('span');kbd.id='kbd-nav';
+  const k=document.createElement('kbd');k.textContent='↑↓';
+  kbd.append(k,document.createTextNode(' '),document.createTextNode('navigate'));
+  const iwa=document.createElement('h3');iwa.id='iwa-title';
+  iwa.textContent='Built-in Browser Requires Isolated Web App (IWA)';
+  const turns=document.createElement('button');turns.id='turn-jump';
+  turns.setAttribute('aria-label','Go to turn 3 of 12');
+  turns.textContent='Turns 1\u20133';
+  ui.append(commit,need,sched,kbd,iwa,turns);
+ });await page.waitForTimeout(100);
+ check(await page.locator('#git-commit').textContent(),'将 3 个文件的更改提交到','Git 拆分节点翻译');
+ check(await page.locator('#need-input').textContent(),'2 项需要输入','等待输入拆分节点翻译');
+ check(await page.locator('#sched-summary').textContent(),'每天 约在 09:00','弹窗外定时任务周期摘要翻译');
+ check(await page.locator('#kbd-nav').textContent(),'↑↓ 导航','命令面板快捷键提示翻译');
+ check(await page.locator('#iwa-title').textContent(),'内置浏览器需要隔离式 Web 应用 (IWA)','2.26.0 IWA 标题翻译');
+ check(await page.locator('#turn-jump').getAttribute('aria-label'),'转到第 3 轮（共 12 轮）','2.26.0 轮次跳转无障碍标签');
+ check(await page.locator('#turn-jump').textContent(),'第 1–3 轮','2.26.0 轮次区间标题');
+ await page.evaluate(()=>{for(const id of ['default-account','account-count','git-commit','need-input','sched-summary','kbd-nav','iwa-title','turn-jump'])document.getElementById(id)?.remove();document.querySelector('#voice').setAttribute('aria-label','Start voice');});await page.waitForTimeout(100);
+ await page.evaluate(()=>window.__antigravityZhPatchRestore());
+ // addScriptTag appends the injected script to body; remove only that script.
+ await page.evaluate(()=>document.querySelectorAll('script').forEach(e=>e.remove()));
+ check(await page.locator('body').innerHTML(),before,'新版控件与原始文本精确还原');
+ console.log(JSON.stringify({checks,passed:true}));
+}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

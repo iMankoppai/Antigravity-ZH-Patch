@@ -1,0 +1,326 @@
+[
+  {
+    "original": "Resets in <1m",
+    "expected": "不到 1 分钟后重置"
+  },
+  {
+    "original": "In review",
+    "expected": "审阅中"
+  },
+  {
+    "original": "Requested changes",
+    "expected": "已要求修改"
+  },
+  {
+    "original": "New Browser",
+    "expected": "新建浏览器"
+  },
+  {
+    "original": "New Preview",
+    "expected": "新建预览"
+  },
+  {
+    "original": "Maximize Width",
+    "expected": "展开宽度"
+  },
+  {
+    "original": "Minimize Width",
+    "expected": "收起宽度"
+  },
+  {
+    "original": "Send command input?",
+    "expected": "发送命令输入？"
+  },
+  {
+    "original": "Code Context Items",
+    "expected": "代码上下文项"
+  },
+  {
+    "original": "Browser Configuration Required",
+    "expected": "需要配置浏览器"
+  },
+  {
+    "original": "Remote Debugging Required",
+    "expected": "需要开启远程调试"
+  },
+  {
+    "original": "Default harness",
+    "expected": "默认执行环境"
+  },
+  {
+    "original": "Audio clip",
+    "expected": "音频片段"
+  },
+  {
+    "original": "Queued message deleted",
+    "expected": "已删除排队消息"
+  },
+  {
+    "original": "Queued message loaded into editor",
+    "expected": "已将排队消息载入编辑器"
+  },
+  {
+    "original": "Queued message sent",
+    "expected": "已发送排队消息"
+  },
+  {
+    "original": "Active Browser pages",
+    "expected": "当前浏览器页面"
+  },
+  {
+    "original": "No access",
+    "expected": "无访问权限"
+  },
+  {
+    "original": "Issue numbers",
+    "expected": "议题编号"
+  },
+  {
+    "original": "Issue actions",
+    "expected": "议题操作"
+  },
+  {
+    "original": "Inherit Editor",
+    "expected": "跟随编辑器"
+  },
+  {
+    "original": "Text Selection",
+    "expected": "文本选择"
+  },
+  {
+    "original": "Select CitC Workspace",
+    "expected": "选择 CitC 工作区"
+  },
+  {
+    "original": "Create CitC Workspace",
+    "expected": "创建 CitC 工作区"
+  },
+  {
+    "original": "Select Cog Workspace",
+    "expected": "选择 Cog 工作区"
+  },
+  {
+    "original": "Select ABFS Workspace (Alpha)",
+    "expected": "选择 ABFS 工作区（Alpha）"
+  },
+  {
+    "original": "Create ABFS Workspace (Alpha)",
+    "expected": "创建 ABFS 工作区（Alpha）"
+  },
+  {
+    "original": "Resets in 2h 30m",
+    "expected": "2 小时 30 分钟后重置"
+  },
+  {
+    "original": "Included by settings.json",
+    "expected": "由 settings.json 引入"
+  },
+  {
+    "original": "Installed in C:/example/skills",
+    "expected": "安装于 C:/example/skills"
+  },
+  {
+    "original": "example.com could not find the requested page.",
+    "expected": "example.com 找不到请求的页面。"
+  },
+  {
+    "original": "example.com is currently unable to handle this request.",
+    "expected": "example.com 目前无法处理此请求。"
+  },
+  {
+    "original": "example.com’s server IP address could not be found.",
+    "expected": "找不到 example.com 的服务器 IP 地址。"
+  },
+  {
+    "original": "example.com refused to connect.",
+    "expected": "example.com 拒绝了连接。"
+  },
+  {
+    "original": "example.com took too long to respond.",
+    "expected": "example.com 响应超时。"
+  },
+  {
+    "original": "This field is required",
+    "expected": "此字段为必填项"
+  },
+  {
+    "original": "Must be positive",
+    "expected": "必须为正数"
+  },
+  {
+    "original": "Must be a valid URL",
+    "expected": "必须是有效的网址"
+  },
+  {
+    "original": "Something else (optional)",
+    "expected": "其他内容（可选）"
+  },
+  {
+    "original": "Requires manual confirmation.",
+    "expected": "需要手动确认。"
+  },
+  {
+    "original": "Requires manual confirmation: Example",
+    "expected": "需要手动确认：Example"
+  },
+  {
+    "original": "Minimum length is 3",
+    "expected": "最短长度为 3"
+  },
+  {
+    "original": "Maximum length is 10",
+    "expected": "最长长度为 10"
+  },
+  {
+    "original": "Pre Tool Use",
+    "expected": "工具调用前"
+  },
+  {
+    "original": "Post Tool Use",
+    "expected": "工具调用后"
+  },
+  {
+    "original": "Pre Invocation",
+    "expected": "代理调用前"
+  },
+  {
+    "original": "Post Invocation",
+    "expected": "代理调用后"
+  },
+  {
+    "original": "Generating commit message...",
+    "expected": "正在生成提交说明…"
+  },
+  {
+    "original": "Goal Verification",
+    "expected": "目标验证"
+  },
+  {
+    "original": "Idle Guard Warning",
+    "expected": "空闲保护警告"
+  },
+  {
+    "original": "Fork Environment Notice",
+    "expected": "派生环境提示"
+  },
+  {
+    "original": "Standalone terminals",
+    "expected": "独立终端"
+  },
+  {
+    "original": "Table of contents",
+    "expected": "目录"
+  },
+  {
+    "original": "PDF attachment",
+    "expected": "PDF 附件"
+  },
+  {
+    "original": "CSV spreadsheet attachment",
+    "expected": "CSV 电子表格附件"
+  },
+  {
+    "original": "JSON attachment",
+    "expected": "JSON 附件"
+  },
+  {
+    "original": "Markdown attachment",
+    "expected": "Markdown 附件"
+  },
+  {
+    "original": "Audio attachment",
+    "expected": "音频附件"
+  },
+  {
+    "original": "Side question answered.",
+    "expected": "附加问题已回答。"
+  },
+  {
+    "original": "Side question failed: Example",
+    "expected": "附加问题处理失败：Example"
+  },
+  {
+    "original": "Automation saved",
+    "expected": "自动化任务已保存"
+  },
+  {
+    "original": "Attachment error: Example",
+    "expected": "附件错误：Example"
+  },
+  {
+    "original": "Upload error: Example",
+    "expected": "上传错误：Example"
+  },
+  {
+    "original": "MCP error: Example",
+    "expected": "MCP 错误：Example"
+  },
+  {
+    "original": "Message queued. 3 messages in queue. Sends after agent finishes working. Actions available: Send Now, Edit, Delete.",
+    "expected": "消息已排队。队列中有 3 条消息。代理完成工作后发送。可用操作：立即发送、编辑、删除。"
+  },
+  {
+    "original": "Playback speed 2x",
+    "expected": "播放速度 2 倍"
+  },
+  {
+    "original": "Zoom 100%, reset to fit",
+    "expected": "缩放 100%，重置为适合窗口"
+  },
+  {
+    "original": "Unfold lines 3-10",
+    "expected": "展开第 3–10 行"
+  },
+  {
+    "original": "Fold lines 3-10",
+    "expected": "折叠第 3 至 10 行"
+  },
+  {
+    "original": "Load older messages, showing 20 of 50",
+    "expected": "加载更早的消息，当前显示 20/50 条"
+  },
+  {
+    "original": "No more older messages, showing 50 of 50",
+    "expected": "没有更早的消息，当前显示 50/50 条"
+  },
+  {
+    "original": "Go to turn 3 of 10",
+    "expected": "转到第 3 轮（共 10 轮）"
+  },
+  {
+    "original": "Runs even when your computer is off. Schedules and events.",
+    "expected": "即使电脑关机也能运行。支持定时和事件触发。"
+  },
+  {
+    "original": "Runs even when your computer is off. Schedules only.",
+    "expected": "即使电脑关机也能运行。仅支持定时触发。"
+  },
+  {
+    "original": "Filter skills and rules: All",
+    "expected": "筛选技能与规则：全部"
+  },
+  {
+    "original": "Enter Time Zone…",
+    "expected": "输入时区…"
+  },
+  {
+    "original": "See more Build with Google",
+    "expected": "查看更多“基于 Google 构建”内容"
+  },
+  {
+    "original": "Retrieving Browser Pages",
+    "expected": "正在获取浏览器页面"
+  },
+  {
+    "original": "Retrieved Browser Pages",
+    "expected": "已获取浏览器页面"
+  },
+  {
+    "original": "Semantic searching",
+    "expected": "正在进行语义搜索"
+  },
+  {
+    "original": "Semantic searched",
+    "expected": "已完成语义搜索"
+  }
+]

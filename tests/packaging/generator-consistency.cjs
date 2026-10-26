@@ -36,7 +36,7 @@ for (const marker of ["contents.on('dom-ready'", "contents.on('did-finish-load'"
 }
 const sandbox = { module: { exports: {} }, URL, WeakSet };
 vm.runInNewContext(onDisk, sandbox);
-for (const name of ['attach', 'installNativeDialogs']) {
+for (const name of ['attach', 'installNativeDialogs', 'translateContextMenuLabel']) {
   if (typeof sandbox.module.exports[name] !== 'function') failures.push(`包装器没有导出 ${name}`);
 }
 

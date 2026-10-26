@@ -17,6 +17,20 @@ if (args.Contains("--apply-installed"))
         return r.Success ? 0 : 1;
     }
 }
+int targetIdx = Array.IndexOf(args, "--install-target");
+if (targetIdx >= 0 && targetIdx + 1 < args.Length)
+{
+    string targetAsar = args[targetIdx + 1];
+    var r = await AsarCleanPatcher.InstallCleanPatchAsync(targetAsar, true, true, Console.WriteLine, true);
+    Console.WriteLine("隔离安装结果: " + r.Success + " " + r.Message);
+    return r.Success ? 0 : 1;
+}
+if (args.Contains("--hot-inject"))
+{
+    var r = await CdpHotPatcher.InjectAsync(Console.WriteLine);
+    Console.WriteLine("热加载结果: " + r.Success + " " + r.Message);
+    return r.Success ? 0 : 1;
+}
 
 int failures = 0;
 void Check(string name, bool ok, string detail = "")

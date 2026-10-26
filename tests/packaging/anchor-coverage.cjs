@@ -40,6 +40,9 @@ const anchors = [
 ];
 
 const cache = new Map();
+// The normal-item and submenu branches use the same label expression.
+const contextLabels = text('dist/ipcHandlers.js')?.split("label: item.label ?? '',").length - 1;
+if (contextLabels !== 2) failures.push(`原生右键菜单标签锚点命中 ${contextLabels} 次，期望 2 次`);
 if (archive.read('dist/provisionSplash.js')) anchors.push({ file: 'dist/provisionSplash.js', needle: '    void win.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(html)}`);', label: 'WSL 准备窗口' });
 for (const a of anchors) {
   if (!cache.has(a.file)) cache.set(a.file, text(a.file));
