@@ -34,6 +34,8 @@ public static class CdpHotPatcher
         return (dictionary, runtime, details, detailCount, int.Parse(Regex.Match(runtime, @"const patchVersion = (\d+)").Groups[1].Value), parsed.RootElement.EnumerateObject().Count());
     });
 
+    public static (int Version, int TermCount) EmbeddedKernelInfo => (Resources.Value.Version, Resources.Value.Count);
+
     private static async Task<List<Uri>> TargetsAsync(CancellationToken token)
     {
         string file = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Antigravity", "DevToolsActivePort");

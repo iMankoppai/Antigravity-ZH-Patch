@@ -120,7 +120,9 @@ namespace AntigravityZhManager.Services
                 }
                 else
                 {
-                    info.Message = $"当前版本 (v{CurrentVersion}) 已是最新版！已适配 Antigravity 2.24.0。";
+                    var knownVersions = BaselineManifest.KnownVersions();
+                    string latestClientVer = knownVersions.Count > 0 ? knownVersions[knownVersions.Count - 1] : "2.25.0";
+                    info.Message = $"当前版本 (v{CurrentVersion}) 已是最新版！已适配 Antigravity {latestClientVer}。";
                     log?.Invoke("✅ " + info.Message);
                 }
 

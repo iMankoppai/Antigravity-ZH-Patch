@@ -221,6 +221,13 @@ namespace AntigravityZhManager.Services
                 ipcHandlers = ipcHandlers
                     .Replace("title: 'Open workspace'", "title: '打开工作区'")
                     .Replace("title: 'Open workspaces'", "title: '选择多个工作区'");
+                // Both branches of buildContextMenuTemplate (including nested
+                // submenus) must translate before Electron renders the menu.
+                const string contextMenuLabel = "label: item.label ?? '',";
+                if (ipcHandlers.Split(contextMenuLabel).Length != 3)
+                    throw new InvalidDataException("原生右键菜单注入锚点数量异常，拒绝写入。");
+                ipcHandlers = ipcHandlers.Replace(contextMenuLabel,
+                    "label: require('./zh-bundle.js').translateContextMenuLabel(item.label ?? '', item),");
 
                 // 2. mainJs
                 // This must execute before the early WSL warnings, not only after
@@ -346,6 +353,7 @@ namespace AntigravityZhManager.Services
                 // 锚点，此时 String.Replace 会静默空操作却仍报成功，因此校验失败时
                 // 直接拒绝写入，保留原有归档。
                 AssertInjectionApplied("dist/ipcHandlers.js", ipcHandlers, "打开工作区", "选择多个工作区");
+                AssertInjectionApplied("dist/ipcHandlers.js (context menus)", ipcHandlers, "translateContextMenuLabel");
                 AssertInjectionApplied("dist/main.js", mainJs, "zh-bundle.js");
                 AssertInjectionApplied("dist/main.js (native dialogs)", mainJs, "installNativeDialogs(electron_1.dialog)");
                 AssertInjectionApplied("dist/utils.js", utilsJs, "zh-bundle.js");

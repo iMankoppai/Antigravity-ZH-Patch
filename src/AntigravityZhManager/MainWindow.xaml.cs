@@ -80,7 +80,8 @@ namespace AntigravityZhManager
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            AppendLog("🚀 欢迎使用 Antigravity 汉化管理器！");
+            var (kernelVer, termCount) = CdpHotPatcher.EmbeddedKernelInfo;
+            AppendLog($"🚀 欢迎使用 Antigravity 汉化管理器！（内嵌汉化内核 v{kernelVer} · {termCount:N0} 条词库）");
             AppendLog("💡 提示：更新后汉化丢失，可点击右上角【新版汉化适配】恢复中文。");
             await RefreshAppStatusAsync();
             if (_settings.LoadError != null) AppendLog("⚠️ 设置读取失败，已使用默认选项：" + _settings.LoadError);
@@ -103,18 +104,19 @@ namespace AntigravityZhManager
 
             Dispatcher.Invoke(() =>
             {
+                string verTag = !string.IsNullOrEmpty(_currentInfo.Version) ? $" v{_currentInfo.Version}" : "";
                 // 运行状态指示灯
                 if (_currentInfo.IsRunning)
                 {
                     StatusDot.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#10B981"));
-                    TxtAppRunningStatus.Text = $"Antigravity 运行中 (PID: {_currentInfo.ProcessId})";
+                    TxtAppRunningStatus.Text = $"Antigravity{verTag} 运行中 (PID: {_currentInfo.ProcessId})";
                     TxtAppRunningStatus.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8FAFC"));
                     BtnHotInject.IsEnabled = true;
                 }
                 else
                 {
                     StatusDot.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#94A3B8"));
-                    TxtAppRunningStatus.Text = "Antigravity 未运行";
+                    TxtAppRunningStatus.Text = $"Antigravity{verTag} 未运行";
                     TxtAppRunningStatus.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#94A3B8"));
                     BtnHotInject.IsEnabled = false;
                 }

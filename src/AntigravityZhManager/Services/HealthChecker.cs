@@ -28,8 +28,6 @@ namespace AntigravityZhManager.Services
 
     public static class HealthChecker
     {
-        public const string OfficialAsarHash = "d075e5d9ff01f8806016aa88c39bf1429f068a941fdbe46147d8409843e62113";
-
         public static async Task<HealthReport> RunDiagnosticsAsync(AntigravityInfo appInfo, Action<string>? log = null)
         {
             var report = new HealthReport();

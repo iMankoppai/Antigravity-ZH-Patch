@@ -28,11 +28,6 @@ namespace AntigravityZhManager.Services
 
     public static class AntigravityDetector
     {
-        // 官方原版 SHA256（按已适配版本记录）
-        public const string OFFICIAL_2_21_1_HASH = "d075e5d9ff01f8806016aa88c39bf1429f068a941fdbe46147d8409843e62113";
-        public const string OFFICIAL_2_22_0_HASH = "259c83ffa266088dda6ede520a601bbf06cc5c34985cdf56c5d68549c98dbb0e";
-        public const string OFFICIAL_2_23_0_HASH = "4e99093662d797ecba823e92823d352413e3bf2ca721257df4a255c045df1598";
-
         /// <summary>
         /// 把卸载记录的 DisplayIcon 值规范成可用的可执行文件路径：
         /// 去掉外层引号，并去掉形如 “,0” 的资源序号后缀。
