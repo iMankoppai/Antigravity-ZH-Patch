@@ -1,5 +1,5 @@
 (() => {
-  const patchVersion = 69;
+  const patchVersion = 70;
   const skillDetails = window.__antigravityZhSkillDetails || { documents: [], translations: {} };
   const detailDocuments = [...skillDetails.documents, ...(skillDetails.additionalDocuments || []), ...(skillDetails.builtinDocuments || [])];
   const reviewedReadmeBlocks = new Map((skillDetails.readmeBlocks || []).map(b => [b.source, b]));
@@ -911,6 +911,10 @@
   }
   function shouldSkipTextNode(node) {
     const parent = node.parentElement;
+    // 会话行（侧栏/历史页）链接整体受 identitySelector 保护，但行内带
+    // opacity-60/min-w-4 类名特征的时间 span 不是会话名，须放行翻译。
+    if (parent && parent.matches('span.opacity-60.min-w-4') &&
+        parent.closest('[data-testid="conversation-row-sidebar"], [data-testid="conversation-row-history"]')) return false;
     // New MCP panes concatenate a fixed prefix, an app-supplied title and
     // diagnostic text. Only the first text node is application UI.
     if (parent?.closest('[data-testid="mcp-app-pane-loading"], [data-testid="mcp-app-pane-error"]')) {
@@ -1159,8 +1163,15 @@
       translated = core === 'Keep In Menu Bar' ? '保留在系统托盘' : '所有窗口关闭后，仍可从系统托盘访问应用并保持后台运行。';
     if (/^.+ (Weekly|Daily|5-hour) Limit$/.test(core) && settingsScreen(parent) === 'Models & Usage')
       translated = core.replace(/ (Weekly|Daily|5-hour) Limit$/, (_, period) => ` ${{Weekly:'每周额度',Daily:'每日额度','5-hour':'五小时额度'}[period]}`);
-    if (/^(\d+)([mhd])$/.test(core) && parent.closest('nav[aria-label="Sidebar"], nav[aria-label="侧边栏"]') && !parent.closest('a, button'))
-      translated = core.replace(/^(\d+)([mhd])$/, (_, n, u) => `${n} ${{m:'分钟',h:'小时',d:'天'}[u]}前`);
+    if (/^(\d+)([mhd])$/.test(core)) {
+      const legacySidebar = parent.closest('nav[aria-label="Sidebar"], nav[aria-label="侧边栏"]') && !parent.closest('a, button');
+      // 2.26.0 会话行（侧栏/历史页）改为链接结构，时间 span 带稳定的类名特征；
+      // 恰好形如时间的会话名没有该特征，不会被误翻。
+      const rowTime = parent.matches('.opacity-60.min-w-4') &&
+        parent.closest('[data-testid="conversation-row-sidebar"], [data-testid="conversation-row-history"]');
+      if (legacySidebar || rowTime)
+        translated = core.replace(/^(\d+)([mhd])$/, (_, n, u) => `${n} ${{m:'分钟',h:'小时',d:'天'}[u]}前`);
+    }
     if (translated === undefined) return false;
     writeText(node, translated, original); return true;
   }
@@ -1359,7 +1370,36 @@
   function translateArchivedNotification(element) {
     const paragraph = element.closest('p');
     const toast = paragraph?.closest('[data-testid="toast-notification"][data-notification-tag^="archive-conversation-"], [data-testid="toast-notification"][data-notification-tag="archive-project-success"]');
-    if (!toast || isOpaque(paragraph) || isConversationContent(paragraph)) return false;
+    // 2.26.0 历史页“此页面即将下线”横幅：同一句英文切成
+    // ["View archived in the sidebar ", "(", " menu)", "."]（筛选图标夹在括号与 menu 之间），
+    // 容器不是 toast；从所在 span 向上找到能拼出整句的容器再做结构改写。
+    const bannerHolder = !toast ? (() => {
+      const sticky = element.closest && element.closest('div.sticky');
+      if (!sticky) return false;
+      let holder = element.closest && element.closest('span');
+      while (holder && sticky.contains(holder)) {
+        const texts = [];
+        const walkerBanner = document.createTreeWalker(holder, NodeFilter.SHOW_TEXT);
+        let scanned; while ((scanned = walkerBanner.nextNode())) texts.push(scanned);
+        const flatBanner = texts.map(originalText).join('').replace(/\s+/g, ' ').trim();
+        if (/^View archived in the sidebar \(.*menu\)\.$/.test(flatBanner) && !isOpaque(holder) && !isConversationContent(holder)) {
+          texts.forEach((text) => {
+            const value = (originalText(text) || '').trim();
+            let replacement = null;
+            if (/^View archived/.test(value)) replacement = value.includes('(') ? '在侧边栏查看已归档项（' : '在侧边栏查看已归档项';
+            else if (value === '(') replacement = '（';
+            else if (/menu/.test(value)) replacement = ' 菜单）。';
+            else if (value === '.') replacement = '';
+            if (replacement !== null) writeText(text, replacement, originalText(text));
+          });
+          return true;
+        }
+        holder = holder.parentElement ? holder.parentElement.closest('span') : null;
+      }
+      return false;
+    })() : null;
+    if (!toast) return !!bannerHolder;
+    if (isOpaque(paragraph) || isConversationContent(paragraph)) return false;
     const walker = document.createTreeWalker(paragraph, NodeFilter.SHOW_TEXT);
     const nodes = []; let node;
     while ((node = walker.nextNode())) nodes.push(node);
@@ -1369,8 +1409,17 @@
     // 2.23.0 归档提示正文：markdown 内联图标让首节点变成 "View archived in the sidebar ("，
     // 整句无法命中词典，必须在结构层改写首尾节点（中间是图标，保持 React 节点不动）。
     if (!link && /^View archived in the sidebar \(.*menu\)\.$/.test(flat)) {
-      nodes.forEach((text, index) => writeText(text,
-        index === 0 ? '在侧边栏查看已归档项（' : index === nodes.length - 1 ? ' 菜单）。' : '', originalText(text)));
+      // Toast 切分：[head(含左括号), " menu)."]；横幅切分：[head, "(", " menu)", "."]。
+      // 按节点内容分派，未知片段保持原样。
+      nodes.forEach((text) => {
+        const value = (originalText(text) || '').trim();
+        let replacement = null;
+        if (/^View archived/.test(value)) replacement = value.includes('(') ? '在侧边栏查看已归档项（' : '在侧边栏查看已归档项';
+        else if (value === '(') replacement = '（';
+        else if (/menu/.test(value)) replacement = ' 菜单）。';
+        else if (value === '.') replacement = '';
+        if (replacement !== null) writeText(text, replacement, originalText(text));
+      });
       return true;
     }
     if (!link) return false;
@@ -3732,6 +3781,39 @@ return false;
       subtree: true, childList: true, characterData: true, attributes: true,
       attributeFilter: [...translatableAttributes, "class", "contenteditable", "data-testid", "data-antigravity-user-content"],
     });
+    // SPA 软导航（pushState/replaceState/popstate）后新挂载的属性批次可能错过
+    // 观察器首轮入队（如输入框工具条 aria-label），安排两次补扫兜底。
+    // 沙箱化测试环境可能没有 history/window.addEventListener，探测后再挂钩。
+    const historyObject = (typeof history !== 'undefined' && history && typeof history.pushState === 'function') ? history : null;
+    const canListen = typeof window !== 'undefined' && typeof window.addEventListener === 'function';
+    if (historyObject || canListen) {
+      const scheduleRouteRescan = () => {
+        if (controller.stopped || !document.body) return;
+        for (const delay of [120, 600]) {
+          const timer = setTimeout(() => {
+            controller.timers.delete(timer);
+            if (controller.stopped || !document.body) return;
+            queueRoot(document.body);
+            requestDrain();
+          }, delay);
+          controller.timers.add(timer);
+        }
+      };
+      if (historyObject) {
+        for (const method of ['pushState', 'replaceState']) {
+          const original = historyObject[method];
+          if (typeof original !== 'function' || original.__zhRoutePatched) continue;
+          const patched = function (...args) {
+            const result = original.apply(this, args);
+            scheduleRouteRescan();
+            return result;
+          };
+          patched.__zhRoutePatched = true;
+          historyObject[method] = patched;
+        }
+      }
+      if (canListen) window.addEventListener('popstate', scheduleRouteRescan);
+    }
     window.__antigravityZhPatchObserver = controller.observer;
     function showBadge() {
       if (!document.body || controller.stopped) return;

@@ -692,8 +692,8 @@
         "bytes": 4387714,
         "productVersion": "2.26.0",
         "source": "backup",
-        "path": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar.bak",
-        "recordedAt": "2026-10-26T18:19:23.297Z"
+        "path": "work/v70/client/resources/app.asar.bak",
+        "recordedAt": "2026-10-26T21:58:35.444Z"
       },
       "compatibility": {
         "packageSignatureSha256": "dd534ff5211df214041d89c743c21ce7cd3df62ec5ae26f7a71376a5ad1b67cf",
@@ -764,6 +764,12 @@
           "kernelSha256": "cfbfe2a8d4a9b6a56b4cbccccd4e108371728f8e6236371c5980aa24a8e27251",
           "bytes": 7684863,
           "recordedAt": "2026-10-26T18:19:23.314Z"
+        },
+        {
+          "sha256": "2d4efe9ad28e17d82908a58caf6c70d4ae48cbe98bac51aa51a2b9acb2bd6799",
+          "kernelSha256": "369edf10772ee7a6e5964942c6d639b45bdc647cd7d5097828bd160c2f96a97d",
+          "bytes": 7690935,
+          "recordedAt": "2026-10-26T21:58:35.460Z"
         }
       ]
     }
