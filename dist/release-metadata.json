@@ -3,11 +3,11 @@
   "version": "1.2.0",
   "platform": "win-x64",
   "zip": "Antigravity-ZH-1.2.0-Windows-x64.zip",
-  "zipSha256": "3b3067e47c42bc447b14f79ffd09a83aead48ea247be407e2457eb61aec94035",
-  "zipBytes": 68917730,
+  "zipSha256": "e63af3349e188ebb0971fbc9004b6394170e9c46e3e5f550dc3bdd7f76d77612",
+  "zipBytes": 68998121,
   "exe": "Antigravity汉化管理器.exe",
   "exeAsset": "AntigravityZhManager.exe",
-  "exeSha256": "c0677c3b7bb459ee4d3c33dd90a21f280230a16ef756ead4e0597a6f70a61f89",
+  "exeSha256": "b1556b63169163143e1266e59f104449078e1f2a3b579da3c0c62142aa2f871a",
   "releaseMetadataVersion": 1,
-  "generatedAt": "2026-10-19T13:13:53.023Z"
+  "generatedAt": "2026-10-25T12:48:36.846Z"
 }

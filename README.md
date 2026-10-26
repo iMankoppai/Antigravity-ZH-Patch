@@ -1,14 +1,20 @@
 # Antigravity 中文汉化管理器
 
 [![Release](https://img.shields.io/badge/Release-v1.2.0-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.2.0)
-[![Antigravity](https://img.shields.io/badge/Antigravity-2.24.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Antigravity](https://img.shields.io/badge/Antigravity-2.26.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.2.0 适配 Google Antigravity 2.24.0（Windows x64）**，汉化内核 v62、界面词条 5,638 条，另含 17 个官方插件、140 份完整技能详情正文及 6 份规则／智能体详情。此前本地 v1.1.7 构建统一以 v1.2.0 发布，见 [v1.2.0 发布说明](docs/v1.2.0-发布说明.md)。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
+> **当前版本 v1.2.0（汉化内核 v68）适配 Google Antigravity 2.26.0（Windows x64）**，界面词条 **5,874 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。此前本地 v1.1.7 构建统一以 v1.2.0 发布，见 [v1.2.0 发布说明](docs/v1.2.0-发布说明.md)。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
+
+本地最新 **v68 全局漏译修复**：补齐 9 个内置技能的 488 个正文翻译单元，修复原生错误弹窗、配置保存提示、动态文案和无障碍标签；修正 Windows 系统托盘措辞、权限说明与 Git 提交栏语序。详见 [v68 修复与验证](docs/v68-全局漏译修复.md)。此为本地构建，尚未发布到 GitHub。
+
+本地源码另含 **v63 修复**：补齐任务完成通知的中文状态、权限通知的动态前缀，并修复删除项目/工作区弹窗中的对话数量漏译。使用与验证范围见 [通知与删除弹窗复核](docs/v63-通知与删除弹窗复核.md)；尚未发布到 GitHub。
+
+此前本地 **v67（适配 Antigravity 2.26.0）**：完整登记 2.26.0 官方基线，补齐 2.26.0 新增的内置浏览器 IWA 引导、`<webview>` 原生右键菜单、云端工作区资源与披露弹窗、已关联应用管理、对话轮次导航（`Turn N` / `Turns M–N`）、远程控制实例、共享工作区派生（`Fork in Shared Workspace`）及状态栏切换等 87 条新词条与 17 条动态模板，词库增至 5,818 条。原生菜单需退出客户端后重新永久安装。详见 [v64 适配与排查说明](docs/v64-2.25.0适配与原生菜单补全.md)。
 
 ---
 
@@ -19,7 +25,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 - **⚡ 免重启实时汉化（热加载模式）**  
   软件在前台运行中无需退出，通过 CDP 协议秒级动态注入最新翻译引擎，界面即时切换为中文，**AI 正在进行的思考与会话连接完全不受影响**。
-  内核 v39 适配 Antigravity 2.23.0（前端 bundle 本次确有改动，新增 437 条可读串）：新增 137 条界面词条（插件包、Google Drive、SSO 登录、会话已读标记、权限详情等），修复模型名被逐词翻译（`Gemini 3.8 Flash High` 不再变成 `…Flash 高`），清理 6 条永不命中的死词条，并补齐两条动态模板规则。
+  内核 v68 完整适配 Antigravity 2.26.0，支持多文本节点拼接还原、动态模板与弹窗外定时任务翻译，同时严格保护模型名与推理档位（如 `Gemini 3.8 Flash High`、`Chief of Staff`、`Best of N` 等专有名词保持英文原名）。
 - **📦 永久原生内嵌汉化（终极洁癖模式）**  
   直接将翻译引擎与完整深度精校词库无缝封包进 `resources/app.asar` 内部：
   - **零外置文件夹**：安装后，Antigravity 根目录下**无需存在任何外部补丁文件夹**，也没有任何散落的 `.cmd` / `.ps1` 脚本，目录纯净整洁；
@@ -67,8 +73,8 @@ Antigravity ZH/
 ```
 
 ### 技术规格
-- **适配软件**：**Google Antigravity 2.24.0**（Windows x64）
-- **汉化内核**：v62（词条 5,638 条）
+- **适配软件**：**Google Antigravity 2.26.0**（Windows x64）
+- **汉化内核**：v68（词条 5,874 条）
 - **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、工作状态、插件市场与主题设置）
 - **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入
 
@@ -87,7 +93,16 @@ Antigravity ZH/
 
 ## 📦 版本记录
 
-### v1.2.0 — 完整技能汉化与全局错翻、漏翻复核
+### v1.2.0 (内核 v67) — 适配 Antigravity 2.26.0 与全量漏译收口
+
+- **适配客户端**：Google Antigravity **2.26.0**（Windows x64），汉化内核升级至 **v67**，词条扩充至 **5,818 条**。
+- **2.26.0 新版界面全覆盖**：完整汉化内置浏览器隔离式 Web 应用（IWA）安装引导、`<webview>` 原生右键菜单、云端工作区文件与资源披露弹窗、本地与已关联应用（Connected apps）管理页、对话轮次导航（`Turn N` / `Turns M–N`）、远程控制实例列表、共享工作区派生（`Fork in Shared Workspace`）及状态栏切换。
+- **React 拆分节点修复**：修复 Git 提交栏（`Commit N file changes to`）、等待输入提示（`N needs input`）、Diff 展开与代码折叠徽标、命令面板底部快捷键说明（`↑↓ navigate` / `↵ select` / `esc close`）、审阅评论计数、各类数量单位及侧边栏归属标签等因多节点拆分导致的半截英文。
+- **非弹窗场景覆盖**：扩展定时任务/自动化翻译上下文，修复列表卡片上的周期摘要（`Daily around 9:00 AM` ➔ `每天 约在 09:00`）、云端触发器编辑面板与定时编辑面板中的 `Schedule` / `Prompt` 标签漏译。
+- **原生右键菜单与动态模板**：接入 `ipcHandlers.js` 原生右键菜单本地化（覆盖项目、工作区、分屏、标签页、媒体保存、钩子操作等 57 项菜单），补齐声明式权限弹窗、插件市场批量添加、MCP 工具开关等动态模板。
+- **管理器优化**：检查更新提示改为从内嵌基线清单动态读取最新适配版本，状态栏与启动日志直观展示客户端版本与内嵌内核版本/词库规模。
+
+### v1.2.0 (内核 v62) — 完整技能汉化与全局错翻、漏翻复核
 
 - 汇总此前本地 v1.1.2–v1.1.7 的修复并正式发布，适配 Antigravity 2.24.0；内核保持 v62。
 - 覆盖 17 个官方插件、140 份技能详情，以及 6 份规则／智能体详情；修复 Markdown 表格续行与截断预览匹配。
