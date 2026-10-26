@@ -1,6 +1,6 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),http=require('node:http');
-const {spawn}=require('node:child_process');
+const {spawn,spawnSync}=require('node:child_process');
 module.exports=async function withChromeFixture(html,run){
   let chrome,ws,server;const pending=new Map();let id=0;
   const pause=ms=>new Promise(r=>setTimeout(r,ms));
@@ -37,6 +37,14 @@ module.exports=async function withChromeFixture(html,run){
     if(!ready)throw Error('Fixture navigation timeout');
     await run(evaluate,pause);
   }finally{
-    ws?.close();chrome?.kill();if(server)await new Promise(r=>server.close(r));
+    ws?.close();
+    // chrome.kill() 不会终止 crashpad 等子进程，残留句柄会锁住临时 profile；
+    // 必须按进程树终止并等待 taskkill 结束，再清理目录。
+    try{if(chrome)spawnSync('taskkill',['/pid',String(chrome.pid),'/T','/F'],{stdio:'ignore'});}catch{}
+    chrome?.kill();
+    if(server)await new Promise(r=>server.close(r));
+    // crashpad_handler 可能晚于主进程数秒才释放 profile 句柄（taskkill 偶发 128），
+    // 以轮询等待句柄释放为准，成功即提前结束。
+    for(let i=0;i<30;i++){try{fs.rmSync(profile,{recursive:true,force:true});break;}catch(e){if(i===29)break;await pause(500);}}
   }
 };

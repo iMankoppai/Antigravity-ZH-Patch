@@ -11,7 +11,7 @@
 //
 // The expected patch version is read from Assets/translate.js, never hard-coded,
 // and the pass count is computed from the assertions that actually ran.
-const fs = require('fs'), path = require('path'), http = require('http'), { spawn } = require('child_process'), assert = require('assert/strict');
+const fs = require('fs'), path = require('path'), http = require('http'), { spawn, spawnSync } = require('child_process'), assert = require('assert/strict');
 const root = path.resolve(__dirname, '..', '..');
 const out = process.env.ZH_TEST_OUT || path.join(root, 'work/status-label-repair');
 const assets = path.join(root, 'src/AntigravityZhManager/Assets');
@@ -27,7 +27,7 @@ const expectedVersion = Number(source.match(/const patchVersion = (\d+)/)?.[1]);
 if (!Number.isInteger(expectedVersion)) throw new Error('无法从 translate.js 读取 patchVersion');
 const oldSource = fs.existsSync(path.join(out, 'baseline/translate.js')) ? fs.readFileSync(path.join(out, 'baseline/translate.js'), 'utf8') : null;
 const pause = ms => new Promise(r => setTimeout(r, ms));
-let server, chrome, ws, id = 0;
+let server, chrome, ws, id = 0, profile = null;
 const pending = new Map(), checks = [];
 const header = 'group flex w-full min-w-0 items-center min-h-8 py-1 px-2 select-none transition-[background-color]';
 const title = 'flex flex-row items-center gap-1 overflow-hidden whitespace-nowrap text-muted-foreground';
@@ -97,7 +97,7 @@ async function eq(name, expression, expected) { const actual = await evaluate(ex
 async function main() {
   server = http.createServer((req, res) => { res.setHeader('Content-Type', 'text/html;charset=utf-8'); res.end(fixture) });
   await new Promise(r => server.listen(0, '127.0.0.1', r));
-  const profile = path.join(out, 'chrome-profile-' + Date.now());
+  profile = path.join(out, 'chrome-profile-' + Date.now());
   chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check', '--disable-background-networking', '--disable-extensions', '--user-data-dir=' + profile, '--remote-debugging-port=0', '--remote-debugging-address=127.0.0.1', 'http://127.0.0.1:' + server.address().port], { windowsHide: true, stdio: ['ignore', 'ignore', 'pipe'] });
   let err = '';
   chrome.stderr.on('data', d => err += d);
@@ -250,4 +250,4 @@ async function main() {
   fs.writeFileSync(path.join(out, 'regression.json'), JSON.stringify(result, null, 2));
   console.log(JSON.stringify({ passed: checks.length, expectedPatchVersion: expectedVersion, baseline: before, repaired: after }, null, 2));
 }
-main().catch(e => { fs.writeFileSync(path.join(out, 'regression-failure.txt'), e.stack); console.error(e.stack); process.exitCode = 1 }).finally(async () => { if (ws?.readyState === 1) { try { await cdp('Browser.close') } catch { } ws.close() } if (chrome) chrome.kill(); if (server) server.close() });
+main().catch(e => { fs.writeFileSync(path.join(out, 'regression-failure.txt'), e.stack); console.error(e.stack); process.exitCode = 1 }).finally(async () => { try { if (chrome) spawnSync('taskkill', ['/pid', String(chrome.pid), '/T', '/F'], { stdio: 'ignore' }) } catch { } if (chrome) chrome.kill(); if (ws?.readyState === 1) { try { await cdp('Browser.close') } catch { } ws.close() } if (server) server.close(); for (let i = 0; i < 30; i++) { try { fs.rmSync(profile, { recursive: true, force: true }); break } catch (e) { if (i === 29) break; await pause(500) } } });
