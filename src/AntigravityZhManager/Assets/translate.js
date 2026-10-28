@@ -1,5 +1,5 @@
 (() => {
-  const patchVersion = 70;
+  const patchVersion = 71;
   const skillDetails = window.__antigravityZhSkillDetails || { documents: [], translations: {} };
   const detailDocuments = [...skillDetails.documents, ...(skillDetails.additionalDocuments || []), ...(skillDetails.builtinDocuments || [])];
   const reviewedReadmeBlocks = new Map((skillDetails.readmeBlocks || []).map(b => [b.source, b]));
@@ -686,7 +686,21 @@
     [/^Installing into (.+?)(?:…|\.{3})$/, m => `正在安装到 ${m[1]}…`],
     [/^(\d+) seconds of (\d+) seconds$/, m => `${m[1]} 秒 / 共 ${m[2]} 秒`],
     [/^(\d+:\d+(?::\d+)?) of (\d+:\d+(?::\d+)?)$/, m => `${m[1]} / ${m[2]}`],
-    [/^Wait for (\d+)s$/, m => `等待 ${m[1]} 秒`]
+    [/^Wait for (\d+)s$/, m => `等待 ${m[1]} 秒`],
+    // 2.27.0 浏览器子代理进行时状态：域名（≤20 字符）、按键名与滚动方向均为
+    // 客户端生成的受控值，原样保留；详见 work/v71/context-probe.cjs 证据。
+    [/^Opening ([a-z0-9.-]{1,20})$/i, m => `正在打开 ${m[1]}`],
+    [/^Pressing ([A-Za-z0-9+\u2019]+)$/, m => `按下 ${m[1]}`],
+    [/^Scrolling (up|left|right)$/i, m => `正在${{ up: '向上', left: '向左', right: '向右' }[m[1].toLowerCase()]}滚动`],
+    // 实时通话计时（aria-label），mm:ss / h:mm:ss
+    [/^Live chat, (\d{1,3}:[\d:]{2,})$/, m => `实时通话，${m[1]}`],
+    // 模型额度窗口标签（`24h limit` 等受控枚举）
+    [/^(\d+[smhd]) limit$/i, m => `${m[1]} 额度`],
+    // MCP 服务器账号选择器（aria-label），账号名保留
+    [/^Account this MCP server uses: (.+)$/, m => `此 MCP 服务器使用的账号：${m[1]}`],
+    // 语音坞「返回目标」：`Back to ${name}` 仅由语音坞生成（bundle 证据单一出处），
+    // 对话名等用户内容原样保留；固定兜底 Back to chat 同时入词典。
+    [/^Back to (.+)$/, m => m[1] === 'chat' ? '返回对话' : `返回 ${m[1]}`]
   );
   const translatableAttributes = ["aria-label", "aria-valuetext", "placeholder", "data-placeholder", "title", "alt", "data-tooltip"];
   const opaqueSelector = "script, style, code, pre, [data-antigravity-user-content='true'], " +
@@ -1075,6 +1089,7 @@
     const parent = node.parentElement;
     if (translateDetailText(node)) return;
     if (translatePermissionSentence(node)) return;
+    if (translateSplitHintSentence(node)) return;
     if (translateReviewedPluginBlock(parent)) return;
     if (translateReviewedUiFragment(node)) return;
     if (translatePlatformUi(node)) return;
@@ -1148,6 +1163,51 @@
       while ((text = walker.nextNode())) {
         const original = originalText(text), key = original.trim();
         if (Object.hasOwn(fragments, key)) writeText(text, fragments[key], original);
+        else if (!key) writeText(text, '', original);
+      }
+      return true;
+    }
+    return false;
+  }
+  // 2.27.0 多账号提示、语音选择器与调试包说明：同一句话被链接/选择器切分成
+  // 多个文本节点，整句匹配父容器后才按片段改写；账号名、邮箱链接等非片段
+  // 节点不命中映射，保持原样。
+  function translateSplitHintSentence(node) {
+    const core = originalText(node)?.trim();
+    const fragmentSets = [
+      {
+        pattern: /^Signed in as (.+)\. To use another account, add it in the Accounts tab and make it the default\.$/,
+        fragments: { 'Signed in as': '当前登录账号：', '. To use another account, add it in the': '。要使用其他账号，请在', 'and make it the default.': '中添加并设为默认。' }
+      },
+      {
+        pattern: /^Signed in as (.+)\. To add another account, go to the Accounts tab\.$/,
+        fragments: { 'Signed in as': '当前登录账号：', '. To add another account, go to the': '。要添加其他账号，请前往', '.': '。' }
+      },
+      {
+        pattern: /^To switch accounts, sign out in the (.+) and sign in again\.$/,
+        fragments: { 'To switch accounts, sign out in the': '要切换账号，请在', 'and sign in again.': '中退出登录后重新登录。' }
+      },
+      {
+        pattern: /^You can change this in Settings later\.$/,
+        fragments: { 'You can change this in': '稍后可在', 'later.': '中更改。' }
+      },
+      {
+        pattern: /^Not shared automatically—share with (.+) for debugging\.$/,
+        fragments: { 'Not shared automatically—share with': '不会自动共享——可发送给', 'for debugging.': '以便调试。' }
+      },
+    ];
+    // 空白节点也参与：它们是切分句的一部分，须清空并由本函数认领，
+    // 否则通用管线会把空白改写回去。
+    if (!(core === '' || fragmentSets.some(set => set.fragments[core] !== undefined))) return false;
+    let parent = node.parentElement;
+    for (let depth = 0; parent && depth < 3; depth++, parent = parent.parentElement) {
+      const sentence = originalElementText(parent).replace(/\s+/g, ' ').trim();
+      const set = fragmentSets.find(candidate => candidate.pattern.test(sentence));
+      if (!set) continue;
+      const walker = document.createTreeWalker(parent, NodeFilter.SHOW_TEXT); let text;
+      while ((text = walker.nextNode())) {
+        const original = originalText(text), key = original.trim();
+        if (Object.hasOwn(set.fragments, key)) writeText(text, set.fragments[key], original);
         else if (!key) writeText(text, '', original);
       }
       return true;

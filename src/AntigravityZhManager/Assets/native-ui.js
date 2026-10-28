@@ -8,7 +8,10 @@ function createNativeUi(dictionary) {
     if (typeof value !== 'string') return value;
     if (Object.hasOwn(dictionary, value)) return dictionary[value];
     const match = value.match(/^The WSL distro "(.+)" is no longer installed\.$/);
-    return match ? `WSL 发行版“${match[1]}”已不再安装。` : value;
+    if (match) return `WSL 发行版“${match[1]}”已不再安装。`;
+    // 2.27.0 WebAuthn 登录提示（webauthn.js）：站点标识保留原样。
+    const passkey = value.match(/^Sign in to (.+)$/);
+    return passkey ? `登录 ${passkey[1]}` : value;
   }
   function localizeOptions(options) {
     if (!options || typeof options !== 'object') return options;

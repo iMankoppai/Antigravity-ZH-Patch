@@ -1,16 +1,16 @@
 # Antigravity 中文汉化管理器
 
 [![Release](https://img.shields.io/badge/Release-v1.3.1-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.1)
-[![Antigravity](https://img.shields.io/badge/Antigravity-2.26.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Antigravity](https://img.shields.io/badge/Antigravity-2.27.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.3.1（汉化内核 v70）适配 Google Antigravity 2.26.0（Windows x64）**，界面词条 **5,894 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。此前本地 v1.1.7 构建统一以 v1.2.0 发布，见 [v1.2.0 发布说明](docs/v1.2.0-发布说明.md)。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
+> **当前版本 v1.3.1（汉化内核 v71）适配 Google Antigravity 2.27.0（Windows x64）**，界面词条 **5,963 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。此前本地 v1.1.7 构建统一以 v1.2.0 发布，见 [v1.2.0 发布说明](docs/v1.2.0-发布说明.md)。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
 
-本地最新 **v70 实机漏译修复**：基于计算机控制实机审计（work/live-audit/），修复 3 处漏译——会话列表相对时间（`34m` ➔ `34 分钟前`，侧栏与历史页）、历史页归档横幅的 `(⌘ menu).` 尾节点切分、SPA 软导航后输入框工具条 aria-label 漏翻（pushState/popstate 补扫）。详见 `work/live-audit/summary.md`。此为本地构建，尚未发布到 GitHub。
+本地最新 **v71（适配 Antigravity 2.27.0）**：完整登记 2.27.0 官方基线（原版哈希与全部注入目标哈希），补齐 2.27.0 新增界面的 74 条词条与 8 条动态模板——语音模式/实时通话（语音选择器、音量、麦克风、语音坞）、Google Drive 集成、多账号切换提示、浏览器子代理动作状态、环境恢复与项目创建引导等；原生 Passkey 通行密钥弹窗接入词典翻译。v1.3.1 标签下的发布资产由此构建覆盖（此前该标签为内核 v70 构建，其三处实机漏译修复已包含在 v71 内）。详见 [v71 适配说明](docs/v71-2.27.0适配.md)。
 
 此前 **v69 低频界面补漏**：基于全局漏译排查（缓存 bundle 提取、真引擎覆盖测试、版本差分与实机只读扫描），新增 20 条低频界面词条（输入框占位符短变体、书签操作状态、执行环境加载、表单校验等）、1 条文件展示上限动态模板，并扩展状态前缀白名单（读取网页、自动继续处理等）。详见 [v69 补漏说明](docs/v69-低频界面补漏.md)。
 
@@ -77,7 +77,7 @@ Antigravity ZH/
 ```
 
 ### 技术规格
-- **适配软件**：**Google Antigravity 2.26.0**（Windows x64）
+- **适配软件**：**Google Antigravity 2.27.0**（Windows x64）
 - **汉化内核**：v69（词条 5,894 条）
 - **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、工作状态、插件市场与主题设置）
 - **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入
@@ -97,11 +97,15 @@ Antigravity ZH/
 
 ## 📦 版本记录
 
-### v1.3.1 (内核 v70) — 实机审计漏译修复
+### v1.3.1 (内核 v71) — 适配 Antigravity 2.27.0
 
-- **来源**：计算机控制实机审计（CDP DOM 扫描 + 真实智能体动作两轮），详见 `work/live-audit/summary.md`。
-- **修复**：① 会话列表相对时间生肉（侧栏/历史页行，根因为 2.26.0 行结构与侧栏地标变更 + identitySelector 守卫吞行）；② 历史页归档横幅 `(⌘ menu).` 尾节点切分漏译（非 Toast 变体）；③ SPA 软导航后输入框工具条 aria-label 漏翻（新增 pushState/replaceState/popstate 补扫钩子，沙箱环境安全降级）。
-- **回归**：v68 界面回归增至 232 断言（会话行时间、形似时间的会话名保护、横幅切分、软导航补扫、精确还原）；全套门禁 30/30。
+- **适配客户端**：Google Antigravity **2.27.0**（Windows x64），汉化内核升级至 **v71**，词条扩充至 **5,963 条**。2.27.0 官方更新清除了已安装补丁与原件备份（`app.asar` 换新、`app.asar.bak` 被移除），需重新永久安装。
+- **发布说明**：本构建覆盖 v1.3.1 标签下此前的内核 v70 构建；v70 的三处实机漏译修复（会话列表相对时间、归档横幅尾节点切分、SPA 软导航补扫，详见 [v70 说明](docs/v70-实机审计漏译修复.md)）已全部包含在 v71 内。
+- **2.27.0 新界面覆盖**：新增 74 条词条与 8 条动态模板——语音模式与实时通话（语音选择器 `Choose Jetski's Voice`、音量/麦克风设置、语音坞状态与提示）、Google Drive 集成（`@drive` 徽标、登录提示）、多账号切换提示（被链接切分的整句按结构重组，账号邮箱保留）、浏览器子代理动作状态（`Opening page`、`Pressing Enter` 等 12 条及 `Opening {域名}` 等模板）、环境恢复与终端提示、项目/远程工作区创建引导、模型额度标签（`Daily limit`、`24h limit`）、对话列表空状态与加载态、网页视图截图栏。
+- **原生弹窗**：WebAuthn 通行密钥选择弹窗（`Choose a Passkey`）接入词典翻译，`Sign in to {站点}` 动态前缀保留站点标识；macOS 专属的 Passkey 二维码弹窗（caBLEv2）经平台门禁确认不在 Windows 出现，列入范围外记录。
+- **范围纪律**：bundle 差分命中的 `Owner`/`Merged`/`Ask`/`Drive` 等单词经上下文核实为 React 内部标识，未收录；`Attached context:` 等拼入消息负载的组合串保持原文；开发者诊断信息不翻译。
+- **验证**：官方基线登记 2.27.0（原版 `5ed34675…`，5 个注入锚点全部恰好命中 1 次）；以真实 2.27.0 原版完成隔离安装、重复安装与英文还原演习（还原逐字节一致）；统一门禁 **31/31** 通过（新增 v227 网页回归 176 断言、原生弹窗回归 80 项）；生产安装后 CDP 只读抽查确认 2.27.0 客户端原生自动加载 v71（词库 5,963 条，菜单栏中文）。
+- 证据与工具：`work/v71/`（asar 差分、前端 bundle 字面量差分、上下文探针）；说明：[v71 适配说明](docs/v71-2.27.0适配.md)。
 
 ### v1.3.0 (内核 v69) — 全局漏译排查收口与低频界面补漏
 

@@ -73,16 +73,21 @@ fs.copyFileSync(readmePath, path.join(stageFiles, 'README.md'));
 const expected = ['README.md', exeName].sort();
 
 // ---- 3. 生成临时 ZIP ----
-execFileSync('tar', ['-a', '-c', '-f', tempZip, '-C', stageFiles, '.'], { stdio: 'pipe' });
+// tar 的 -f 参数必须用相对路径：GNU tar 会把 `C:\...` 解析成 远程主机:文件
+// （"Cannot connect to C:"），System32 bsdtar 则两种都接受。相对路径对两者都安全。
+const tempZipArg = path.relative(root, tempZip).split(path.sep).join('/');
+if (tempZipArg.startsWith('..')) fail('临时 ZIP 相对路径越界');
+const stageFilesArg = path.relative(root, stageFiles).split(path.sep).join('/');
+execFileSync('tar', ['-a', '-c', '-f', tempZipArg, '-C', stageFilesArg, '.'], { stdio: 'pipe', cwd: root });
 if (!fs.existsSync(tempZip)) fail('临时 ZIP 未生成');
 
 // ---- 4. 验证临时 ZIP ----
 if (failures.length === 0) {
-  const listOut = execFileSync('tar', ['-t', '-f', tempZip], { encoding: 'utf8' });
+  const listOut = execFileSync('tar', ['-t', '-f', tempZipArg], { encoding: 'utf8', cwd: root });
   fs.mkdirSync(path.join(stageRoot, 'extract'), { recursive: true });
   // 解压到暂存目录，同时让 tar 校验 CRC（损坏会以非零退出）
   try {
-    execFileSync('tar', ['-x', '-f', tempZip, '-C', path.join(stageRoot, 'extract')], { stdio: 'pipe' });
+    execFileSync('tar', ['-x', '-f', tempZipArg, '-C', path.relative(root, path.join(stageRoot, 'extract')).split(path.sep).join('/')], { stdio: 'pipe', cwd: root });
   } catch (err) {
     fail('ZIP 解压失败（CRC 或结构损坏）：' + (err.message || err));
   }

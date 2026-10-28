@@ -21,4 +21,20 @@ for(const [title,translated]of [['Cannot open folder','无法打开文件夹'],[
  check(calls.at(-1).receiver,dialog,'错误弹窗 this');check(calls.at(-1).args[0],translated,'错误弹窗标题');check(calls.at(-1).args[1],detail,'技术诊断不翻译');
 }
 dialog.showErrorBox('Custom diagnostic Copy','Unknown content');check(calls.at(-1).args[0],'Custom diagnostic Copy','未知错误标题保持');
+// 2.27.0 WebAuthn（webauthn.js）通行密钥选择弹窗
+{
+ const opts={type:'question',title:'Choose a Passkey',message:'Sign in to example.com',detail:'Select a passkey account to continue:',buttons:['alice@example.com','bob@example.com','Cancel'],defaultId:0,cancelId:2};
+ dialog.showMessageBox(win,opts);
+ const actual=calls.at(-1).args[1];
+ check(actual.title,'选择通行密钥','通行密钥弹窗标题');
+ check(actual.message,'登录 example.com','登录提示前缀翻译且站点保留');
+ check(actual.detail,'选择一个通行密钥账号以继续：','通行密钥详情');
+ check(actual.buttons[0],'alice@example.com','账号按钮保留');
+ check(actual.buttons[2],'取消','取消按钮');
+ check(opts.message,'Sign in to example.com','原选项不改写');
+}
+for(const [message,expected]of [['Sign in to this site','登录此网站'],['Sign in to Example Corp','登录 Example Corp'],['Sign into something else','Sign into something else']]){
+ dialog.showMessageBox({message});
+ check(calls.at(-1).args[0].message,expected,'登录提示变体：'+message);
+}
 console.log('native UI regression: '+checks+' PASS');
