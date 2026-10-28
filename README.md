@@ -1,16 +1,16 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.3.1-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.1)
-[![Antigravity](https://img.shields.io/badge/Antigravity-2.27.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Release](https://img.shields.io/badge/Release-v1.3.2-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.2)
+[![Antigravity](https://img.shields.io/badge/Antigravity-2.28.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.3.1（汉化内核 v71）适配 Google Antigravity 2.27.0（Windows x64）**，界面词条 **5,963 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。此前本地 v1.1.7 构建统一以 v1.2.0 发布，见 [v1.2.0 发布说明](docs/v1.2.0-发布说明.md)。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
+> **当前版本 v1.3.2（汉化内核 v72）适配 Google Antigravity 2.28.0（Windows x64）**，界面词条 **6,044 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。此前本地 v1.1.7 构建统一以 v1.2.0 发布，见 [v1.2.0 发布说明](docs/v1.2.0-发布说明.md)。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
 
-本地最新 **v71（适配 Antigravity 2.27.0）**：完整登记 2.27.0 官方基线（原版哈希与全部注入目标哈希），补齐 2.27.0 新增界面的 74 条词条与 8 条动态模板——语音模式/实时通话（语音选择器、音量、麦克风、语音坞）、Google Drive 集成、多账号切换提示、浏览器子代理动作状态、环境恢复与项目创建引导等；原生 Passkey 通行密钥弹窗接入词典翻译。v1.3.1 标签下的发布资产由此构建覆盖（此前该标签为内核 v70 构建，其三处实机漏译修复已包含在 v71 内）。详见 [v71 适配说明](docs/v71-2.27.0适配.md)。
+本地最新 **v72（适配 Antigravity 2.28.0）**：完整登记 2.28.0 官方基线，补齐 2.28.0 新增界面的 81 条词条与 3 条词条修订——webview 站点证书面板、快捷键设置面板（含录制器）、命令面板、Cog 云工作区、插件连接与市场、远程数据删除确认、外观与链接设置等；原生菜单补入 `Side Panel` 变体。另有实机巡航审计轮：修复组合式 tooltip（`发送消息 Enter`）、Turbo 模式名（`极速`）、快捷键命令行与成果审阅覆盖行等漏译，并修复热注入未卸载旧实例导致新旧词典互写的缺陷。详见 [v72 适配说明](docs/v72-2.28.0适配.md)。
 
 此前 **v69 低频界面补漏**：基于全局漏译排查（缓存 bundle 提取、真引擎覆盖测试、版本差分与实机只读扫描），新增 20 条低频界面词条（输入框占位符短变体、书签操作状态、执行环境加载、表单校验等）、1 条文件展示上限动态模板，并扩展状态前缀白名单（读取网页、自动继续处理等）。详见 [v69 补漏说明](docs/v69-低频界面补漏.md)。
 
@@ -55,7 +55,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.3.1-Windows-x64.zip`**；
+2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.3.2-Windows-x64.zip`**；
 3. 双击下载的 EXE，或解压 ZIP 后运行其中的 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -77,7 +77,7 @@ Antigravity ZH/
 ```
 
 ### 技术规格
-- **适配软件**：**Google Antigravity 2.27.0**（Windows x64）
+- **适配软件**：**Google Antigravity 2.28.0**（Windows x64）
 - **汉化内核**：v69（词条 5,894 条）
 - **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、工作状态、插件市场与主题设置）
 - **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入
@@ -96,6 +96,17 @@ Antigravity ZH/
 ---
 
 ## 📦 版本记录
+
+### v1.3.2 (内核 v72) — 适配 Antigravity 2.28.0
+
+- **适配客户端**：Google Antigravity **2.28.0**（Windows x64），汉化内核升级至 **v72**，词条扩充至 **6,044 条**。2.28.0 更新再次清除已安装补丁与原件备份，需重新永久安装。
+- **2.28.0 新界面覆盖**：新增 81 条词条——webview 站点信息/证书面板（连接安全、证书字段与四种证书错误、隐私提示）、快捷键设置面板（搜索/重置/录制器/浏览器占用提示）、命令面板搜索占位符、Cog 云工作区、插件连接与市场（登录状态、连接区块、本地/云端徽标）、远程数据删除确认、外观与链接打开设置、`Open in Side Panel` 及原生菜单 `Side Panel (Default)` 变体等。
+- **实机巡航审计轮**（用户反馈驱动）：CDP 多界面扫描（对话页、设置全部分页、快捷键页全量命令行、悬停 tooltip 全量遍历）补漏——组合式 tooltip 根因为 base-ui 将 JSX 内容序列化成单文本节点，新增「已知文案+快捷键」整串模板（`发送消息 Enter` 等）；`Turbo`/`Turbo mode` 修订为「极速/极速模式」；补齐快捷键命令行（`Reopen Closed Tab` 等 3 条）与成果审阅覆盖行（`N projects` 模板）。
+- **热注入缺陷修复**：`CdpHotPatcher` 在已注入旧实例的页面上直接叠加新实例，新旧词典的观察器互相改写节点（旧词典把新译文"还原"回英文）；现注入前先卸载旧实例再重扫。
+- **词条修订**：`Cancel recording` 由「取消录音」改为通用的「取消录制」。
+- **范围纪律**：实验性视觉主题名（Alabaster/Tahoe/Atelier/Studio/Planes）与发布通道名（Dev/Stable）按专名保留英文；React 内部标识与 CSS/枚举串不收录。
+- **验证**：官方基线登记 2.28.0（原版 `4a145127…`，5 个注入锚点恰好各 1 次，`utils.js`/`tray.js` 等四模块与 2.27.0 逐字节一致）；以真实 2.28.0 原版完成隔离安装、重复安装与英文还原演习（还原逐字节一致）；统一门禁 **32/32** 通过（新增 v228 网页回归 186 断言）；生产安装后 CDP 只读抽查确认 2.28.0 客户端原生自动加载 v72（词库 6,044 条，菜单栏中文，`极速`、`发送消息 Enter` 实机复核通过）。
+- 证据与工具：`work/v72/`（asar 差分、前端 bundle 字面量差分与身份交叉验证、上下文探针、实机巡航审计与悬停遍历工具）；说明：[v72 适配说明](docs/v72-2.28.0适配.md)。
 
 ### v1.3.1 (内核 v71) — 适配 Antigravity 2.27.0
 

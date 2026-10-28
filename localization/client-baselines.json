@@ -845,6 +845,79 @@
           "note": "v71，生产安装器隔离验证归档（2.27.0 原版起点）"
         }
       ]
+    },
+    {
+      "productVersion": "2.28.0",
+      "platform": "win32",
+      "arch": "x64",
+      "pristine": {
+        "sha256": "4a145127f2fa419489701fd67415feb8667bb14a6f228231c48ebc02c26704b2",
+        "bytes": 4615355,
+        "productVersion": "2.28.0",
+        "source": "target",
+        "path": "work/v72/client/resources/app.asar",
+        "recordedAt": "2026-10-29T00:00:00.000Z"
+      },
+      "compatibility": {
+        "packageSignatureSha256": "dd534ff5211df214041d89c743c21ce7cd3df62ec5ae26f7a71376a5ad1b67cf",
+        "targetSha256": {
+          "dist/ipcHandlers.js": "3824070036fe6545bc18fc359d13457d25a7437ba0121a32e73036514de3d74a",
+          "dist/main.js": "66fa884c96dee5dd6a536711d35fc90fee853e9a2eede40fb4d1ab576e4ea50f",
+          "dist/utils.js": "2f39dd7b944436bd5007297ccc15c42c897d8e6cecd5a0af93bdf6bfc1708b12",
+          "dist/tray.js": "6c6b0968b45a1c7088e459657d57a9efd72d3733614349095f17b6ee94b47135",
+          "dist/ideInstall/wizard.js": "20814ba365ceb5f386afe856277f5dc85bf9db994d1a77579430f100f3725666",
+          "dist/provisionSplash.js": "737f40f02130440a9ec9a3fed83c2e62290029aece6d0ad558136fa510c45f35"
+        }
+      },
+      "requiredTargets": [
+        "dist/ipcHandlers.js",
+        "dist/main.js",
+        "dist/utils.js",
+        "dist/tray.js"
+      ],
+      "requiredEntries": {
+        "dist/ipcHandlers.js": true,
+        "dist/main.js": true,
+        "dist/tray.js": true,
+        "dist/utils.js": true
+      },
+      "requiredAnchors": [
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspace'",
+          "count": 1
+        },
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspaces'",
+          "count": 1
+        },
+        {
+          "target": "dist/main.js",
+          "text": "void win.loadURL(newUrl);",
+          "count": 1
+        },
+        {
+          "target": "dist/utils.js",
+          "text": "void win.loadURL(url);",
+          "count": 1
+        },
+        {
+          "target": "dist/tray.js",
+          "text": "Menu.buildFromTemplate(actions)",
+          "count": 1
+        }
+      ],
+      "missingTargets": [],
+      "knownPatchedSha256": [
+        {
+          "sha256": "711ce22fce4c59e5c54d666ade7407fe391203311dd28185a3b06b1ce9ca7680",
+          "kernelSha256": "bc41ae610641a25cc87adaab111cff44a48b611afce52c2f9db0bb60e2e5ac6e",
+          "bytes": 7932784,
+          "recordedAt": "2026-10-29T00:00:00.000Z",
+          "note": "v72（含实机审计修复轮），生产安装器隔离验证归档（2.28.0 原版起点）"
+        }
+      ]
     }
   ]
 }

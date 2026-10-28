@@ -1,5 +1,5 @@
 (() => {
-  const patchVersion = 71;
+  const patchVersion = 72;
   const skillDetails = window.__antigravityZhSkillDetails || { documents: [], translations: {} };
   const detailDocuments = [...skillDetails.documents, ...(skillDetails.additionalDocuments || []), ...(skillDetails.builtinDocuments || [])];
   const reviewedReadmeBlocks = new Map((skillDetails.readmeBlocks || []).map(b => [b.source, b]));
@@ -346,7 +346,7 @@
     [/^Version\s+(.+)$/, (match) => `版本 ${match[1]}`],
     [/^Select model, current:\s*(.+)$/, (match) => `选择模型，当前：${match[1]}`],
     [/^(.+?)\s*·\s*Context window$/i, (match) => `${match[1]} · 上下文窗口`],
-    [/^Agent permissions preset selector, current:\s*(.+)$/, (match) => `代理权限预设选择器，当前：${match[1]}`],
+    [/^Agent permissions preset selector, current:\s*(.+)$/, (match) => `代理权限预设选择器，当前：${translations.get(match[1]) || match[1]}`],
     [/^This (.+) overrides your global permission settings\.$/, (match) => {
       const scope = { project: '项目', global: '全局', workspace: '工作区', environment: '环境' }[match[1].toLowerCase()] || match[1];
       return `此${scope}会覆盖你的全局权限设置。`;
@@ -698,6 +698,15 @@
     [/^(\d+[smhd]) limit$/i, m => `${m[1]} 额度`],
     // MCP 服务器账号选择器（aria-label），账号名保留
     [/^Account this MCP server uses: (.+)$/, m => `此 MCP 服务器使用的账号：${m[1]}`],
+    // 侧边栏产品按钮 aria（产品名保留）
+    [/^About (.+)$/, m => `关于 ${m[1]}`],
+    // 发送/入队按钮的组合 tooltip：base-ui 会把 JSX 内容序列化成单个文本节点，
+    // 「已知文案 + 快捷键」的组合只能整串命中（实机审计 work/v72/）。
+    [/^(Send Message|Queue Message) ([A-Za-z⇧⌘+]+)$/, m => `${translations.get(m[1]) || m[1]} ${m[2]}`],
+    // 成果审阅覆盖行的「N projects」按钮
+    [/^(\d+) projects?$/, m => `${m[1]} 个项目`],
+    // 语音 pill 组合 aria
+    [/^Live chat \((.+)\)$/, m => `实时通话（${m[1]}）`],
     // 语音坞「返回目标」：`Back to ${name}` 仅由语音坞生成（bundle 证据单一出处），
     // 对话名等用户内容原样保留；固定兜底 Back to chat 同时入词典。
     [/^Back to (.+)$/, m => m[1] === 'chat' ? '返回对话' : `返回 ${m[1]}`]
@@ -818,7 +827,7 @@
     if (elapsed) return leading + elapsed + trailing;
     const fixed = {'Retrieving Browser Pages':'正在获取浏览器页面','Retrieved Browser Pages':'已获取浏览器页面','Semantic searching':'正在进行语义搜索','Semantic searched':'已完成语义搜索'};
     if (Object.hasOwn(fixed, core)) return leading + fixed[core] + trailing;
-    if (/^(Thinking|Thought Process|Working|Done|Unknown (?:file )?edit|Analyz(?:ing|ed) (?:Task Log|content)|Check(?:ing|ed) command status|Fetch(?:ing|ed) network requests?(?: for page\.)?|Extract(?:ing|ed) DOM elements|Failed to (?:build|edit|execute|read)|Test failed|(?:Searching|Searched) Moma for|(?:Retrieving|Retrieved) findings for|Build Cleaner (?:is running on|completed for)|(?:Auto-)?proceeded with|(?:reading|read) page|bookmarking|bookmarked|removing bookmark|removed bookmark|canceled (?:bookmark of|removal of bookmark|creation of|deletion of|edit to))$/i.test(core) && translations.has(core))
+    if (/^(Thinking|Thought Process|Working|Done|Waiting for your approval|Unknown (?:file )?edit|Analyz(?:ing|ed) (?:Task Log|content)|Check(?:ing|ed) command status|Fetch(?:ing|ed) network requests?(?: for page\.)?|Extract(?:ing|ed) DOM elements|Failed to (?:build|edit|execute|read)|Test failed|(?:Searching|Searched) Moma for|(?:Retrieving|Retrieved) findings for|Build Cleaner (?:is running on|completed for)|(?:Auto-)?proceeded with|(?:reading|read) page|bookmarking|bookmarked|removing bookmark|removed bookmark|canceled (?:bookmark of|removal of bookmark|creation of|deletion of|edit to))$/i.test(core) && translations.has(core))
       return leading + translations.get(core) + trailing;
     const single = core.match(/^([A-Za-z]+)$/);
     if (single && statusVerbs[single[1].toLowerCase()]) return leading + statusVerbs[single[1].toLowerCase()] + trailing;

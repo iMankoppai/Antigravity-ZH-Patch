@@ -56,6 +56,7 @@ function createNativeUi(dictionary) {
     'Toggle Status Bar', 'Give Feedback', 'Pin Tab', 'Unpin Tab',
     'Add to Chat', 'Copy File Path', 'Copy File Name',
     'Send Message', 'Queue Message', 'Send Immediately',
+    'Open in Side Panel', 'Side Panel', 'Side Panel (Default)',
   ]);
   function translateContextMenuLabel(label, item) {
     if (typeof label !== 'string') return label;

@@ -119,6 +119,9 @@ public static class CdpHotPatcher
             var pages = await TargetsAsync(timeout.Token);
             string script = "(async () => {" +
                 "if (!document.body || (document.body.childElementCount === 0 && !document.getElementById('root') && !document.querySelector('[data-testid], main, nav, header'))) throw new Error('主界面尚未就绪或结构已变化');" +
+                // 已有旧实例时必须先卸载：两个实例的观察器会互相改写节点
+                // （旧词典把新译文“还原”回英文），热更新永远不生效。
+                "if (window.__antigravityZhPatchRestore) { window.__antigravityZhPatchRestore(); delete window.__antigravityZhPatchDictionary; delete window.__antigravityZhPatchDictionaryRevision; delete window.__antigravityZhSkillDetails; delete window.__antigravityZhPatchInstalled; }\n" +
                 "window.__antigravityZhPatchHotActive = true; window.__antigravityZhNativeAutoload = true;" +
                 "window.__antigravityZhPatchDictionary = " + resources.Dictionary + "; window.__antigravityZhPatchDictionaryRevision = Date.now();\n" +
                 "window.__antigravityZhSkillDetails = " + resources.SkillDetails + ";\n" +
