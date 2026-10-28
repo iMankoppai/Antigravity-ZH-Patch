@@ -19,8 +19,8 @@
   "managerExeNote": "v1.3.1（内核 v71）本地构建完成；发布资产覆盖 v1.3.1 标签的 GitHub 资产待用户执行上传。",
   "releaseZip": "Antigravity-ZH-1.3.1-Windows-x64.zip",
   "releaseZipSha256": "e3f1f66efa901cfc4df14f6cf41ad278b1dd3bcf0f701cadbba949bb833c3bc4",
-  "publishedInfo": "v1.3.1（同标签资产替换为内核 v71 构建）；发布目标：GitHub Releases v1.3.1。",
-  "updatedAt": "2026-10-28T00:35:00.000Z",
+  "publishedInfo": "v1.3.1；发布目标：GitHub Releases v1.3.1（同标签资产已替换为内核 v71 构建，标题与说明已更新为 2.27.0 适配）。",
+  "updatedAt": "2026-10-28T00:55:00.000Z",
   "patchVersion": 71,
   "installedPatchVersion": 71,
   "statusLabelRegressionChecks": 100,
@@ -413,6 +413,6 @@
       "menuBarSample": "工作区 | 查看 | 窗口 | 新建对话 | 对话历史 | 自动化 | 自定义项 | 项目",
       "relativeTimeSample": "18 小时前"
     },
-    "released": false
+    "released": true
   }
 }
