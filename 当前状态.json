@@ -19,7 +19,7 @@
   "managerExeNote": "v1.3.2（内核 v72）已随 GitHub Releases v1.3.2 发布。",
   "releaseZip": "Antigravity-ZH-1.3.4-Windows-x64.zip",
   "releaseZipSha256": "dd093b39699d56890ef9284e77ecef53d9baf52bd1ed19f03a559f41a4738221",
-  "publishedInfo": "v1.3.4；发布目标：GitHub Releases v1.3.4。",
+  "publishedInfo": "v1.3.4；已发布：GitHub Releases v1.3.4。",
   "updatedAt": "2026-10-30T00:00:00.000Z",
   "patchVersion": 73,
   "installedPatchVersion": 73,
@@ -523,7 +523,7 @@
       "menuBarSample": "工作区 | 查看 | 窗口 | 新建对话 | 自动化 | 自定义项 | 项目",
       "relativeTimeSample": "5 分钟前"
     },
-    "released": false,
+    "released": true,
     "managerExeSha256": "a6696d6f621560c5cfdf7400acfb34f46acf88001451db7ab2e32423c395dc35",
     "releaseZipSha256": "dd093b39699d56890ef9284e77ecef53d9baf52bd1ed19f03a559f41a4738221"
   }
