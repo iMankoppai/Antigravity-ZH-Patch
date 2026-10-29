@@ -1,0 +1,15 @@
+{
+  "notes": {
+    "date": "2026-10-29",
+    "evidence": "work/v73/：2.28.1 主进程归档与 2.28.0 逐字节一致（仅 package.json 版本号），前端（live-main-2.28.1.js，10,652,357 字节，从运行中 2.28.1 客户端本地服务 /main.js 下载）字面量差分仅新增插件详情页脚与市场页脚区块；v72 词典键保留 3,111/消失 0。",
+    "skipped": [
+      "third-party-tools-disclaimer-* / {privacyPolicyLink} / Malformed third party tools disclaimer flag：内部标识与开发者诊断信息。",
+      "其余 50 个新增字面量为代码片段、正则与 CSS 类名噪声。"
+    ]
+  },
+  "dictionary": {
+    "Website": "网站",
+    "Repository": "代码仓库",
+    "Marketplace notice": "市场提示"
+  }
+}

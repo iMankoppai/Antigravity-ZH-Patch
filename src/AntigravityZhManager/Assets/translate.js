@@ -1,5 +1,5 @@
 (() => {
-  const patchVersion = 72;
+  const patchVersion = 73;
   const skillDetails = window.__antigravityZhSkillDetails || { documents: [], translations: {} };
   const detailDocuments = [...skillDetails.documents, ...(skillDetails.additionalDocuments || []), ...(skillDetails.builtinDocuments || [])];
   const reviewedReadmeBlocks = new Map((skillDetails.readmeBlocks || []).map(b => [b.source, b]));
