@@ -1,16 +1,16 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.3.3-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.3)
-[![Antigravity](https://img.shields.io/badge/Antigravity-2.28.1-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Release](https://img.shields.io/badge/Release-v1.3.4-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.4)
+[![Antigravity](https://img.shields.io/badge/Antigravity-2.28.2-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.3.3（汉化内核 v73）适配 Google Antigravity 2.28.1（Windows x64）**，界面词条 **6,047 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。此前本地 v1.1.7 构建统一以 v1.2.0 发布，见 [v1.2.0 发布说明](docs/v1.2.0-发布说明.md)。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
+> **当前版本 v1.3.4（汉化内核 v73）适配 Google Antigravity 2.28.2（Windows x64）**，界面词条 **6,047 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。此前本地 v1.1.7 构建统一以 v1.2.0 发布，见 [v1.2.0 发布说明](docs/v1.2.0-发布说明.md)。更新后汉化失效时可手动点击【新版汉化适配】，详见 `docs/新版汉化适配.md`。
 
-本地最新 **v73（适配 Antigravity 2.28.1）**：2.28.1 主进程与 2.28.0 逐字节一致（纯版本号更新），前端仅新增插件详情页脚与市场页脚区块，补齐 `Website`/`Repository`/`Marketplace notice` 3 条词条（词库 6,047 条）。详见 [v73 适配说明](docs/v73-2.28.1适配.md)。此前 **v72（适配 2.28.0）** 补齐 2.28.0 新增界面 81 条词条与实机巡航审计轮（组合式 tooltip 修复、`极速` 模式名、热注入卸载缺陷修复）。详见 [v72 适配说明](docs/v72-2.28.0适配.md)。
+本地最新 **v1.3.4（适配 Antigravity 2.28.2）**：2.28.2 与 2.28.1 相同为纯版本号更新（主进程逐字节一致、前端字面量零变化），内核保持 v73，重新登记基线并永久安装。详见 [v74 适配说明](docs/v74-2.28.2适配.md)。此前 **v73（适配 2.28.1）** 补齐插件详情页脚 3 条词条；**v72（适配 2.28.0）** 补齐 2.28.0 新增界面 81 条词条与实机巡航审计轮。详见 [v73 说明](docs/v73-2.28.1适配.md)、[v72 说明](docs/v72-2.28.0适配.md)。
 
 此前 **v69 低频界面补漏**：基于全局漏译排查（缓存 bundle 提取、真引擎覆盖测试、版本差分与实机只读扫描），新增 20 条低频界面词条（输入框占位符短变体、书签操作状态、执行环境加载、表单校验等）、1 条文件展示上限动态模板，并扩展状态前缀白名单（读取网页、自动继续处理等）。详见 [v69 补漏说明](docs/v69-低频界面补漏.md)。
 
@@ -55,7 +55,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.3.3-Windows-x64.zip`**；
+2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.3.4-Windows-x64.zip`**；
 3. 双击下载的 EXE，或解压 ZIP 后运行其中的 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -77,7 +77,7 @@ Antigravity ZH/
 ```
 
 ### 技术规格
-- **适配软件**：**Google Antigravity 2.28.1**（Windows x64）
+- **适配软件**：**Google Antigravity 2.28.2**（Windows x64）
 - **汉化内核**：v69（词条 5,894 条）
 - **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、工作状态、插件市场与主题设置）
 - **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入
@@ -96,6 +96,13 @@ Antigravity ZH/
 ---
 
 ## 📦 版本记录
+
+### v1.3.4 (内核 v73) — 适配 Antigravity 2.28.2
+
+- **适配客户端**：Google Antigravity **2.28.2**（Windows x64），汉化内核保持 **v73**（词库 6,047 条不变）。2.28.2 更新再次清除补丁与原件备份，需重新永久安装。
+- **官方更新内容**：纯版本号更新（与 2.28.1 主进程逐字节一致，仅 `package.json` 版本号变化）；前端字面量差分为零（34,971 个字符串完全一致，22 字节差异为构建注入物）。
+- **验证**：2.28.2 基线登记（原版 `046fa2ba…`）；真实原版隔离安装/重复安装/还原演习与引擎回归 41/41 通过；统一门禁 **32/32**；生产安装后 CDP 只读抽查确认 2.28.2 客户端原生自动加载 v73（词库 6,047 条，菜单栏中文）。
+- 证据：`work/v74/`；说明：[v74 适配说明](docs/v74-2.28.2适配.md)。
 
 ### v1.3.3 (内核 v73) — 适配 Antigravity 2.28.1
 
