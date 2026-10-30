@@ -66,7 +66,8 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 ```text
 Antigravity ZH/
 ├── Antigravity汉化管理器.exe    # 独立单文件发布程序（C# WPF Self-Contained）
-├── README.md                 # 项目文档
+├── README.md                 # 项目文档（用户向）
+├── HANDOFF.md                # 交接文档（维护者向：现状、playbook、踩坑记录）
 ├── 当前状态.json              # 当前基线台账（版本/哈希/验证结果）
 ├── src/                      # C# / .NET 8 完整工程源代码
 │   └── AntigravityZhManager/ # 管理器源码、XAML 界面与内嵌资源 Assets
@@ -85,6 +86,7 @@ Antigravity ZH/
 
 ### 维护与回归
 
+- **接手维护从 [`HANDOFF.md`](HANDOFF.md) 开始**——现状快照、适配/排查/发布三套 playbook、踩坑记录。
 - **统一检查入口**：`powershell -File scripts/check-current.ps1`——依赖检查、词库质量、渲染回归、打包一致性、版本一致性、引擎测试共 32 项门禁，任一必需项失败即非零退出。
 - **从核心 Assets 重建内嵌资源**：`node 维护工具/重建汉化内核.js`；仅校验同步：追加 `--check`。
 - **逐版词条增量**：`localization/vXX-ui-additions.json` + `scripts/sync-vXX-localization.cjs`。
