@@ -31,6 +31,9 @@ namespace AntigravityZhManager
             InitializeComponent();
             ChkCloseToTray.IsChecked = _options.CloseClientToTray;
             ChkTrayMenu.IsChecked = _options.ChineseTrayMenu;
+            ChkAzureBubble.IsChecked = _options.AzureBubble;
+            if (CdpHotPatcher.IsThemeEnabled() != _options.AzureBubble) CdpHotPatcher.SetThemeEnabled(_options.AzureBubble);
+            ChkStatsHud.IsChecked = StatsHudService.GetEnabled();
             var menu = new System.Windows.Forms.ContextMenuStrip();
             menu.Items.Add("打开汉化管理器", null, (_, _) => Dispatcher.BeginInvoke(new Action(ShowManager)));
             menu.Items.Add("退出管理器", null, async (_, _) => await Dispatcher.InvokeAsync(QuitAsync).Task.Unwrap());
@@ -63,6 +66,7 @@ namespace AntigravityZhManager
             await _repair.Operations.WaitAsync();
             _exitRequested = true;
             _repair.Operations.Release();
+            try { await StatsHudService.StopAsync(); } catch { }
             Close();
         }
 
@@ -76,6 +80,54 @@ namespace AntigravityZhManager
         {
             if (_loading) return;
             ApplyOptions(_options with { CloseClientToTray = ChkCloseToTray.IsChecked == true, ChineseTrayMenu = ChkTrayMenu.IsChecked == true });
+        }
+
+        // 天青蓝气泡开关：保存偏好并写入主题配置；客户端运行时立即通过 CDP 应用/移除，
+        // 永久安装后由 zh-bundle.attach() 在每次启动/加载时读取配置自动应用。
+        private async void AzureBubble_Changed(object sender, RoutedEventArgs e)
+        {
+            if (_loading) return;
+            bool enabled = ChkAzureBubble.IsChecked == true;
+            ApplyOptions(_options with { AzureBubble = enabled });
+            CdpHotPatcher.SetThemeEnabled(enabled);
+            if (_currentInfo.IsRunning)
+            {
+                await _repair.Operations.WaitAsync();
+                try
+                {
+                    bool ok = await CdpHotPatcher.SetThemeAsync(enabled, AppendLog);
+                    if (!ok) AppendLog("⚠️ 天青蓝气泡即时切换未完成，请确认客户端窗口已就绪后再次勾选。");
+                }
+                finally { _repair.Operations.Release(); }
+            }
+            else
+            {
+                AppendLog(enabled
+                    ? "🎨 已记录天青蓝气泡偏好；永久安装后客户端启动时会自动应用。"
+                    : "🎨 已关闭天青蓝气泡。");
+            }
+        }
+
+        // 统计状态条开关：持久化到 zh-stats.json；永久安装后由客户端启动时自动显示。
+        private async void StatsHud_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (_loading) return;
+            bool on = ChkStatsHud.IsChecked == true;
+            // 持久化常驻开关：永久安装后由客户端启动时自动读取并显示。
+            StatsHudService.SetEnabled(on);
+            if (!on)
+            {
+                await StatsHudService.StopAsync(AppendLog);
+                AppendLog("📊 统计状态条已关闭（常驻开关已保存为关）。");
+                return;
+            }
+            if (!_currentInfo.IsRunning)
+            {
+                AppendLog("📊 已设为常驻：启动 Antigravity 后会自动显示（需已永久安装内核）。");
+                return;
+            }
+            bool ok = await StatsHudService.StartAsync(AppendLog);
+            if (!ok) AppendLog("📊 常驻已开启；当前窗口未能立即显示，重启客户端后会自动出现。");
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -293,6 +345,9 @@ namespace AntigravityZhManager
             {
                 bool closeToTray = ChkCloseToTray.IsChecked == true;
                 bool trayMenu = ChkTrayMenu.IsChecked == true;
+                bool azureBubble = ChkAzureBubble.IsChecked == true;
+                // 永久安装前把外观偏好落到主题配置，attach() 启动时据此应用。
+                CdpHotPatcher.SetThemeEnabled(azureBubble);
 
                 var result = await AsarCleanPatcher.InstallCleanPatchAsync(_currentInfo.AsarPath, closeToTray, trayMenu, AppendLog, allowCompatibleUpdates: true);
                 if (result.Success)

@@ -34,9 +34,42 @@ public static class CdpHotPatcher
         return (dictionary, runtime, details, detailCount, int.Parse(Regex.Match(runtime, @"const patchVersion = (\d+)").Groups[1].Value), parsed.RootElement.EnumerateObject().Count());
     });
 
+    private static readonly Lazy<string> ThemeCss = new(() => Resource("theme-azure-bubble.css"));
+
     public static (int Version, int TermCount) EmbeddedKernelInfo => (Resources.Value.Version, Resources.Value.Count);
 
-    private static async Task<List<Uri>> TargetsAsync(CancellationToken token)
+    // 天青蓝气泡外观开关：偏好写入 %APPDATA%\Antigravity\zh-theme.json，
+    // 运行时由本类即时注入/移除，永久安装后由 zh-bundle.attach() 在每次加载时读取。
+    public static string ThemeConfigPath => Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Antigravity", "zh-theme.json");
+
+    public static bool IsThemeEnabled()
+    {
+        try
+        {
+            if (!File.Exists(ThemeConfigPath)) return false;
+            using var doc = JsonDocument.Parse(File.ReadAllText(ThemeConfigPath));
+            return doc.RootElement.TryGetProperty("azureBubble", out var v) && v.ValueKind == JsonValueKind.True;
+        }
+        catch { return false; }
+    }
+
+    public static void SetThemeEnabled(bool enabled)
+    {
+        string dir = Path.GetDirectoryName(ThemeConfigPath)!;
+        Directory.CreateDirectory(dir);
+        string tmp = ThemeConfigPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            File.WriteAllText(tmp, JsonSerializer.Serialize(new { azureBubble = enabled }, new JsonSerializerOptions { WriteIndented = true }));
+            File.Move(tmp, ThemeConfigPath, true);
+        }
+        finally { if (File.Exists(tmp)) File.Delete(tmp); }
+    }
+
+    public sealed record PageTarget(Uri WebSocket, string Url);
+
+    internal static async Task<List<PageTarget>> PageTargetsAsync(CancellationToken token)
     {
         string file = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Antigravity", "DevToolsActivePort");
         var lines = await File.ReadAllLinesAsync(file, token);
@@ -45,7 +78,7 @@ public static class CdpHotPatcher
         using var handler = new HttpClientHandler { AllowAutoRedirect = false, UseProxy = false };
         using var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(3) };
         using var document = JsonDocument.Parse(await client.GetStringAsync($"http://127.0.0.1:{port}/json/list", token));
-        var result = new List<Uri>();
+        var result = new List<PageTarget>();
         foreach (var page in document.RootElement.EnumerateArray())
         {
             if (page.GetProperty("type").GetString() != "page" ||
@@ -53,11 +86,15 @@ public static class CdpHotPatcher
                 origin.Scheme != "https" || origin.Host != "127.0.0.1") continue;
             if (page.TryGetProperty("webSocketDebuggerUrl", out var endpoint) &&
                 Uri.TryCreate(endpoint.GetString(), UriKind.Absolute, out var uri) &&
-                uri.Scheme == "ws" && uri.Host == "127.0.0.1" && uri.Port == port) result.Add(uri);
+                uri.Scheme == "ws" && uri.Host == "127.0.0.1" && uri.Port == port)
+                result.Add(new PageTarget(uri, origin.ToString()));
         }
         if (result.Count == 0) throw new IOException("主应用窗口尚未就绪。");
         return result;
     }
+
+    private static async Task<List<Uri>> TargetsAsync(CancellationToken token) =>
+        (await PageTargetsAsync(token)).Select(p => p.WebSocket).ToList();
 
     // CDP can interleave events and fragment a reply across WebSocket frames.
     internal static async Task<JsonElement> ReceiveResultAsync(WebSocket socket, int id, CancellationToken token)
@@ -84,7 +121,7 @@ public static class CdpHotPatcher
         }
     }
 
-    private static async Task<JsonElement> EvaluateAsync(Uri target, string expression, CancellationToken token)
+    internal static async Task<JsonElement> EvaluateAsync(Uri target, string expression, CancellationToken token)
     {
         using var socket = new ClientWebSocket();
         await socket.ConnectAsync(target, token);
@@ -159,5 +196,49 @@ public static class CdpHotPatcher
             return true;
         }
         catch (Exception ex) { log?.Invoke("窗口英文恢复失败：" + ex.Message); return false; }
+    }
+
+    private static string ThemeScript(bool enable)
+    {
+        string css = JsonSerializer.Serialize(ThemeCss.Value);
+        string core = enable
+            ? "if(!el){el=document.createElement('style');el.id=id;(document.head||document.documentElement).appendChild(el);}var css=" + css + ";if(el.textContent!==css){el.textContent=css;}window.__antigravityZhThemeEnabled=true;"
+            : "if(el){el.remove();}window.__antigravityZhThemeEnabled=false;";
+        return "(() => { var id='ag-azure-bubble-style'; var el=document.getElementById(id); " + core + " })()";
+    }
+
+    // 在当前前台窗口即时应用/移除天青蓝气泡，不写归档、不影响会话与输入。
+    public static async Task<bool> SetThemeAsync(bool enable, Action<string>? log = null)
+    {
+        try
+        {
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(8));
+            var pages = await TargetsAsync(timeout.Token);
+            foreach (var page in pages)
+            {
+                var value = await EvaluateAsync(page, ThemeScript(enable), timeout.Token);
+                if (!value.TryGetProperty("value", out _)) return false;
+            }
+            log?.Invoke(enable ? "🎨 天青蓝对话气泡已应用到当前窗口。" : "🎨 已移除天青蓝对话气泡，界面恢复官方默认。");
+            return true;
+        }
+        catch (Exception ex) { log?.Invoke("🎨 天青蓝气泡切换失败：" + ex.Message); return false; }
+    }
+
+    public static async Task<bool> CheckThemeAsync()
+    {
+        try
+        {
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            foreach (var page in await TargetsAsync(timeout.Token))
+            {
+                var value = await EvaluateAsync(page,
+                    "Boolean(window.__antigravityZhThemeEnabled === true && document.getElementById('ag-azure-bubble-style'))",
+                    timeout.Token);
+                if (!value.TryGetProperty("value", out var on) || on.ValueKind != JsonValueKind.True) return false;
+            }
+            return true;
+        }
+        catch { return false; }
     }
 }

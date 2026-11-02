@@ -31,7 +31,7 @@ if (beforeHash !== afterHash) failures.push('--check 模式修改了文件（应
 if (checkSummary.changed !== false) failures.push('--check 报告文件不同步');
 
 // 4. 包装器必须保留关键注入契约
-for (const marker of ["contents.on('dom-ready'", "contents.on('did-finish-load'", 'allowedOrigin']) {
+for (const marker of ["contents.on('dom-ready'", "contents.on('did-finish-load'", 'allowedOrigin', 'statsRenderSrc', 'agCollectStats', 'zh-stats.json', '__agStatsRender']) {
   if (!onDisk.includes(marker)) failures.push(`包装器缺少关键契约：${marker}`);
 }
 const sandbox = { module: { exports: {} }, URL, WeakSet };

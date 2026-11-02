@@ -1,6 +1,6 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.3.4-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.4)
+[![Release](https://img.shields.io/badge/Release-v1.3.5-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Antigravity](https://img.shields.io/badge/Antigravity-2.28.2-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
@@ -8,7 +8,7 @@
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.3.4（汉化内核 v73）适配 Google Antigravity 2.28.2（Windows x64）**，界面词条 **6,047 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。官方更新导致汉化失效时，可运行管理器重新安装，或点击【新版汉化适配】热恢复，详见 [`docs/新版汉化适配.md`](docs/新版汉化适配.md)。
+> **当前源码版本 v1.3.5（汉化内核 v73）适配 Google Antigravity 2.28.2（Windows x64）；v1.3.5 为本地构建，尚未发布到 GitHub Releases（已发布最新为 v1.3.4）。** 界面词条 **6,047 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。官方更新导致汉化失效时，可运行管理器重新安装，或点击【新版汉化适配】热恢复，详见 [`docs/新版汉化适配.md`](docs/新版汉化适配.md)。
 
 ---
 
@@ -35,6 +35,12 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 - **🎨 界面与生态全面汉化**  
   深度覆盖插件扩展市场（Google Workspace、科学计算套件、开发工具等）、所有个性化外观主题及权限审查弹窗。
 
+- **💠 天青蓝对话气泡（可选外观）**  
+  可选开启纯净天青蓝用户消息气泡：图文上下分离、短句单行舒展、长句安全折行、时间/复制/撤销按钮下移至气泡外、解除官方吸顶悬浮。客户端运行时**即时生效**，**永久安装后启动自动应用**，随时一键还原官方默认。纯 CSS 外观补丁，**不修改任何文本内容与业务逻辑**。
+
+- **📊 会话统计状态条（可选）**  
+  在客户端底部实时显示当前会话的 **轮数 / 步数 / tok/秒 / 总 token / 缓存命中率 / 缓存 TTL 倒计时 / 上下文占用 / 距 auto-compact 约几步 / 成本估算 / 配额积分**（上下文按 App 的**自动压缩上限**计：Gemini 3.8 Flash ≈256k、Claude 4.6 ≈160k、GPT-OSS 120B ≈80k，**不是模型理论 1M 窗口**；成本为 API 等价估算；配额/积分来自 App 自身的 `GetUserStatus`）。数据来自本机会话日志 `transcript.jsonl`（**只读、不外传**）。**开启常驻后随 Antigravity 启动自动显示（内嵌内核，默认精简、点击展开完整面板）**，也可随时在管理器中关闭。类似 DSH/Claude Code 的 statusline 体验。
+
 - **↩️ 官方纯净英文一键秒级还原**  
   随时从官方备份文件还原原生 ASAR，清除内存热注入，100% 恢复官方初始状态。
 
@@ -50,7 +56,8 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.3.4-Windows-x64.zip`**；
+2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.3.5-Windows-x64.zip`**；
+   > 说明：**v1.3.5 目前是本地构建、尚未上传 GitHub Releases**（已发布最新为 v1.3.4）。需要 v1.3.5 可先从本项目 `dist/` 取包，或等发布后再下。
 3. 双击下载的 EXE，或解压 ZIP 后运行其中的 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -83,11 +90,12 @@ Antigravity ZH/
 - **汉化内核**：v73（词条 6,047 条）
 - **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、工作状态、插件市场与主题设置）
 - **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入
+- **可选增强**：天青蓝气泡外观（`theme-azure-bubble.css`，运行时+永久）；会话统计状态条（`stats-hud.js` + `StatsHudService`，主进程读 `transcript.jsonl`、内嵌 `attach()` 随启动自动显示、默认 DSH 风格一行、点击展开白底三行面板）
 
 ### 维护与回归
 
 - **接手维护从 [`HANDOFF.md`](HANDOFF.md) 开始**——现状快照、适配/排查/发布三套 playbook、踩坑记录。
-- **统一检查入口**：`powershell -File scripts/check-current.ps1`——依赖检查、词库质量、渲染回归、打包一致性、版本一致性、引擎测试共 32 项门禁，任一必需项失败即非零退出。
+- **统一检查入口**：`powershell -File scripts/check-current.ps1`——依赖检查、词库质量、渲染回归、打包一致性、版本一致性、引擎测试共 33 项门禁，任一必需项失败即非零退出。
 - **从核心 Assets 重建内嵌资源**：`node 维护工具/重建汉化内核.js`；仅校验同步：追加 `--check`。
 - **逐版词条增量**：`localization/vXX-ui-additions.json` + `scripts/sync-vXX-localization.cjs`。
 - 汉化范围与保留项说明：[`docs/汉化范围说明-哪些不翻译.md`](docs/汉化范围说明-哪些不翻译.md)（为什么内容、专名与程序内部标识故意保留英文）。
@@ -96,6 +104,14 @@ Antigravity ZH/
 ---
 
 ## 📦 版本记录
+
+### v1.3.5 (内核 v73) — 新增天青蓝气泡外观 + 会话统计状态条（本地构建，未发布 GitHub）
+
+- **适配客户端**：Google Antigravity **2.28.2**（Windows x64），汉化内核保持 **v73**（词条 6,047 条不变）。
+- **新增可选外观：天青蓝对话气泡**：纯净天青蓝用户消息气泡、图文上下分离、短句单行舒展、长句安全折行、时间/复制/撤销按钮移至气泡外、解除官方吸顶悬浮。客户端运行时**即时生效**；永久安装后**启动自动应用**；随时一键还原官方默认。纯 CSS 外观，**不修改任何文本内容与业务逻辑**。技术：CSS 内嵌进 `zh-bundle.js`，`attach()` 读 `%APPDATA%\Antigravity\zh-theme.json`。
+- **新增可选：会话统计状态条（DSH 风格）**：读本机会话日志 `transcript.jsonl`，显示 **轮/步 · tok/s │ 总 token · 缓存命中 │ 上下文%**（默认一行、无黑底、内联在输入栏空白处，横跨占满）；点一下展开**白色底板、四列网格**的三行完整面板（含缓存 TTL、距 auto-compact 约几步、成本估算、配额/积分）。**开启常驻后随 Antigravity 启动自动显示（内嵌内核）**，开关存 `%APPDATA%\Antigravity\zh-stats.json`，只读日志、不外传。
+- **口径说明**：上下文按 App 的**自动压缩上限**计（Gemini 3.8 Flash ≈256k、Claude 4.6 ≈160k、GPT-OSS 120B ≈80k），**不是模型理论 1M 窗口**；成本为 API 等价估算（GPT-OSS 无单价显示 —）；配额/积分来自页面挂钩捕获的 `GetUserStatus`，App 未拉取时显示 —。
+- **验证**：引擎回归 **41/41**（另含 **6** 项统计指标用例）；新增天青蓝外观渲染回归 11 项 + 统计条无头夹具回归；统一门禁 **33/33**；真实客户端安装归档 `5143d347…`，安装内嵌 bundle == 源码 `198a078d…`。**本地构建，尚未发布 GitHub。**
 
 ### v1.3.4 (内核 v73) — 适配 Antigravity 2.28.2
 
