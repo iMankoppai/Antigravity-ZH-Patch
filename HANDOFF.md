@@ -17,7 +17,7 @@ Google Antigravity 官方 Windows 客户端的中文汉化。两条腿：
 
 另有两条**可选增强**（v1.3.5 新增，均内嵌进 `zh-bundle.js`、可在管理器中开关）：
 - **天青蓝对话气泡**（外观）：`Assets/theme-azure-bubble.css`；运行时 CDP 注入/移除，永久安装后 `attach()` 读 `%APPDATA%\Antigravity\zh-theme.json` 自动应用。
-- **会话统计状态条**（DSH 风格）：`Assets/stats-hud.js`（渲染端）+ `Services/StatsHudService.cs`（管理器运行时）+ 主进程 `attach()` 内嵌采集；默认一行显示「轮/步·tok/s │ 总tok·缓存命中 │ 上下文%」，点击展开白底三行面板；开关存 `%APPDATA%\Antigravity\zh-stats.json`，**常驻后随 Antigravity 启动自动显示**。
+- **会话统计状态条**（DSH 风格）：`Assets/stats-hud.js`（渲染端）+ `Services/StatsHudService.cs`（管理器运行时）+ 主进程 `attach()` 内嵌采集；底栏三组内联（⏱ 轮/步·tok/s ｜ 🗄 总tok·缓存命中 ｜ ◔ 上下文%），在模型选择器与右侧控件之间的中间空白区居中；点击某一组只弹出对应的一张卡片（⏱ 会话统计 / 🗄 Token 用量 / ◔ 上下文已用），三卡独立不连体；开关存 `%APPDATA%\Antigravity\zh-stats.json`，**常驻后随 Antigravity 启动自动显示**。
 
 **关键背景**：官方自动更新会整体替换 `app.asar` 并删除 `app.asar.bak` 备份——所以每次官方更新，补丁都会失效，需要走一遍第 4 节的适配流程。这是本项目最高频的任务。
 
@@ -52,7 +52,7 @@ powershell -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - **外观补丁（天青蓝气泡）**：CSS 在 `src/AntigravityZhManager/Assets/theme-azure-bubble.css`，由内核生成器内嵌进 `zh-bundle.js`（`const themeCss`）。运行时由 `CdpHotPatcher.SetThemeAsync` 通过 CDP 注入/移除；永久安装后由 `zh-bundle.js` 的 `attach()` 在每次加载时读取 `%APPDATA%\Antigravity\zh-theme.json` 决定是否应用。开关偏好保存在管理器设置里。
 - **统计状态条（可选，DSH 风格）**：数据来自 `%USERPROFILE%\.gemini\antigravity\brain\<会话id>\.system_generated\logs\transcript.jsonl`（字段 `input_tokens/cache_read_tokens/output_tokens/step_index/created_at`），算出 轮/步/tok/s/总token/缓存命中率/缓存TTL/上下文占用/距auto-compact约几步/成本估算/配额积分。
   - **口径**：上下文按 App 的**自动压缩上限**（实测 Gemini 3.8 Flash≈256k、Claude 4.6≈160k、GPT-OSS 120B≈80k，**不是模型理论 1M**）；成本=API 等价估算（GPT-OSS 无价显示 —）；配额/积分=页面 `fetch` 挂钩捕获 `GetUserStatus`（未拉取时显示 —）。
-  - **UI**：渲染脚本 `Assets/stats-hud.js`，由 `StatsHudService` 与永久 `attach()` 共用。默认内联在输入框底栏（`@container/input-footer`），一行「轮/步·tok/s │ 总tok·缓存命中 │ 上下文%」、无黑底、横跨占满空白；点击弹出**白色底板 + 4 列等分网格**的三行完整面板。
+  - **UI**：渲染脚本 `Assets/stats-hud.js`，由 `StatsHudService` 与永久 `attach()` 共用。底栏三组内联（⏱ 轮/步·tok/s ｜ 🗄 总tok·缓存命中 ｜ ◔ 上下文%），**在模型选择器与右侧控件之间的中间空白区居中**，单色、数值常规字重、组内正常空格；**点击某一组只弹出对应的一张卡片**（⏱ 会话统计 / 🗄 Token 用量 / ◔ 上下文已用），三卡各自独立不连体，点击别处收起；同时保护模型名不被挤压截断。
   - **常驻**：开关 `%APPDATA%\Antigravity\zh-stats.json`（`{"enabled":true}`）；永久安装后 `attach()` 每 2s 读日志并 `executeJavaScript` 渲染，**随 Antigravity 启动自动显示**，管理器关闭也不影响；管理器取消勾选写 false 即关闭。
   - **注意**：`attach()` 每窗口一个定时器（`statsTimers` WeakMap），`dom-ready`/`did-finish-load` 会重建并清理旧定时器；页面跳转按 `contents.getURL()` 的 `/c/<uuid>` 跟随会话。全程只读日志、不外传。
 - **词条增量**：每版一个 `localization/vXX-ui-additions.json`（含 evidence/skipped 说明）+ `scripts/sync-vXX-localization.cjs` 合入 `Assets/dictionaries.json`。术语与占位符由 `tests/localization/dictionary-quality.cjs` 把关。
@@ -140,27 +140,27 @@ powershell -ExecutionPolicy Bypass -File scripts/check-current.ps1
 
 ## 10. v1.3.5 本轮交接纪要（2026-11-02）
 
-**状态**：管理器 v1.3.5 **本地构建完成、已写入本机客户端，但未发布到 GitHub**（最新已发布仍是 v1.3.4）。工作树有未提交改动（见 `git status`），交接前建议先提交。
+**状态**：管理器 v1.3.5 **本地构建完成、已写入本机客户端，但未发布到 GitHub**（最新已发布仍是 v1.3.4）。本轮改动已本地提交（未推送）。
 
 **本轮新增**
 - 天青蓝对话气泡外观（运行时 + 永久内嵌，默认关）。
-- 会话统计状态条（DSH 风格）：默认一行内联输入底栏、无黑底、横跨占满；点击展开**白色底板 4 列网格**三行完整面板；永久内嵌、随客户端启动自动显示；开关 `%APPDATA%\Antigravity\zh-stats.json`。
+- 会话统计状态条（DSH 风格）：底栏三组内联（⏱ 轮/步·tok/s ｜ 🗄 总tok·缓存命中 ｜ ◔ 上下文%），在模型与右侧控件间的中间空白区居中；点击各组弹出对应独立卡片（⏱ 会话统计 / 🗄 Token 用量 / ◔ 上下文已用），三卡不连体，单色、数值常规字重、组内正常空格，模型名保护不截断；永久内嵌、随客户端启动自动显示；开关 `%APPDATA%\Antigravity\zh-stats.json`。
 - 新增文件：`Assets/theme-azure-bubble.css`、`Assets/stats-hud.js`、`Services/StatsHudService.cs`、`tests/renderer/azure-theme-regression.cjs`。
 - 改动文件：`维护工具/内核生成器.js`（内嵌 theme/stats + `attach()` 采集）、`CdpHotPatcher.cs`（页面目标/主题/评估）、`CompatibilityRepairService.cs`（ManagerOptions.AzureBubble）、`MainWindow.xaml(.cs)`（天青蓝+统计条开关）、`engine-tests/Program.cs`（`--stats/--stats-hud-*` + 指标用例）、`generator-consistency.cjs`（统计条标记）、`client-baselines.json`（新安装归档）、`scripts/check-current.ps1`（新增 azure-theme 回归，门禁 33 项）。
 
 **关键哈希（可复核）**
-- 源码 bundle：`198a078d98ace75bc6d2c5712e08957025c2c2fb36985038846ccc8be575bb15`
-- 本机安装 app.asar：`5143d3471e45217c727a9566cf652305805d7d80793ba993b8f0f0c79c84a93d`（安装内嵌 bundle == 源码）
-- 根目录 EXE：`4b905d077608ca804804f5c9c02a1891f644adba54339419bc3e7645678adbd1`
-- 发布 ZIP：`d5e4202f3471f62feb61da3e3930d8537a8f1d9d48f6f01466a8d54ac4f54e97`
+- 源码 bundle：`b2d318fdf1b2c74b03a13240c155d085b1ea087193fab4d797eb6c1280d79610`
+- 本机安装 app.asar：`36c5c16a51da0194952bf7dfda489427a9f34b71ee673d32cfacfc8e67b3d5fa`（安装内嵌 bundle == 源码）
+- 根目录 EXE：`a32bfabd327da88b90e21056e0a6b498b9412ae51da3f2d165bb5bd5dd5b7076`
+- 发布 ZIP：`371ad9d07a9bb0669b66c8e0f05ead71242c7fdadf8a33f2996c71b482b82050`
 
 **验证**：统一门禁 33/33；引擎 41/41 + 6 统计指标用例；天青蓝渲染回归 11 项；统计条无头夹具通过。真实安装归档 == 源码 bundle。
 
 **下一步（接手人）**
-1. **让用户手动启动 Antigravity**（当前关闭），确认统计条自动出现、点击可展开白底面板；确认主题/汉化正常。
+1. 启动 Antigravity 确认统计条自动出现、三组在中间空白区居中、点击各组弹出对应卡片；确认主题/汉化正常。
 2. **发布 v1.3.5 到 GitHub**（Playbook C）：`gh release create v1.3.5` + 分步上传资产（EXE/ZIP 74MB，按第 6 节第 6 条）；发布后把 README/当前状态里的"未发布"改回"已发布"，`v135Verification.released=true`。
 3. 提交本轮改动（含 4 个新文件），补 `docs/history/v1.3.5-外观与统计条.md`（可选）。
-4. 可选微调：统计条图标换成 SVG（现在用 `⟳`/`◔` 符号）、默认三段的间距/字号。
+4. 可选微调：统计条图标可换成内联 SVG（现用 `⏱`/`🗄`/`◔` 字符）；布局已改为在中间空白区居中、数值常规字重。
 
 ## 11. 参考/竞品速览（2026-11-02 调研）
 

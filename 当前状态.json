@@ -13,7 +13,7 @@
   "officialAsarSha256": "046fa2ba9abe96bc915eb7ed12887c067396a8a12148842ab4f4e2cd05a68feb",
   "installedAsarSha256": "36c5c16a51da0194952bf7dfda489427a9f34b71ee673d32cfacfc8e67b3d5fa",
   "isolatedAsarSha256": "36c5c16a51da0194952bf7dfda489427a9f34b71ee673d32cfacfc8e67b3d5fa",
-  "isolatedAsarNote": "真实客户端安装归档（2.28.2 原版起点 + 完整内核，含天青蓝气泡与三行统计状态条）；与源码 bundle 逐字节一致。",
+  "isolatedAsarNote": "真实客户端安装归档（2.28.2 原版起点 + 完整内核，含天青蓝气泡与 DSH 风格统计状态条）；与源码 bundle 逐字节一致。",
   "installedKernelSha256": "b2d318fdf1b2c74b03a13240c155d085b1ea087193fab4d797eb6c1280d79610",
   "managerExeSha256": "a32bfabd327da88b90e21056e0a6b498b9412ae51da3f2d165bb5bd5dd5b7076",
   "managerExeNote": "v1.3.5（内核 v73 + 天青蓝气泡外观 + 统计状态条）本地构建完成，尚未发布到 GitHub Releases。",
@@ -119,7 +119,7 @@
     "statsMetricsChecks": 6,
     "engineTests": 41,
     "released": false,
-    "note": "v1.3.5：天青蓝气泡（运行时+永久）+ 会话统计状态条（轮/步/tok/s/总token/缓存命中/TTL/上下文(按256k压缩线)/距压缩/成本/配额，默认内联精简、点击展开；永久内嵌随客户端启动自动显示）。汉化内核 v73、词条 6,047。真实安装归档与隔离一致（d1780972…）；统一门禁 33/33，引擎 41/41（+6 统计用例）。本地构建，未发布 GitHub。"
+    "note": "v1.3.5：天青蓝气泡（运行时+永久）+ 会话统计状态条（DSH 风格：底栏三组内联在模型与右侧控件之间的中间空白区居中，点击各组分别弹出会话统计/Token 用量/上下文已用三张独立卡片；轮/步/tok/s/总token/缓存命中/输入明细/上下文(按256k压缩线)/距压缩/成本/配额；数值常规字重、模型名保护不截断；永久内嵌随客户端启动自动显示）。汉化内核 v73、词条 6,047。真实安装归档与隔离一致（36c5c16a…）；统一门禁 33/33，引擎 41/41（+6 统计用例）。本地构建，未发布 GitHub。"
   },
   "v74Verification": {
     "performed": true,
