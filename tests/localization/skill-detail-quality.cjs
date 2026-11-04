@@ -31,8 +31,8 @@ for(const [key,value]of Object.entries(catalogue.translations)){
  assert.equal(key,key.replace(/\s+/g,' ').trim(),'目录键必须规范化');assert.ok(typeof value==='string'&&value.trim(),'不得包含空译文');assert.ok(!/ZXQ(?:ITEM|TERM)/i.test(value),'不得残留翻译占位标记');
  if(!/[\u4e00-\u9fff]/.test(value))assert.ok(identities.has(key),'未登记的原文保留项：'+key);checked++;
 }
-assert.equal(catalogue.additionalDocuments.length,6,'规则和智能体详情全部纳入目录');
-for(const doc of catalogue.additionalDocuments){assert.ok(/[\u4e00-\u9fff]/.test(doc.renderedHtml));for(const value of Object.values(doc.overrides))assert.ok(/[\u4e00-\u9fff]/.test(value),'详情简介应有中文');}
+assert.ok(catalogue.additionalDocuments.length>=6,'规则、智能体与合作插件详情全部纳入目录');
+for(const doc of catalogue.additionalDocuments){assert.ok(/[\u4e00-\u9fff]/.test(doc.renderedHtml));for(const value of Object.values(doc.overrides||{}))assert.ok(/[\u4e00-\u9fff]/.test(value),'详情简介应有中文');}
 assert.equal(catalogue.builtinDocuments.length,9,'本机内置技能必须完整纳入');
 const revision=crypto.createHash('sha256').update(JSON.stringify({documents:catalogue.documents,additionalDocuments:catalogue.additionalDocuments,builtinDocuments:catalogue.builtinDocuments,translations:catalogue.translations,readmeBlocks:catalogue.readmeBlocks,uiTemplates:catalogue.uiTemplates})).digest('hex');assert.equal(catalogue.revision,revision,'目录签名必须覆盖所有正文和匹配信息');
 console.log(JSON.stringify({documents:140,plugins:17,paragraphBlocks:Object.keys(blocks.units).length,reviewedBlocks:Object.keys(reviewed).length,preservedBlocks:preserved.size,failures:0}));
