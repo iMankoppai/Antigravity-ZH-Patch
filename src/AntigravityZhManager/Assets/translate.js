@@ -1348,8 +1348,14 @@
     if (core === 'Schedule' || core === 'Prompt') return original.replace(core, translations.get(core) || core);
     if (core === 'around') return original.replace(core, '约在');
     if (core === 'on') {
+      // 2.28.x: schedule-frequency-trigger 的 data-frequency 表示频率。
+      // 2.29+: 换成 schedule-repeat 下拉，当前选项写在触发按钮内首个 span
+      // （"Custom"/"Custom…"，或已被本词典译为“自定义”）。两种结构都要识别。
       const frequency = container?.querySelector?.('[data-testid="schedule-frequency-trigger"]')?.getAttribute('data-frequency');
-      return original.replace(core, frequency === 'custom' ? '规则' : '在');
+      const repeatTrigger = container?.querySelector?.('[data-testid="schedule-repeat"]');
+      const repeatLabel = (repeatTrigger?.querySelector?.('span')?.textContent || '').trim();
+      const isCustom = frequency === 'custom' || repeatLabel === 'Custom' || repeatLabel === 'Custom…' || repeatLabel === '自定义' || repeatLabel === '自定义…';
+      return original.replace(core, isCustom ? '规则' : '在');
     }
     // React splits this fixed sentence into three text nodes. Keep that structure.
     if (/^All (scheduled task|automation)s run as Flash\.$/.test(originalElementText(parent))) {

@@ -217,6 +217,9 @@
     "Password prompt blocked to prevent a Chrome Password Alert reset.": "已阻止密码提示，以防止触发 Chrome Password Alert 强制重置。",
     "Script execution is disabled (enable-browser-subagent-webview-script is off)": "脚本执行已禁用（enable-browser-subagent-webview-script 处于关闭状态）",
     "CitC workspace paths are world-readable and permanently snapshotted. Choose a local folder outside CitC.": "CitC 工作区路径对所有用户可读且会被永久快照。请选择 CitC 之外的本地文件夹。",
-    "Entering your corp password in the web terminal triggers a Chrome Password Alert (Watchword) forced password reset, so this prompt was automatically cancelled.": "在 Web 终端中输入公司密码会触发 Chrome Password Alert（Watchword）强制重置密码，因此已自动取消此提示。"
+    "Entering your corp password in the web terminal triggers a Chrome Password Alert (Watchword) forced password reset, so this prompt was automatically cancelled.": "在 Web 终端中输入公司密码会触发 Chrome Password Alert（Watchword）强制重置密码，因此已自动取消此提示。",
+    "hours": "小时",
+    "week": "周",
+    "month": "个月"
   }
 }
