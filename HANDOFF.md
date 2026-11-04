@@ -126,7 +126,9 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 | `docs/汉化范围说明-哪些不翻译.md` | 所有人 | 什么故意不翻、为什么 |
 | `docs/新版汉化适配.md` | 用户 | 适配按钮的使用说明 |
 | `docs/现场验收清单.md` | 维护者 | 需人工在真实客户端验收的项 |
-| `docs/history/` | 考古 | 19 份逐版说明 + 状态台账归档（发布时点事实） |
+| `docs/history/` | 考古 | 逐版说明 + 状态台账归档（发布时点事实） |
+| `localization/partner-skill-docs/` | 维护者 | 44 个合作插件 494 篇技能正文的中文 markdown（受版本管理，见其 README） |
+| `维护工具/partner-skill-docs/` | 维护者 | 技能正文接入脚本：`integrate-plugin-docs.cjs`、`coverage.js`、`verify-plugin-doc.cjs`、`partner-urls.json` |
 | `当前状态.json` | 机器与人 | 唯一当前事实源 |
 
 ## 9. 已知边界（截至交接）
@@ -137,6 +139,7 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - `当前状态.json` 的历史块在 `docs/history/状态台账-归档-2026-10.json`；再过几个版本可以按同样方式把 v74 之前的块继续归档。
 - `work/` 是 git 忽略的本机证据目录，换电脑即失效；台账里引用的哈希是可复核的最小事实，原始 bundle/asar 不保证长期存在。
 - **统计条边界**：token/缓存来自 `transcript.jsonl`，官方改日志格式或路径会失效；成本/额度是**估算/账号级**（非精确账单）；缓存 TTL 按 5 分钟假设；UI 选择器依赖输入底栏 DOM（`input-footer`、`permissions-selector-trigger`），官方改版可能需更新 `stats-hud.js`。
+- **技能正文边界**：弹窗正文按 SKILL.md 的 24KB 预览 fingerprint 匹配；官方改正文会导致失配、回退英文。bundle 因含 494 篇正文约 10.7MB，页面注入较重。`build-skill-detail-views.cjs` 重跑会清空 partner additionalDocuments，需用 `integrate-plugin-docs.cjs` 逐插件恢复；译文原文在 `localization/partner-skill-docs/`。
 
 ## 10. v1.3.6 本轮交接纪要（2026-11-04）
 
@@ -148,15 +151,20 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - 内核：`translate.js` patchVersion **73 → 74**；词条 **6,834**；bundle sha `d48b2f5d…`（含技能正文后约 10.7MB）。
 - 自定义项市场：实机 CDP 只读导出 68 张插件卡片（含“再查看”展开项）+ 5 个分类；并从 51 个 partner 插件包（`marketplace.json` + 各 zip）提取详情页的建议提示词/技能/代理/规则描述逐条汉化；产品名等专名、代码/路径/URL、免责声明保留英文。新增 `marketplace-cards-regression.cjs`（11 项）与 `marketplace-detail-regression.cjs`（6 项），均纳入门禁。
 - 计划编辑器结构适配：2.29.0 用 `schedule-repeat` 下拉取代了 `schedule-frequency-trigger[data-frequency]`；`on` 连接词判断改为两种结构兼容（custom→“规则”、其余→“在”），补 `hours/week/month` 单位词条，并新增 `tests/renderer/schedule-summary-regression.cjs`（8 项，已纳入统一门禁）。
-- 技能正文（SKILL.md 全文）：把「命令/技能」弹窗（`doc-row-modal`）正文汉化——44 个合作插件、494 篇 SKILL.md 经 `skill-details` 管线生成中文 `renderedHtml`（additionalDocuments=499），按正文 fingerprint/签名匹配替换；代码/路径/URL/专名保留英文。官方 140 篇沿用原目录。
+- 技能正文（SKILL.md 全文）：把「命令/技能」弹窗（`[data-testid="doc-row-modal"]`，正文为 SKILL.md markdown，市场预览截断 24KB）汉化。项目 `translate.js` 本就按正文 fingerprint/签名从 `skill-details.json` 匹配并替换成 `renderedHtml`；本轮把 **44 个合作插件、494 篇 SKILL.md** 全文译成中文，接入 `skill-details.additionalDocuments`（共 **499** 条，含原 6 条；其中 493 条为 partner 正文，1 篇 canva-cli 仅 frontmatter 无正文已跳过）。官方 140 篇沿用原目录。
+  - 译文源与映射：中文 markdown 已固化到 `localization/partner-skill-docs/<slug>/<相对路径>`（44 目录 / 494 文件 / 约 5.9MB，受版本管理）；生成脚本在 `维护工具/partner-skill-docs/`（`integrate-plugin-docs.cjs`、`coverage.js`、`verify-plugin-doc.cjs`、`partner-urls.json`）。
+  - 每条 additionalDocument 含 `markdownLength/markdownFingerprint`（英文正文 fingerprint）+ `signature` + 中文 `renderedHtml`，弹窗按此精确命中。
+  - ⚠️ 维护陷阱：`scripts/build-skill-detail-views.cjs` 只按官方 fixtures 重建 `skill-details.json`，**重跑会丢掉全部 partner additionalDocuments**；若必须重跑，之后要对 44 个 slug 逐个再跑 `integrate-plugin-docs.cjs` 恢复。
+  - 注：bundle 因容纳正文增至约 10.7MB，页面注入略重；若实测卡顿，可改为按技能懒加载。
 - 基线：2.29.0 已登记（原版 `290e1b7a…`；已知补丁版 `a32e0d93…` / `8e822fc8…` / `779388c0…` / `f775a0a4…` / `568409e5…`）。
 - 验证：统一门禁 **36/36**（失败 0、跳过 0），引擎 41/41；安装归档与隔离归档逐字节一致（`568409e5…`），内嵌 bundle == 源码（`d48b2f5d…`）。已永久安装 v74 / 6,834 条 + 494 篇技能正文到本机客户端。
 - 交付：根目录 `Antigravity汉化管理器.exe` 已更新为 v1.3.6（sha `5992df6b…`，约 79MB）。
 
 **下一步（接手人）**
-1. 手动启动 Antigravity 2.29.0 实机验收：汉化、天青蓝气泡、统计状态条，以及新版自动化/语音/连接器/下载等界面。
-2. 若发布：按 Playbook C 打包 v1.3.6 并 `gh release create`（EXE 74MB，按第 6 节第 6 条分步上传）。
+1. 手动启动 Antigravity 2.29.0 实机验收：汉化、天青蓝气泡、统计状态条、**命令/技能弹窗正文**（如 `/mongodb-connection`、`/figma-use`、harness/vercel 任意技能），以及新版自动化/语音/连接器/下载等界面。
+2. 若发布：按 Playbook C 打包 v1.3.6 并 `gh release create`（EXE 约 79MB，按第 6 节第 6 条分步上传）。
 3. 注意：`scripts/check-current.ps1` 含中文且无 BOM，**必须用 pwsh 7**（5.1 会按 ANSI 读成乱码并报解析错误）。
+4. 技能正文再生/维护见上方"技能正文"小节与 `localization/partner-skill-docs/README.md`。
 
 ## 11. v1.3.5 本轮交接纪要（2026-11-02）
 
@@ -182,7 +190,7 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 3. 提交本轮改动（含 4 个新文件），补 `docs/history/v1.3.5-外观与统计条.md`（可选）。
 4. 可选微调：统计条图标可换成内联 SVG（现用 `⏱`/`🗄`/`◔` 字符）；布局已改为在中间空白区居中、数值常规字重。
 
-## 11. 参考/竞品速览（2026-11-02 调研）
+## 12. 参考/竞品速览（2026-11-02 调研）
 
 做统计条时的同类方案，供后续迭代参考（外部链接，注意各自 License）：
 - **Antigravity-Context-Window-Monitor**（IDE 扩展，最完整）：状态栏 token/上下文，读 Language Server 的 planner 响应/checkpoint，含配额/成本/模型活动/缓存命中仪表盘。github.com/AGI-is-going-to-arrive/Antigravity-Context-Window-Monitor

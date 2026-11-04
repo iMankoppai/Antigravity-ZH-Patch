@@ -1,0 +1,353 @@
+{
+ "url": "https://127.0.0.1:53557/customizations",
+ "cardCount": 68,
+ "heads": [],
+ "featured": [
+  {
+   "title": "Context7",
+   "desc": "Up-to-date documentation lookup. Pull version-specific documentation and code examples directly from source repositories into your LLM context."
+  }
+ ],
+ "cards": [
+  {
+   "name": "Google 文档",
+   "desc": "阅读、起草和编辑文档。",
+   "cat": ""
+  },
+  {
+   "name": "Google 表格",
+   "desc": "读取、写入和格式化电子表格。",
+   "cat": ""
+  },
+  {
+   "name": "Google 幻灯片",
+   "desc": "阅读、编辑和导出演示文稿。",
+   "cat": ""
+  },
+  {
+   "name": "Google 云端硬盘",
+   "desc": "搜索、上传、下载和共享文件。",
+   "cat": ""
+  },
+  {
+   "name": "Google 日历",
+   "desc": "查看空闲时间、安排活动日程并回复邀请。",
+   "cat": ""
+  },
+  {
+   "name": "Gemini API",
+   "desc": "使用 Gemini Interactions API 和 Live API 构建应用，涵盖文本、图像、视频与语音生成、托管代理及实时多模态流式传输。",
+   "cat": ""
+  },
+  {
+   "name": "Chrome 开发者工具",
+   "desc": "使用 Chrome DevTools 与 Puppeteer，在 Chrome 中进行可靠的自动化、深入调试和性能分析",
+   "cat": ""
+  },
+  {
+   "name": "Android CLI",
+   "desc": "开发 Android 所需的核心工具与知识。",
+   "cat": ""
+  },
+  {
+   "name": "Firebase",
+   "desc": "利用 Firebase 的后端、AI 和运维基础设施，构建并运行深受用户喜爱的现代化应用。",
+   "cat": ""
+  },
+  {
+   "name": "科学计算",
+   "desc": "针对科学计算任务精选的代理技能合集。",
+   "cat": ""
+  },
+  {
+   "name": "Google Antigravity SDK",
+   "desc": "使用 Google Antigravity Python SDK 构建 AI 代理",
+   "cat": ""
+  },
+  {
+   "name": "Google Developer Knowledge",
+   "desc": "搜索并检索涵盖 Google Cloud、Gemini、Android、Firebase、Flutter 和 Web 的官方文档。需要 Google Cloud 凭据 (ADC) 或 API 密钥。",
+   "cat": ""
+  },
+  {
+   "name": "现代 Web 开发指南",
+   "desc": "让你的编程代理时刻掌握最新的 Web 最佳实践。",
+   "cat": ""
+  },
+  {
+   "name": "Google Maps Platform",
+   "desc": "Google Maps Platform API 的集成技能与工具",
+   "cat": ""
+  },
+  {
+   "name": "Dart 与 Flutter",
+   "desc": "Dart 与 Flutter 官方插件，安装技能、规则、自定义代理和 Dart MCP 服务器，用于从单一代码库构建适用于移动端、Web、桌面端和嵌入式设备的原生编译、精美绝伦的应用程序。",
+   "cat": ""
+  },
+  {
+   "name": "Data Agent Kit",
+   "desc": "该插件为在 Google Cloud 上工作的数据工程师和数据库从业人员提供了专用的技能套件。它充当专家助手，允许你在偏好的编程代理中使用自然语言提示来架构复杂的数据流水线、使用 dbt 转换数据、编写 Spark 和 BigQuery SQL Notebook，并跨 GCP 数据生态系统编排端到端工作流。",
+   "cat": ""
+  },
+  {
+   "name": "Google Cloud 开发者",
+   "desc": "适用于编程代理的 Google Cloud 指南：首个项目上手、身份验证与凭据选择，以及 gcloud CLI 命令的安全关键验证。包含 Google Developer Knowledge MCP 服务器，提供权威、最新的 Google Cloud 文档支持。",
+   "cat": ""
+  },
+  {
+   "name": "Canva",
+   "desc": "Create, edit, review, resize, and brand-check Canva designs with the Canva MCP server.",
+   "cat": ""
+  },
+  {
+   "name": "Figma",
+   "desc": "Turn Figma designs into production code, map components with Code Connect, and create or edit Figma files in Antigravity.",
+   "cat": ""
+  },
+  {
+   "name": "Mobbin",
+   "desc": "Give your AI agent 600,000+ real app screens, and the skills to use them. Includes the Mobbin MCP and a skill that redesigns your screen from patterns real apps ship, in your own design system, with the references behind every change.",
+   "cat": ""
+  },
+  {
+   "name": "Atlassian Teamwork Graph CLI",
+   "desc": "Teamwork Graph CLI is Atlassian's agent-first interface to your entire work context: Jira issues, Confluence pages, Bitbucket PRs, along with your connected third-party data sources. Purpose-built for coding agents like Antigravity (terminal or desktop), and powered by Atlassian's context graph. Try: \"draft a Jira issue from this PR and link it to the epic.\" Run /twg-setup after install to connect Atlassian Teamwork Graph CLI to Antigravity.",
+   "cat": ""
+  },
+  {
+   "name": "Dropbox",
+   "desc": "连接 Antigravity to Dropbox to search, inspect, summarize, share, collect uploads, organize folders, and clean up files with confirmation for write actions.",
+   "cat": ""
+  },
+  {
+   "name": "Linear",
+   "desc": "The product development system for teams and agents. Manage issues, projects, and documents across your Linear workspace from Antigravity.",
+   "cat": ""
+  },
+  {
+   "name": "monday.com",
+   "desc": "Plan and track work in monday.com from Antigravity: create, update and assign items, write docs, and build forms that turn requests into items.",
+   "cat": ""
+  },
+  {
+   "name": "Notion",
+   "desc": "连接 Antigravity to your Notion workspace with the Notion MCP server, plus skills for research, documentation, meeting prep, specs, trackers, and project updates.",
+   "cat": ""
+  },
+  {
+   "name": "PandaDoc",
+   "desc": "Create and send proposals, quotes, and contracts for e-signature. Track signing progress and identify documents that need follow-up.",
+   "cat": ""
+  },
+  {
+   "name": "Trello",
+   "desc": "Official Trello plugin with the Trello MCP server and a skill for boards, lists, cards, checklists, Inbox, and Planner.",
+   "cat": ""
+  },
+  {
+   "name": "Netlify",
+   "desc": "Build and deploy on Netlify: functions, edge functions, blobs, database, identity, forms, image CDN, caching, and AI Gateway, plus the Netlify MCP server.",
+   "cat": ""
+  },
+  {
+   "name": "Railway",
+   "desc": "Deploy, configure, monitor, and troubleshoot apps, databases, and infrastructure on Railway from Antigravity with Railway's agent skill and hosted MCP server.",
+   "cat": ""
+  },
+  {
+   "name": "Vercel",
+   "desc": "Build and deploy web apps and AI agents on Vercel with skills for Next.js, AI SDK, and cloud services, plus the official Vercel MCP server.",
+   "cat": ""
+  },
+  {
+   "name": "Wix",
+   "desc": "Build Wix apps and headless sites, and manage Wix stores, bookings, CMS and more, with Wix CLI skills and the official Wix MCP server.",
+   "cat": ""
+  },
+  {
+   "name": "WordPress",
+   "desc": "Build, publish, and manage WordPress.com and Jetpack-connected sites. Draft posts, edit blocks, check traffic stats, moderate comments, and manage plugins.",
+   "cat": ""
+  },
+  {
+   "name": "Auth0",
+   "desc": "添加 Auth0 authentication to any app: login, MFA, SSO, Organizations, RBAC, custom domains, and branding. Debug auth errors and migrate from other providers.",
+   "cat": ""
+  },
+  {
+   "name": "Base44",
+   "desc": "Build and deploy Base44 full-stack apps: CLI project management, JavaScript/TypeScript SDK development, and production troubleshooting skills.",
+   "cat": ""
+  },
+  {
+   "name": "Browserbase",
+   "desc": "Give your agent a real browser: navigate, click, type, screenshot, and extract data from any site, locally or on Browserbase cloud browsers.",
+   "cat": ""
+  },
+  {
+   "name": "CodeRabbit",
+   "desc": "AI-powered code review and review-comment autofix, powered by CodeRabbit.",
+   "cat": ""
+  },
+  {
+   "name": "Context7",
+   "desc": "Up-to-date documentation lookup. Pull version-specific documentation and code examples directly from source repositories into your LLM context.",
+   "cat": ""
+  },
+  {
+   "name": "CrowdStrike Falcon",
+   "desc": "Use the official CrowdStrike-hosted MCP server to work across Falcon: detections, cases, threat intel, SIEM, hosts, vulnerabilities, cloud, and more.",
+   "cat": ""
+  },
+  {
+   "name": "Datadog",
+   "desc": "Use Datadog directly in Antigravity through a preconfigured Datadog MCP server. Query logs, metrics, traces, dashboards, and more through natural conversation. This plugin is in preview.",
+   "cat": ""
+  },
+  {
+   "name": "Dynatrace",
+   "desc": "Investigate production issues with real Dynatrace data: problems and root causes, logs, metrics, traces, and vulnerabilities, via skills and the MCP server.",
+   "cat": ""
+  },
+  {
+   "name": "Endor Labs Agent Kit",
+   "desc": "Packaged workflows for SCA remediation, AI SAST triage, CI/CD posture, malware response, findings review, Endor Labs setup, and more.",
+   "cat": ""
+  },
+  {
+   "name": "Exabeam Agentic SOC",
+   "desc": "Triage Exabeam New-Scale alerts and cases end to end: gather the evidence, map MITRE, reach a verdict, and record it behind an approval step.",
+   "cat": ""
+  },
+  {
+   "name": "Harness",
+   "desc": "Build and debug pipelines, manage deployments, investigate security findings, and operate Harness with connected tools and reusable workflow skills.",
+   "cat": ""
+  },
+  {
+   "name": "Keenable",
+   "desc": "Search the web and read any page as clean markdown with Keenable, a search engine built for AI agents. Keyless: no signup or API key needed.",
+   "cat": ""
+  },
+  {
+   "name": "Keenable SELECT",
+   "desc": "Ask a question of the live web and get a table back. Keenable SELECT runs many searches, reads the pages and extracts the fields you need in one call. Sign in with a Keenable account.",
+   "cat": ""
+  },
+  {
+   "name": "Leapwork Play",
+   "desc": "Create, run and debug Leapwork Play tests and runlists, build agents, and hand work to Play's AI workflows, right from Antigravity.",
+   "cat": ""
+  },
+  {
+   "name": "MongoDB Atlas (Managed MCP)",
+   "desc": "Official Antigravity plugin for MongoDB Atlas (hosted MCP Server + Skills). Connect to the MongoDB-hosted Atlas MCP server, explore data, manage collections, optimize queries, generate reliable code, implement best practices, develop advanced features, and more.",
+   "cat": ""
+  },
+  {
+   "name": "Parallel",
+   "desc": "Search the live web and fetch page content with Parallel's hosted MCP server. Free access with no Parallel account, API key, or Parallel CLI required.",
+   "cat": ""
+  },
+  {
+   "name": "PingOne",
+   "desc": "Agent plugin for PingOne multi-tenant. Includes skills and a remote MCP server that lets AI agents configure and monitor your PingOne environments.",
+   "cat": ""
+  },
+  {
+   "name": "Postman",
+   "desc": "Equip Antigravity with specialized Postman skills for the complete API lifecycle. Discover, design, test, document, mock, monitor, and improve APIs through agent-friendly, filesystem-first workflows.",
+   "cat": ""
+  },
+  {
+   "name": "Qodo",
+   "desc": "设置 Qodo, explore code and repository history, review local changes, and resolve pull-request findings directly from Antigravity.",
+   "cat": ""
+  },
+  {
+   "name": "SentinelOne Purple AI",
+   "desc": "Query your SentinelOne Singularity Console from Antigravity through a self-hosted, read-only Purple AI MCP server. Requires an active console deployment, your console URL, and an API token.",
+   "cat": ""
+  },
+  {
+   "name": "Sentry",
+   "desc": "设置 Sentry monitoring, investigate production errors, and configure alerts and releases with expert skills and live context from your Sentry projects.",
+   "cat": ""
+  },
+  {
+   "name": "Supabase",
+   "desc": "Official Supabase plugin for Antigravity with Supabase skills and MCP access for project management, database work, auth, storage, and Postgres best practices.",
+   "cat": ""
+  },
+  {
+   "name": "Superpowers",
+   "desc": "Make your coding agent a better engineer",
+   "cat": ""
+  },
+  {
+   "name": "Unity",
+   "desc": "Unity's official plugin for Antigravity, with curated skills for game development, monetization, and performance optimization.",
+   "cat": ""
+  },
+  {
+   "name": "VirusTotal",
+   "desc": "Investigate files, URLs, domains and IP addresses with VirusTotal threat intelligence, analysis and submission recovery.",
+   "cat": ""
+  },
+  {
+   "name": "Bigin",
+   "desc": "Manage your Bigin CRM from Antigravity: review pipelines, find contacts and deals, log calls, plan follow-ups, and email customers.",
+   "cat": ""
+  },
+  {
+   "name": "Databricks",
+   "desc": "Databricks skills for the CLI, Apps, Lakebase, Model Serving, Lakeflow Jobs, Spark Declarative Pipelines, Declarative Automation Bundles (DABs), and classic-to-serverless migration.",
+   "cat": ""
+  },
+  {
+   "name": "Intercom",
+   "desc": "Search Intercom conversations, contacts, and companies, spot support trends, and install the Intercom Messenger with secure identity verification.",
+   "cat": ""
+  },
+  {
+   "name": "Semrush",
+   "desc": "SEO workflows on live Semrush data: keyword research, site audits, backlinks, competitor, traffic and market analytics, PPC, and AI brand visibility.",
+   "cat": ""
+  },
+  {
+   "name": "Stripe",
+   "desc": "Accept payments and grow your business. Stripe's official MCP server enables AI agents to manage customers, products, prices, payment links, invoices, subscriptions, and refunds, as well as search Stripe documentation.",
+   "cat": ""
+  },
+  {
+   "name": "Wispr Flow",
+   "desc": "Search and read your Wispr Flow meeting notes, transcripts, scratchpad notes, and calendar events. Read-only access to your own account.",
+   "cat": ""
+  },
+  {
+   "name": "Zapier",
+   "desc": "连接 9,000+ apps to your AI workflow. Discover, enable, and execute Zapier actions and workflows directly from your client.",
+   "cat": ""
+  },
+  {
+   "name": "Zoho Books",
+   "desc": "Run Zoho Books from Antigravity: invoicing, bills, banking, journals, projects, items, taxes, customization and automation.",
+   "cat": ""
+  },
+  {
+   "name": "Zoho CRM",
+   "desc": "Build on Zoho CRM v8: REST API, Deluge functions, ClientScript, widgets, COQL and connections, with live CRM data through your Zoho MCP server.",
+   "cat": ""
+  },
+  {
+   "name": "Zoho Desk",
+   "desc": "Zoho Desk plugin for Antigravity. Review, prioritize, and update Zoho Desk tickets directly from Antigravity through Zoho Desk MCP and includes a Ticket Prioritization Agent for triage and priority updates.",
+   "cat": ""
+  },
+  {
+   "name": "Zoho Projects",
+   "desc": "连接 Zoho Projects to Antigravity to turn tasks and issues into working code. Access project context, investigate bugs, and update work items as you develop.",
+   "cat": ""
+  }
+ ]
+}

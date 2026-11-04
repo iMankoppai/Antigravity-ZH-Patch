@@ -1,0 +1,257 @@
+[
+  {
+    "name": "stripe",
+    "displayName": "Stripe",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/stripe/stripe.zip?v=41152adff4b5"
+  },
+  {
+    "name": "atlassian-twg-cli",
+    "displayName": "Atlassian Teamwork Graph CLI",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/atlassian-twg-cli/atlassian-twg-cli.zip?v=ca067e6bab47"
+  },
+  {
+    "name": "auth0",
+    "displayName": "Auth0",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/auth0/auth0.zip?v=81ce508eef7b"
+  },
+  {
+    "name": "base44",
+    "displayName": "Base44",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/base44/base44.zip?v=ed6b6969a860"
+  },
+  {
+    "name": "browse",
+    "displayName": "Browserbase",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/browse/browse.zip?v=c046ede01539"
+  },
+  {
+    "name": "canva",
+    "displayName": "Canva",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/canva/canva.zip?v=92edbdb0dd86"
+  },
+  {
+    "name": "coderabbit",
+    "displayName": "CodeRabbit",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/coderabbit/coderabbit.zip?v=0b866c9be215"
+  },
+  {
+    "name": "context7",
+    "displayName": "Context7",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/context7/context7.zip?v=5d9ef0b58f8e"
+  },
+  {
+    "name": "crowdstrike",
+    "displayName": "CrowdStrike Falcon",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/crowdstrike/crowdstrike.zip?v=2338f5491941"
+  },
+  {
+    "name": "databricks",
+    "displayName": "Databricks",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/databricks/databricks.zip?v=e319cf402bfc"
+  },
+  {
+    "name": "datadog",
+    "displayName": "Datadog",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/datadog/datadog.zip?v=a8b39657e326"
+  },
+  {
+    "name": "dropbox",
+    "displayName": "Dropbox",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/dropbox/dropbox.zip?v=45a0ff0b3d11"
+  },
+  {
+    "name": "dynatrace",
+    "displayName": "Dynatrace",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/dynatrace/dynatrace.zip?v=c5510e9c9cf8"
+  },
+  {
+    "name": "endor-labs-agent-kit",
+    "displayName": "Endor Labs Agent Kit",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/endor-labs-agent-kit/endor-labs-agent-kit.zip?v=796e9e2afc1a"
+  },
+  {
+    "name": "figma",
+    "displayName": "Figma",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/figma/figma.zip?v=e9175155aa98"
+  },
+  {
+    "name": "harness-antigravity",
+    "displayName": "Harness",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/harness-antigravity/harness-antigravity.zip?v=25281ecbe14a"
+  },
+  {
+    "name": "intercom",
+    "displayName": "Intercom",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/intercom/intercom.zip?v=b63fd097c6e7"
+  },
+  {
+    "name": "keenable",
+    "displayName": "Keenable",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/keenable/keenable.zip?v=aa159f3ab6ab"
+  },
+  {
+    "name": "keenable-select",
+    "displayName": "Keenable SELECT",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/keenable-select/keenable-select.zip?v=e281ce2e2100"
+  },
+  {
+    "name": "leapwork-play",
+    "displayName": "Leapwork Play",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/leapwork-play/leapwork-play.zip?v=4f73c2c3cc23"
+  },
+  {
+    "name": "linear",
+    "displayName": "Linear",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/linear/linear.zip?v=bf9894077b66"
+  },
+  {
+    "name": "mobbin",
+    "displayName": "Mobbin",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/mobbin/mobbin.zip?v=1e4440a59a76"
+  },
+  {
+    "name": "monday",
+    "displayName": "monday.com",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/monday/monday.zip?v=afd8da323ba9"
+  },
+  {
+    "name": "mongodb-atlas",
+    "displayName": "MongoDB Atlas (Managed MCP)",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/mongodb-atlas/mongodb-atlas.zip?v=e8342cad5b8e"
+  },
+  {
+    "name": "netlify",
+    "displayName": "Netlify",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/netlify/netlify.zip?v=8c834861f25c"
+  },
+  {
+    "name": "notion",
+    "displayName": "Notion",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/notion/notion.zip?v=edc64e7b5f97"
+  },
+  {
+    "name": "pandadoc",
+    "displayName": "PandaDoc",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/pandadoc/pandadoc.zip?v=b5133fef3c9d"
+  },
+  {
+    "name": "parallel",
+    "displayName": "Parallel",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/parallel/parallel.zip?v=7b4c51963b83"
+  },
+  {
+    "name": "ping-identity-pingone",
+    "displayName": "PingOne",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/ping-identity-pingone/ping-identity-pingone.zip?v=1478a5e75499"
+  },
+  {
+    "name": "postman",
+    "displayName": "Postman",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/postman/postman.zip?v=55c2f795ebd4"
+  },
+  {
+    "name": "qodo",
+    "displayName": "Qodo",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/qodo/qodo.zip?v=54ca5958e85e"
+  },
+  {
+    "name": "railway",
+    "displayName": "Railway",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/railway/railway.zip?v=ade91805380b"
+  },
+  {
+    "name": "semrush",
+    "displayName": "Semrush",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/semrush/semrush.zip?v=4a6b2d5205eb"
+  },
+  {
+    "name": "sentinelone-purple-mcp",
+    "displayName": "SentinelOne Purple AI",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/sentinelone-purple-mcp/sentinelone-purple-mcp.zip?v=039c830718e7"
+  },
+  {
+    "name": "sentry",
+    "displayName": "Sentry",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/sentry/sentry.zip?v=67c329e2cd93"
+  },
+  {
+    "name": "soc",
+    "displayName": "Exabeam Agentic SOC",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/soc/soc.zip?v=634de7290e3c"
+  },
+  {
+    "name": "supabase",
+    "displayName": "Supabase",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/supabase/supabase.zip?v=2cdc4ff956fe"
+  },
+  {
+    "name": "superpowers",
+    "displayName": "Superpowers",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/superpowers/superpowers.zip?v=8ea5d527369d"
+  },
+  {
+    "name": "trello",
+    "displayName": "Trello",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/trello/trello.zip?v=945b4ab52ed2"
+  },
+  {
+    "name": "unity",
+    "displayName": "Unity",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/unity/unity.zip?v=2f8768aa9578"
+  },
+  {
+    "name": "vercel-plugin",
+    "displayName": "Vercel",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/vercel-plugin/vercel-plugin.zip?v=db31440aaa5a"
+  },
+  {
+    "name": "virustotal",
+    "displayName": "VirusTotal",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/virustotal/virustotal.zip?v=4bc1e4c2fcec"
+  },
+  {
+    "name": "wispr-flow",
+    "displayName": "Wispr Flow",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/wispr-flow/wispr-flow.zip?v=adfed78a363e"
+  },
+  {
+    "name": "wix",
+    "displayName": "Wix",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/wix/wix.zip?v=957e1cecc063"
+  },
+  {
+    "name": "wordpress",
+    "displayName": "WordPress",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/wordpress/wordpress.zip?v=77d7e88a0103"
+  },
+  {
+    "name": "zapier",
+    "displayName": "Zapier",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/zapier/zapier.zip?v=95a49d5f0e24"
+  },
+  {
+    "name": "zoho-bigin",
+    "displayName": "Bigin",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/zoho-bigin/zoho-bigin.zip?v=a75864783663"
+  },
+  {
+    "name": "zoho-crm-plugin",
+    "displayName": "Zoho CRM",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/zoho-crm-plugin/zoho-crm-plugin.zip?v=55264e64ce0c"
+  },
+  {
+    "name": "zoho-desk-antigravity",
+    "displayName": "Zoho Desk",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/zoho-desk-antigravity/zoho-desk-antigravity.zip?v=4cdfbe32bbe5"
+  },
+  {
+    "name": "zoho-projects",
+    "displayName": "Zoho Projects",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/zoho-projects/zoho-projects.zip?v=a2a035798bc1"
+  },
+  {
+    "name": "zohobooks-antigravity",
+    "displayName": "Zoho Books",
+    "url": "https://www.gstatic.com/antigravity/plugins-partners/zohobooks-antigravity/zohobooks-antigravity.zip?v=fe5c848098c2"
+  }
+]

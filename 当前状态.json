@@ -20,7 +20,7 @@
   "releaseZip": null,
   "releaseZipSha256": null,
   "publishedInfo": "v1.3.6；本地构建并已永久安装到本机客户端（未打包发布到 GitHub Releases）。",
-  "updatedAt": "2026-11-04T06:48:49.618Z",
+  "updatedAt": "2026-11-04T06:59:01.748Z",
   "patchVersion": 74,
   "installedPatchVersion": 74,
   "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.1",
@@ -196,6 +196,8 @@
     "partnerSkillFiles": 494,
     "catalogAdditionalDocuments": 499,
     "popupSelector": "[data-testid=\"doc-row-modal\"]",
-    "note": "按 SKILL.md 正文 fingerprint/签名匹配并替换为中文 renderedHtml；产品名/代码/路径/URL 保留英文。"
+    "note": "SKILL.md 正文中文 markdown 存于 localization/partner-skill-docs/<slug>/；经 integrate-plugin-docs.cjs 渲染为 renderedHtml 并入 skill-details.additionalDocuments（499 条）。重跑 build-skill-detail-views.cjs 会清空 partner 条目。",
+    "translationsDir": "localization/partner-skill-docs/",
+    "generator": "维护工具/partner-skill-docs/integrate-plugin-docs.cjs"
   }
 }
