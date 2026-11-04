@@ -11,16 +11,16 @@
   "installDir": "C:/Users/24844/AppData/Local/Programs/antigravity",
   "officialBackup": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar.bak",
   "officialAsarSha256": "290e1b7a1caa430a0c5367c7b433e8d284e2ca5d0b305e91e5ce8ec926f43283",
-  "installedAsarSha256": "a32e0d939b409c175ea35ba0de9a401ff473988149b2619de9ee985fadd7fc3f",
+  "installedAsarSha256": "8e822fc8c55e0cbfbe8b1bee8724fb58d93bb68fb14a5062f993c893607389f0",
   "isolatedAsarSha256": "8e822fc8c55e0cbfbe8b1bee8724fb58d93bb68fb14a5062f993c893607389f0",
   "isolatedAsarNote": "2.29.0 隔离验证归档（含计划编辑器 on 连接词修复；词条 6,257）。",
-  "installedKernelSha256": "910be17f191f478932a2f95d6407b2c5ea4b14a5a6b800d4dcbac5ec20c68a25",
+  "installedKernelSha256": "84ef60b85e833ae625ee628ac41853b9b9d2f62306c31f8a84ce626bd721e7eb",
   "managerExeSha256": "c71f15719238c7325ccf96a3d2ef452525a41859a955e8eb4a789d3c1afc5862",
   "managerExeNote": "v1.3.6（内核 v74 + 适配 Antigravity 2.29.0）本地构建完成并已写入本机客户端；未发布到 GitHub Releases。",
   "releaseZip": null,
   "releaseZipSha256": null,
   "publishedInfo": "v1.3.6；本地构建并已永久安装到本机客户端（未打包发布到 GitHub Releases）。",
-  "updatedAt": "2026-11-04T12:49:33.0292927+08:00",
+  "updatedAt": "2026-11-04T12:53:17.8498431+08:00",
   "patchVersion": 74,
   "installedPatchVersion": 74,
   "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.1",
@@ -98,7 +98,7 @@
   "previousReleaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.0",
   "localOnly": false,
   "sourceKernelSha256": "84ef60b85e833ae625ee628ac41853b9b9d2f62306c31f8a84ce626bd721e7eb",
-  "permanentInstallPending": true,
+  "permanentInstallPending": false,
   "installedDiskPatchVersion": 74,
   "v135Verification": {
     "performed": true,
@@ -159,10 +159,10 @@
     "releaseZipSha256": "dd093b39699d56890ef9284e77ecef53d9baf52bd1ed19f03a559f41a4738221"
   },
   "pendingRelease": true,
-  "nextAction": "客户端关闭后运行管理器【新版汉化适配】（第二次点击）或引擎 --apply-installed 完成 6,257 词条内核的永久安装；随后发布可按 Playbook C 打包 v1.3.6",
+  "nextAction": "已永久安装 6,257 词条内核，可启动客户端验收；如需发布按 Playbook C 打包 v1.3.6 并上传 GitHub",
   "v136Verification": {
     "performed": true,
-    "checkedAt": "2026-11-04T12:49:33.0292927+08:00",
+    "checkedAt": "2026-11-04T12:53:17.8498431+08:00",
     "clientVersion": "2.29.0",
     "patchVersion": 74,
     "termsCount": 6257,
@@ -173,7 +173,7 @@
     "bundleSha256": "84ef60b85e833ae625ee628ac41853b9b9d2f62306c31f8a84ce626bd721e7eb",
     "pristineAsarSha256": "290e1b7a1caa430a0c5367c7b433e8d284e2ca5d0b305e91e5ce8ec926f43283",
     "isolatedAsarSha256": "8e822fc8c55e0cbfbe8b1bee8724fb58d93bb68fb14a5062f993c893607389f0",
-    "installedAsarSha256": "a32e0d939b409c175ea35ba0de9a401ff473988149b2619de9ee985fadd7fc3f",
+    "installedAsarSha256": "8e822fc8c55e0cbfbe8b1bee8724fb58d93bb68fb14a5062f993c893607389f0",
     "managerVersion": "1.3.6",
     "managerExeSha256": "c71f15719238c7325ccf96a3d2ef452525a41859a955e8eb4a789d3c1afc5862",
     "themeRegressionChecks": 11,
@@ -182,6 +182,6 @@
     "rendererScheduleChecks": 8,
     "released": false,
     "evidence": "work/2-29-0-probe/",
-    "note": "v1.3.6 适配 Antigravity 2.29.0，并补计划编辑器 2.29 新结构适配（schedule-repeat 取代 schedule-frequency-trigger 的 data-frequency；on 连接词 custom→规则、其余→在；新增 hours/week/month 词条）。内核 v74、词条 6,257；统一门禁 34/34（新增 schedule-summary 回归 8 项），引擎 41/41。隔离归档 8e822fc8… 与源码 bundle 84ef60b8… 一致。当前运行中客户端已热注入 v74/6257；磁盘永久安装仍为上一版内核（临时归档 a32e0d93…），待客户端关闭后重新固化。"
+    "note": "v1.3.6 适配 Antigravity 2.29.0，并补计划编辑器 2.29 新结构适配（schedule-repeat 取代 schedule-frequency-trigger 的 data-frequency；on 连接词 custom→规则、其余→在；新增 hours/week/month 词条）。内核 v74、词条 6,257；统一门禁 34/34（新增 schedule-summary 回归 8 项），引擎 41/41。真实安装归档与隔离归档逐字节一致（8e822fc8…），安装内嵌 bundle == 源码（84ef60b8…）。本地构建，未发布 GitHub。"
   }
 }
