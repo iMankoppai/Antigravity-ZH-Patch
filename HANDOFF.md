@@ -15,7 +15,7 @@ Google Antigravity 官方 Windows 客户端的中文汉化。两条腿：
 1. **管理器**（`src/AntigravityZhManager/`，C# .NET 8 WPF 单文件 EXE）：把翻译内核封包进客户端的 `resources/app.asar`（"永久安装"），支持还原英文、运行中热注入、健康检查、新版适配。
 2. **汉化内核**（`src/AntigravityZhManager/Assets/`）：`translate.js`（渲染端运行时）+ `dictionaries.json`（词条）+ `skill-details.json`（140 份官方技能正文目录 + 44 个合作插件 494 篇技能正文的中文 `renderedHtml`）+ `native-ui.js`（主进程原生菜单/对话框），由 `维护工具/内核生成器.js` 确定性合成为 `Assets/zh-bundle.js`，作为 EmbeddedResource 打进管理器 EXE。
 
-另有两条**可选增强**（v1.3.5 新增，均内嵌进 `zh-bundle.js`、可在管理器中开关）：
+另有两条**可选增强**（均内嵌进 `zh-bundle.js`、可在管理器中开关）：
 - **天青蓝对话气泡**（外观）：`Assets/theme-azure-bubble.css`；运行时 CDP 注入/移除，永久安装后 `attach()` 读 `%APPDATA%\Antigravity\zh-theme.json` 自动应用。
 - **会话统计状态条**（DSH 风格）：`Assets/stats-hud.js`（渲染端）+ `Services/StatsHudService.cs`（管理器运行时）+ 主进程 `attach()` 内嵌采集；底栏三组内联（⏱ 轮/步·tok/s ｜ 🗄 总tok·缓存命中 ｜ ◔ 上下文%），在模型选择器与右侧控件之间的中间空白区居中；点击某一组只弹出对应的一张卡片（⏱ 会话统计 / 🗄 Token 用量 / ◔ 上下文已用），三卡独立不连体；开关存 `%APPDATA%\Antigravity\zh-stats.json`，**常驻后随 Antigravity 启动自动显示**。
 
@@ -105,7 +105,7 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 
 ## 7. 核心任务 Playbook C：发布
 
-> **现状（2026-11-02）**：v1.3.5 已在本地完成 版本号/重编/打包/写客户端，但**尚未发布到 GitHub**（`当前状态.json` 的 `publishedInfo` 已标"未发布"）。发布时从本节第 1 步重走一遍，并把 README 徽章/头部里的"未发布"措辞改回"已发布"。
+> **现状**：v1.3.6 已完成本地构建、重编并写入本机客户端，但**尚未发布到 GitHub**（`当前状态.json` 的 `publishedInfo` 已标"未发布"）。发布时从本节第 1 步重走一遍，并把 README 徽章/头部里的"未发布"措辞改回"已发布"。
 
 1. `csproj` 三处版本号（Version/FileVersion/AssemblyVersion）→ README（徽章、头部、下载名、版本记录条目）→ `当前状态.json`（version/patchVersion/哈希/verification 块）。
 2. `dotnet publish -c Release -r win-x64 --self-contained true` 到独立候选目录（首次需先 restore）。
