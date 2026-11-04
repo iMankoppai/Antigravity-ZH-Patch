@@ -13,7 +13,7 @@
 Google Antigravity 官方 Windows 客户端的中文汉化。两条腿：
 
 1. **管理器**（`src/AntigravityZhManager/`，C# .NET 8 WPF 单文件 EXE）：把翻译内核封包进客户端的 `resources/app.asar`（"永久安装"），支持还原英文、运行中热注入、健康检查、新版适配。
-2. **汉化内核**（`src/AntigravityZhManager/Assets/`）：`translate.js`（渲染端运行时）+ `dictionaries.json`（词条）+ `skill-details.json`（140 份技能正文目录）+ `native-ui.js`（主进程原生菜单/对话框），由 `维护工具/内核生成器.js` 确定性合成为 `Assets/zh-bundle.js`，作为 EmbeddedResource 打进管理器 EXE。
+2. **汉化内核**（`src/AntigravityZhManager/Assets/`）：`translate.js`（渲染端运行时）+ `dictionaries.json`（词条）+ `skill-details.json`（140 份官方技能正文目录 + 44 个合作插件 494 篇技能正文的中文 `renderedHtml`）+ `native-ui.js`（主进程原生菜单/对话框），由 `维护工具/内核生成器.js` 确定性合成为 `Assets/zh-bundle.js`，作为 EmbeddedResource 打进管理器 EXE。
 
 另有两条**可选增强**（v1.3.5 新增，均内嵌进 `zh-bundle.js`、可在管理器中开关）：
 - **天青蓝对话气泡**（外观）：`Assets/theme-azure-bubble.css`；运行时 CDP 注入/移除，永久安装后 `attach()` 读 `%APPDATA%\Antigravity\zh-theme.json` 自动应用。
@@ -145,13 +145,13 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 **本轮适配要点（2.28.2 → 2.29.0）**
 - 主进程：新增 7 个模块（`wcvBrowserRegistry`/`wcvIpcHandlers`/`guestDialogController`/`webviewDownloadRouting`/`windowState`/`externalUrl`/`wcvZOrderController`），`utils/main/ipcHandlers/preload/scriptJail/updater` 等变更；但 anchor-coverage 的 **16 个锚点全部恰好命中 1 次 → AsarCleanPatcher 零改动**。
 - 前端：renderer 从缓存提取 `work/2-29-0-probe/renderer-candidate-0.js`（11,187,917 字节，sha `8d1196a2…`）；字面量新增 4,296、经 UI 过滤候选 349，收录 **787 条**新词条（210 条 2.29 新 UI：`v74-ui-additions.json`；62 条「自定义项」市场卡片：`v74-marketplace-additions.json`；515 条「自定义项」插件详情页：`v74-marketplace-detail-additions.json` + `sync-v74-marketplace-detail.cjs`）。
-- 内核：`translate.js` patchVersion **73 → 74**；词条 **6,834**；bundle sha `e3ff463b…`。
+- 内核：`translate.js` patchVersion **73 → 74**；词条 **6,834**；bundle sha `d48b2f5d…`（含技能正文后约 10.7MB）。
 - 自定义项市场：实机 CDP 只读导出 68 张插件卡片（含“再查看”展开项）+ 5 个分类；并从 51 个 partner 插件包（`marketplace.json` + 各 zip）提取详情页的建议提示词/技能/代理/规则描述逐条汉化；产品名等专名、代码/路径/URL、免责声明保留英文。新增 `marketplace-cards-regression.cjs`（11 项）与 `marketplace-detail-regression.cjs`（6 项），均纳入门禁。
 - 计划编辑器结构适配：2.29.0 用 `schedule-repeat` 下拉取代了 `schedule-frequency-trigger[data-frequency]`；`on` 连接词判断改为两种结构兼容（custom→“规则”、其余→“在”），补 `hours/week/month` 单位词条，并新增 `tests/renderer/schedule-summary-regression.cjs`（8 项，已纳入统一门禁）。
-- 基线：2.29.0 已登记（原版 `290e1b7a…`；已知补丁版 `a32e0d93…` / `8e822fc8…` / `779388c0…` / `f775a0a4…`）。
-- 验证：统一门禁 **36/36**（失败 0、跳过 0），引擎 41/41；安装归档与隔离归档逐字节一致（`f775a0a4…`），内嵌 bundle == 源码（`e3ff463b…`）。已永久安装 v74 / 6,834 条到本机客户端。
-- 交付：根目录 `Antigravity汉化管理器.exe` 已更新为 v1.3.6（sha `c71f1571…`）。
-- **交付**：根目录 `Antigravity汉化管理器.exe` 已更新为 v1.3.6（sha `f83e040c…`）。6,834 内核已永久安装到本机客户端（`f775a0a4…`）。
+- 技能正文（SKILL.md 全文）：把「命令/技能」弹窗（`doc-row-modal`）正文汉化——44 个合作插件、494 篇 SKILL.md 经 `skill-details` 管线生成中文 `renderedHtml`（additionalDocuments=499），按正文 fingerprint/签名匹配替换；代码/路径/URL/专名保留英文。官方 140 篇沿用原目录。
+- 基线：2.29.0 已登记（原版 `290e1b7a…`；已知补丁版 `a32e0d93…` / `8e822fc8…` / `779388c0…` / `f775a0a4…` / `568409e5…`）。
+- 验证：统一门禁 **36/36**（失败 0、跳过 0），引擎 41/41；安装归档与隔离归档逐字节一致（`568409e5…`），内嵌 bundle == 源码（`d48b2f5d…`）。已永久安装 v74 / 6,834 条 + 494 篇技能正文到本机客户端。
+- 交付：根目录 `Antigravity汉化管理器.exe` 已更新为 v1.3.6（sha `5992df6b…`，约 79MB）。
 
 **下一步（接手人）**
 1. 手动启动 Antigravity 2.29.0 实机验收：汉化、天青蓝气泡、统计状态条，以及新版自动化/语音/连接器/下载等界面。
