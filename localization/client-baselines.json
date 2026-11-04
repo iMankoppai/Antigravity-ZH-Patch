@@ -1144,8 +1144,8 @@
         "bytes": 4797365,
         "productVersion": "2.29.0",
         "source": "backup",
-        "path": "work/2-29-0-probe/iso2/resources/app.asar.bak",
-        "recordedAt": "2026-11-04T04:47:16.475Z"
+        "path": "work/2-29-0-probe/iso3/resources/app.asar.bak",
+        "recordedAt": "2026-11-04T05:04:17.705Z"
       },
       "compatibility": {
         "packageSignatureSha256": "dd534ff5211df214041d89c743c21ce7cd3df62ec5ae26f7a71376a5ad1b67cf",
@@ -1210,6 +1210,12 @@
           "kernelSha256": "84ef60b85e833ae625ee628ac41853b9b9d2f62306c31f8a84ce626bd721e7eb",
           "bytes": 8154737,
           "recordedAt": "2026-11-04T04:47:16.488Z"
+        },
+        {
+          "sha256": "779388c086d0ee98a25d1c83c1e225c364b2d9835e8165726d5f5760e930ee73",
+          "kernelSha256": "e40ea887c29ad9cfeac286af97aacc2c5a9968fdb9dc957d2d63f769c5eb5778",
+          "bytes": 8171777,
+          "recordedAt": "2026-11-04T05:04:17.719Z"
         }
       ]
     }
