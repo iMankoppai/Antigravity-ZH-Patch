@@ -124,6 +124,7 @@ $null = Invoke-Check 'notification-hook' @('tests/renderer/notification-hook.cjs
         $null = Invoke-Check 'azure-theme-regression' @('tests/renderer/azure-theme-regression.cjs') $true
         $null = Invoke-Check 'schedule-summary-regression' @('tests/renderer/schedule-summary-regression.cjs') $true
         $null = Invoke-Check 'marketplace-cards-regression' @('tests/renderer/marketplace-cards-regression.cjs') $true
+        $null = Invoke-Check 'marketplace-detail-regression' @('tests/renderer/marketplace-detail-regression.cjs') $true
     } finally { $env:ZH_CHROME_PATH = $old }
 } else {
     Add-Result 'renderer-regression' 'SKIP' '未运行浏览器回归（缺少 Chrome 或显式跳过）'

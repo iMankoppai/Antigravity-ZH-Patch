@@ -2,7 +2,7 @@
 
 写给接手本项目维护工作的人。目标：**不依赖任何口头交接，读完这份 + 按清单跑一遍，就能独立完成"官方更新后重新适配"的全流程**。
 
-- 编写日期：2026-10-31（2026-11-04 随 v1.3.6 更新）。对应交接状态：管理器 v1.3.6 / 汉化内核 v74 / 适配 Antigravity 2.29.0 / 词库 6,319 条。
+- 编写日期：2026-10-31（2026-11-04 随 v1.3.6 更新）。对应交接状态：管理器 v1.3.6 / 汉化内核 v74 / 适配 Antigravity 2.29.0 / 词库 6,834 条。
 - 当前基线（版本、哈希、最近验证）**只看一处**：根目录 [`当前状态.json`](当前状态.json)。本文件的数字是交接时点快照。
 - 规范性流程（怎样才算做对、发布判定标准）在 [`docs/项目维护与交付指导书.md`](docs/项目维护与交付指导书.md)；本文件是实操手册，两者冲突时以指导书 + 实际门禁为准。
 
@@ -144,14 +144,14 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 
 **本轮适配要点（2.28.2 → 2.29.0）**
 - 主进程：新增 7 个模块（`wcvBrowserRegistry`/`wcvIpcHandlers`/`guestDialogController`/`webviewDownloadRouting`/`windowState`/`externalUrl`/`wcvZOrderController`），`utils/main/ipcHandlers/preload/scriptJail/updater` 等变更；但 anchor-coverage 的 **16 个锚点全部恰好命中 1 次 → AsarCleanPatcher 零改动**。
-- 前端：renderer 从缓存提取 `work/2-29-0-probe/renderer-candidate-0.js`（11,187,917 字节，sha `8d1196a2…`）；字面量新增 4,296、经 UI 过滤候选 349，收录 **272 条**新词条（210 条 2.29 新 UI：`localization/v74-ui-additions.json` + `scripts/sync-v74-localization.cjs`；62 条「自定义项」市场：`localization/v74-marketplace-additions.json` + `scripts/sync-v74-marketplace.cjs`）。
-- 内核：`translate.js` patchVersion **73 → 74**；词条 **6,319**；bundle sha `e40ea887…`。
-- 自定义项市场：实机 CDP 只读导出 68 张插件卡片（含“再查看”展开项）+ 5 个分类，翻译分类标题/副标题、精选卡片与全部第三方插件描述；产品名等专名与免责声明保留英文；新增 `tests/renderer/marketplace-cards-regression.cjs`（11 项，已纳入门禁）。
+- 前端：renderer 从缓存提取 `work/2-29-0-probe/renderer-candidate-0.js`（11,187,917 字节，sha `8d1196a2…`）；字面量新增 4,296、经 UI 过滤候选 349，收录 **787 条**新词条（210 条 2.29 新 UI：`v74-ui-additions.json`；62 条「自定义项」市场卡片：`v74-marketplace-additions.json`；515 条「自定义项」插件详情页：`v74-marketplace-detail-additions.json` + `sync-v74-marketplace-detail.cjs`）。
+- 内核：`translate.js` patchVersion **73 → 74**；词条 **6,834**；bundle sha `e3ff463b…`。
+- 自定义项市场：实机 CDP 只读导出 68 张插件卡片（含“再查看”展开项）+ 5 个分类；并从 51 个 partner 插件包（`marketplace.json` + 各 zip）提取详情页的建议提示词/技能/代理/规则描述逐条汉化；产品名等专名、代码/路径/URL、免责声明保留英文。新增 `marketplace-cards-regression.cjs`（11 项）与 `marketplace-detail-regression.cjs`（6 项），均纳入门禁。
 - 计划编辑器结构适配：2.29.0 用 `schedule-repeat` 下拉取代了 `schedule-frequency-trigger[data-frequency]`；`on` 连接词判断改为两种结构兼容（custom→“规则”、其余→“在”），补 `hours/week/month` 单位词条，并新增 `tests/renderer/schedule-summary-regression.cjs`（8 项，已纳入统一门禁）。
-- 基线：2.29.0 已登记（原版 `290e1b7a…`；已知补丁版 `a32e0d93…` 旧内核 / `8e822fc8…` / `779388c0…` 市场内核）。
-- 验证：统一门禁 **35/35**（失败 0、跳过 0），引擎 41/41；隔离归档 `779388c0…` 内嵌 bundle == 源码（`e40ea887…`）。运行中客户端已热注入 v74 / 6,319 条（`live-probe` 确认菜单栏中文、nativeAutoload=true；市场卡片描述 0 条残留英文）。
+- 基线：2.29.0 已登记（原版 `290e1b7a…`；已知补丁版 `a32e0d93…` / `8e822fc8…` / `779388c0…` / `f775a0a4…`）。
+- 验证：统一门禁 **36/36**（失败 0、跳过 0），引擎 41/41；安装归档与隔离归档逐字节一致（`f775a0a4…`），内嵌 bundle == 源码（`e3ff463b…`）。已永久安装 v74 / 6,834 条到本机客户端。
 - 交付：根目录 `Antigravity汉化管理器.exe` 已更新为 v1.3.6（sha `c71f1571…`）。
-- **待办**：运行中客户端尚未做 6,319 词条内核的**磁盘永久安装**（磁盘归档仍是上一版 a32e0d93…）；客户端彻底退出后，点管理器【新版汉化适配】第二次或跑引擎 `--apply-installed` 完成固化。
+- **交付**：根目录 `Antigravity汉化管理器.exe` 已更新为 v1.3.6（sha `f83e040c…`）。6,834 内核已永久安装到本机客户端（`f775a0a4…`）。
 
 **下一步（接手人）**
 1. 手动启动 Antigravity 2.29.0 实机验收：汉化、天青蓝气泡、统计状态条，以及新版自动化/语音/连接器/下载等界面。
