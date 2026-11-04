@@ -1134,6 +1134,78 @@
           "note": "v73 + 天青蓝气泡 + 统计状态条（DSH 风格最终版：底栏三段在模型与右侧控件之间的中间空白区居中，模型名保护不截断，数值常规字重；三卡各自独立弹出）；客户端安装归档，与隔离验证归档逐字节一致"
         }
       ]
+    },
+    {
+      "productVersion": "2.29.0",
+      "platform": "win32",
+      "arch": "x64",
+      "pristine": {
+        "sha256": "290e1b7a1caa430a0c5367c7b433e8d284e2ca5d0b305e91e5ce8ec926f43283",
+        "bytes": 4797365,
+        "productVersion": "2.29.0",
+        "source": "backup",
+        "path": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar.bak",
+        "recordedAt": "2026-11-04T04:31:02.025Z"
+      },
+      "compatibility": {
+        "packageSignatureSha256": "dd534ff5211df214041d89c743c21ce7cd3df62ec5ae26f7a71376a5ad1b67cf",
+        "targetSha256": {
+          "dist/ipcHandlers.js": "584770318464da504dfbaa2add454eff55e70418c8b0550145c55d2cb79818bb",
+          "dist/main.js": "e5bf4ae92a586b222034c7de27e0e58dd8922deb0edc9649d290bc06182b2c6c",
+          "dist/utils.js": "277c626bedc704f12927eee26836350078835eb43ae1847cdc346b0be21b2d9d",
+          "dist/tray.js": "6c6b0968b45a1c7088e459657d57a9efd72d3733614349095f17b6ee94b47135",
+          "dist/ideInstall/wizard.js": "20814ba365ceb5f386afe856277f5dc85bf9db994d1a77579430f100f3725666",
+          "dist/provisionSplash.js": "737f40f02130440a9ec9a3fed83c2e62290029aece6d0ad558136fa510c45f35"
+        }
+      },
+      "requiredTargets": [
+        "dist/ipcHandlers.js",
+        "dist/main.js",
+        "dist/utils.js",
+        "dist/tray.js"
+      ],
+      "requiredEntries": {
+        "dist/ipcHandlers.js": true,
+        "dist/main.js": true,
+        "dist/tray.js": true,
+        "dist/utils.js": true
+      },
+      "requiredAnchors": [
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspace'",
+          "count": 1
+        },
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspaces'",
+          "count": 1
+        },
+        {
+          "target": "dist/main.js",
+          "text": "void win.loadURL(newUrl);",
+          "count": 1
+        },
+        {
+          "target": "dist/utils.js",
+          "text": "void win.loadURL(url);",
+          "count": 1
+        },
+        {
+          "target": "dist/tray.js",
+          "text": "Menu.buildFromTemplate(actions)",
+          "count": 1
+        }
+      ],
+      "missingTargets": [],
+      "knownPatchedSha256": [
+        {
+          "sha256": "a32e0d939b409c175ea35ba0de9a401ff473988149b2619de9ee985fadd7fc3f",
+          "kernelSha256": "910be17f191f478932a2f95d6407b2c5ea4b14a5a6b800d4dcbac5ec20c68a25",
+          "bytes": 8154056,
+          "recordedAt": "2026-11-04T04:30:20.343Z"
+        }
+      ]
     }
   ]
 }

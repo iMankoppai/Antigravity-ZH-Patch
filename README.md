@@ -1,14 +1,14 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.3.5-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
-[![Antigravity](https://img.shields.io/badge/Antigravity-2.28.2-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Release](https://img.shields.io/badge/Release-v1.3.6-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Antigravity](https://img.shields.io/badge/Antigravity-2.29.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前源码版本 v1.3.5（汉化内核 v73）适配 Google Antigravity 2.28.2（Windows x64）；v1.3.5 为本地构建，尚未发布到 GitHub Releases（已发布最新为 v1.3.4）。** 界面词条 **6,047 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。官方更新导致汉化失效时，可运行管理器重新安装，或点击【新版汉化适配】热恢复，详见 [`docs/新版汉化适配.md`](docs/新版汉化适配.md)。
+> **当前源码版本 v1.3.6（汉化内核 v74）适配 Google Antigravity 2.29.0（Windows x64）；v1.3.6 为本地构建并已永久安装到本机客户端，尚未发布到 GitHub Releases（已发布最新为 v1.3.4）。** 界面词条 **6,254 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情。官方更新导致汉化失效时，可运行管理器重新安装，或点击【新版汉化适配】热恢复，详见 [`docs/新版汉化适配.md`](docs/新版汉化适配.md)。
 
 ---
 
@@ -56,8 +56,8 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.3.5-Windows-x64.zip`**；
-   > 说明：**v1.3.5 目前是本地构建、尚未上传 GitHub Releases**（已发布最新为 v1.3.4）。需要 v1.3.5 可先从本项目 `dist/` 取包，或等发布后再下。
+2. 下载 **`AntigravityZhManager.exe`**，或使用项目根目录 / `dist/` 中的交付包；
+   > 说明：**v1.3.6 目前是本地构建、尚未上传 GitHub Releases**（已发布最新为 v1.3.4）。需要 v1.3.6 可直接运行本项目根目录的 `Antigravity汉化管理器.exe`。
 3. 双击下载的 EXE，或解压 ZIP 后运行其中的 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -86,8 +86,8 @@ Antigravity ZH/
 ```
 
 ### 技术规格
-- **适配软件**：**Google Antigravity 2.28.2**（Windows x64）
-- **汉化内核**：v73（词条 6,047 条）
+- **适配软件**：**Google Antigravity 2.29.0**（Windows x64）
+- **汉化内核**：v74（词条 6,254 条）
 - **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、工作状态、插件市场与主题设置）
 - **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入
 - **可选增强**：天青蓝气泡外观（`theme-azure-bubble.css`，运行时+永久）；会话统计状态条（`stats-hud.js` + `StatsHudService`，主进程读 `transcript.jsonl`、内嵌 `attach()` 随启动自动显示、默认 DSH 风格三组内联居中、点击各组弹对应独立卡片）
@@ -95,7 +95,7 @@ Antigravity ZH/
 ### 维护与回归
 
 - **接手维护从 [`HANDOFF.md`](HANDOFF.md) 开始**——现状快照、适配/排查/发布三套 playbook、踩坑记录。
-- **统一检查入口**：`powershell -File scripts/check-current.ps1`——依赖检查、词库质量、渲染回归、打包一致性、版本一致性、引擎测试共 33 项门禁，任一必需项失败即非零退出。
+- **统一检查入口**：`pwsh -File scripts/check-current.ps1`（务必用 PowerShell 7，脚本含中文且无 BOM，5.1 会按 ANSI 读成乱码报错）——依赖检查、词库质量、渲染回归、打包一致性、版本一致性、引擎测试共 33 项门禁，任一必需项失败即非零退出。
 - **从核心 Assets 重建内嵌资源**：`node 维护工具/重建汉化内核.js`；仅校验同步：追加 `--check`。
 - **逐版词条增量**：`localization/vXX-ui-additions.json` + `scripts/sync-vXX-localization.cjs`。
 - 汉化范围与保留项说明：[`docs/汉化范围说明-哪些不翻译.md`](docs/汉化范围说明-哪些不翻译.md)（为什么内容、专名与程序内部标识故意保留英文）。
@@ -104,6 +104,14 @@ Antigravity ZH/
 ---
 
 ## 📦 版本记录
+
+### v1.3.6 (内核 v74) — 适配 Antigravity 2.29.0（本地构建，未发布 GitHub）
+
+- **适配客户端**：Google Antigravity **2.29.0**（Windows x64），汉化内核升级至 **v74**，词条扩充至 **6,254 条**。2.29.0 更新再次清除已安装补丁与原件备份，需重新永久安装。
+- **官方更新内容**：主进程新增 7 个模块（`wcvBrowserRegistry`、`wcvIpcHandlers`、`guestDialogController`、`webviewDownloadRouting`、`windowState`、`externalUrl`、`wcvZOrderController`），`utils/main/ipcHandlers/preload` 等 6 个模块有实质变更；但 16 个注入锚点全部恰好命中 1 次，**注入引擎零改动**。前端字面量差分新增 4,296 个。
+- **词条**：新增 207 条 UI 词条，覆盖新版自动化/计划、语音模式、连接器/订阅、内置浏览器与下载、工作树/分支/远程、对话与卡片、问卷与侧边问题等界面文案；跳过 CSS/Tailwind 类名、开发者诊断、浏览器安全插页、语音音色名/人名与被 DOM 拆分的句子片段。v73 词条在新前端中保留良好。
+- **验证**：2.29.0 基线登记（原版 `290e1b7a…`）；真实原版隔离安装/重复安装/还原演习与引擎回归 41/41 通过；统一门禁 **33/33**（失败 0、跳过 0）；真实安装归档与隔离归档逐字节一致（`a32e0d93…`），安装内嵌 bundle == 源码（`910be17f…`）。**本地构建并已永久安装，尚未发布 GitHub。**
+- 证据：`work/2-29-0-probe/`。
 
 ### v1.3.5 (内核 v73) — 新增天青蓝气泡外观 + 会话统计状态条（本地构建，未发布 GitHub）
 

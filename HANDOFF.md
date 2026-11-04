@@ -2,7 +2,7 @@
 
 写给接手本项目维护工作的人。目标：**不依赖任何口头交接，读完这份 + 按清单跑一遍，就能独立完成"官方更新后重新适配"的全流程**。
 
-- 编写日期：2026-10-31（2026-11-02 随 v1.3.5 更新）。对应交接状态：管理器 v1.3.5 / 汉化内核 v73 / 适配 Antigravity 2.28.2 / 词库 6,047 条。
+- 编写日期：2026-10-31（2026-11-04 随 v1.3.6 更新）。对应交接状态：管理器 v1.3.6 / 汉化内核 v74 / 适配 Antigravity 2.29.0 / 词库 6,254 条。
 - 当前基线（版本、哈希、最近验证）**只看一处**：根目录 [`当前状态.json`](当前状态.json)。本文件的数字是交接时点快照。
 - 规范性流程（怎样才算做对、发布判定标准）在 [`docs/项目维护与交付指导书.md`](docs/项目维护与交付指导书.md)；本文件是实操手册，两者冲突时以指导书 + 实际门禁为准。
 
@@ -27,7 +27,7 @@ Google Antigravity 官方 Windows 客户端的中文汉化。两条腿：
 
 ```powershell
 cd "C:\Users\24844\Desktop\Tool\Antigravity ZH"
-powershell -ExecutionPolicy Bypass -File scripts/check-current.ps1
+pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 ```
 
 预期：**33 项门禁全 PASS**（失败 0、跳过 0）。这跑通了，说明环境、词库、内核、打包一致性全部健康——之后任何改动都以"门禁仍然全绿"为底线。浏览器回归需要 Chrome；安装层比较默认指向本机客户端 `%LOCALAPPDATA%\Programs\antigravity\resources\app.asar`。
@@ -138,7 +138,24 @@ powershell -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - `work/` 是 git 忽略的本机证据目录，换电脑即失效；台账里引用的哈希是可复核的最小事实，原始 bundle/asar 不保证长期存在。
 - **统计条边界**：token/缓存来自 `transcript.jsonl`，官方改日志格式或路径会失效；成本/额度是**估算/账号级**（非精确账单）；缓存 TTL 按 5 分钟假设；UI 选择器依赖输入底栏 DOM（`input-footer`、`permissions-selector-trigger`），官方改版可能需更新 `stats-hud.js`。
 
-## 10. v1.3.5 本轮交接纪要（2026-11-02）
+## 10. v1.3.6 本轮交接纪要（2026-11-04）
+
+**状态**：管理器 v1.3.6（内核 v74）**本地构建完成并已永久写入本机客户端（Antigravity 2.29.0），尚未发布到 GitHub**。
+
+**本轮适配要点（2.28.2 → 2.29.0）**
+- 主进程：新增 7 个模块（`wcvBrowserRegistry`/`wcvIpcHandlers`/`guestDialogController`/`webviewDownloadRouting`/`windowState`/`externalUrl`/`wcvZOrderController`），`utils/main/ipcHandlers/preload/scriptJail/updater` 等变更；但 anchor-coverage 的 **16 个锚点全部恰好命中 1 次 → AsarCleanPatcher 零改动**。
+- 前端：renderer 从缓存提取 `work/2-29-0-probe/renderer-candidate-0.js`（11,187,917 字节，sha `8d1196a2…`）；字面量新增 4,296、经 UI 过滤候选 349，收录 **207 条**新词条（`localization/v74-ui-additions.json` + `scripts/sync-v74-localization.cjs`）。
+- 内核：`translate.js` patchVersion **73 → 74**；词条 **6,254**；bundle sha `910be17f…`。
+- 基线：2.29.0 已登记（原版 `290e1b7a…`；已知补丁版 `a32e0d93…`）。
+- 验证：统一门禁 **33/33**（失败 0、跳过 0），引擎 41/41；真实安装归档 == 隔离归档（`a32e0d93…`），安装内嵌 bundle == 源码（`910be17f…`）。
+- 交付：根目录 `Antigravity汉化管理器.exe` 已更新为 v1.3.6（sha `a20c6f65…`）。
+
+**下一步（接手人）**
+1. 手动启动 Antigravity 2.29.0 实机验收：汉化、天青蓝气泡、统计状态条，以及新版自动化/语音/连接器/下载等界面。
+2. 若发布：按 Playbook C 打包 v1.3.6 并 `gh release create`（EXE 74MB，按第 6 节第 6 条分步上传）。
+3. 注意：`scripts/check-current.ps1` 含中文且无 BOM，**必须用 pwsh 7**（5.1 会按 ANSI 读成乱码并报解析错误）。
+
+## 11. v1.3.5 本轮交接纪要（2026-11-02）
 
 **状态**：管理器 v1.3.5 **本地构建完成、已写入本机客户端，但未发布到 GitHub**（最新已发布仍是 v1.3.4）。本轮改动已本地提交（未推送）。
 
