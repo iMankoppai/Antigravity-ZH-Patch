@@ -141,17 +141,17 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - **统计条边界**：token/缓存来自 `transcript.jsonl`，官方改日志格式或路径会失效；成本/额度是**估算/账号级**（非精确账单）；缓存 TTL 按 5 分钟假设；UI 选择器依赖输入底栏 DOM（`input-footer`、`permissions-selector-trigger`），官方改版可能需更新 `stats-hud.js`。
 - **技能正文边界**：弹窗正文按 SKILL.md 的 24KB 预览 fingerprint 匹配；官方改正文会导致失配、回退英文。bundle 因含 494 篇正文约 10.7MB，页面注入较重。`build-skill-detail-views.cjs` 重跑会清空 partner additionalDocuments，需用 `integrate-plugin-docs.cjs` 逐插件恢复；译文原文在 `localization/partner-skill-docs/`。
 
-## 10. v1.3.6 本轮交接纪要（2026-11-04）
+## 10. 当前状态与技能正文（v1.3.6 / Antigravity 2.29.0）
 
 **状态**：管理器 v1.3.6（内核 v74）**本地构建完成并已永久写入本机客户端（Antigravity 2.29.0），尚未发布到 GitHub**。
 
-**本轮适配要点（2.28.2 → 2.29.0）**
+**适配现状要点**
 - 主进程：新增 7 个模块（`wcvBrowserRegistry`/`wcvIpcHandlers`/`guestDialogController`/`webviewDownloadRouting`/`windowState`/`externalUrl`/`wcvZOrderController`），`utils/main/ipcHandlers/preload/scriptJail/updater` 等变更；但 anchor-coverage 的 **16 个锚点全部恰好命中 1 次 → AsarCleanPatcher 零改动**。
-- 前端：renderer 从缓存提取 `work/2-29-0-probe/renderer-candidate-0.js`（11,187,917 字节，sha `8d1196a2…`）；字面量新增 4,296、经 UI 过滤候选 349，收录 **787 条**新词条（210 条 2.29 新 UI：`v74-ui-additions.json`；62 条「自定义项」市场卡片：`v74-marketplace-additions.json`；515 条「自定义项」插件详情页：`v74-marketplace-detail-additions.json` + `sync-v74-marketplace-detail.cjs`）。
+- 前端：2.29 renderer 字面量新增 4,296，收录 **787 条**新词条（210 条 2.29 新 UI：`v74-ui-additions.json`；62 条「自定义项」市场卡片：`v74-marketplace-additions.json`；515 条「自定义项」插件详情页：`v74-marketplace-detail-additions.json` + `sync-v74-marketplace-detail.cjs`）。
 - 内核：`translate.js` patchVersion **73 → 74**；词条 **6,834**；bundle sha `d48b2f5d…`（含技能正文后约 10.7MB）。
 - 自定义项市场：实机 CDP 只读导出 68 张插件卡片（含“再查看”展开项）+ 5 个分类；并从 51 个 partner 插件包（`marketplace.json` + 各 zip）提取详情页的建议提示词/技能/代理/规则描述逐条汉化；产品名等专名、代码/路径/URL、免责声明保留英文。新增 `marketplace-cards-regression.cjs`（11 项）与 `marketplace-detail-regression.cjs`（6 项），均纳入门禁。
 - 计划编辑器结构适配：2.29.0 用 `schedule-repeat` 下拉取代了 `schedule-frequency-trigger[data-frequency]`；`on` 连接词判断改为两种结构兼容（custom→“规则”、其余→“在”），补 `hours/week/month` 单位词条，并新增 `tests/renderer/schedule-summary-regression.cjs`（8 项，已纳入统一门禁）。
-- 技能正文（SKILL.md 全文）：把「命令/技能」弹窗（`[data-testid="doc-row-modal"]`，正文为 SKILL.md markdown，市场预览截断 24KB）汉化。项目 `translate.js` 本就按正文 fingerprint/签名从 `skill-details.json` 匹配并替换成 `renderedHtml`；本轮把 **44 个合作插件、494 篇 SKILL.md** 全文译成中文，接入 `skill-details.additionalDocuments`（共 **499** 条，含原 6 条；其中 493 条为 partner 正文，1 篇 canva-cli 仅 frontmatter 无正文已跳过）。官方 140 篇沿用原目录。
+- 技能正文（SKILL.md 全文）：把「命令/技能」弹窗（`[data-testid="doc-row-modal"]`，正文为 SKILL.md markdown，市场预览截断 24KB）汉化。`translate.js` 按正文 fingerprint/签名从 `skill-details.json` 匹配并替换成 `renderedHtml`；已把 **44 个合作插件、494 篇 SKILL.md** 全文译成中文，接入 `skill-details.additionalDocuments`（共 **499** 条，含原 6 条；其中 493 条为 partner 正文，1 篇 canva-cli 仅 frontmatter 无正文跳过）。官方 140 篇沿用原目录。
   - 译文源与映射：中文 markdown 已固化到 `localization/partner-skill-docs/<slug>/<相对路径>`（44 目录 / 494 文件 / 约 5.9MB，受版本管理）；生成脚本在 `维护工具/partner-skill-docs/`（`integrate-plugin-docs.cjs`、`coverage.js`、`verify-plugin-doc.cjs`、`partner-urls.json`）。
   - 每条 additionalDocument 含 `markdownLength/markdownFingerprint`（英文正文 fingerprint）+ `signature` + 中文 `renderedHtml`，弹窗按此精确命中。
   - ⚠️ 维护陷阱：`scripts/build-skill-detail-views.cjs` 只按官方 fixtures 重建 `skill-details.json`，**重跑会丢掉全部 partner additionalDocuments**；若必须重跑，之后要对 44 个 slug 逐个再跑 `integrate-plugin-docs.cjs` 恢复。
@@ -166,38 +166,3 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 3. 注意：`scripts/check-current.ps1` 含中文且无 BOM，**必须用 pwsh 7**（5.1 会按 ANSI 读成乱码并报解析错误）。
 4. 技能正文再生/维护见上方"技能正文"小节与 `localization/partner-skill-docs/README.md`。
 
-## 11. v1.3.5 本轮交接纪要（2026-11-02）
-
-**状态**：管理器 v1.3.5 **本地构建完成、已写入本机客户端，但未发布到 GitHub**（最新已发布仍是 v1.3.4）。本轮改动已本地提交（未推送）。
-
-**本轮新增**
-- 天青蓝对话气泡外观（运行时 + 永久内嵌，默认关）。
-- 会话统计状态条（DSH 风格）：底栏三组内联（⏱ 轮/步·tok/s ｜ 🗄 总tok·缓存命中 ｜ ◔ 上下文%），在模型与右侧控件间的中间空白区居中；点击各组弹出对应独立卡片（⏱ 会话统计 / 🗄 Token 用量 / ◔ 上下文已用），三卡不连体，单色、数值常规字重、组内正常空格，模型名保护不截断；永久内嵌、随客户端启动自动显示；开关 `%APPDATA%\Antigravity\zh-stats.json`。
-- 新增文件：`Assets/theme-azure-bubble.css`、`Assets/stats-hud.js`、`Services/StatsHudService.cs`、`tests/renderer/azure-theme-regression.cjs`。
-- 改动文件：`维护工具/内核生成器.js`（内嵌 theme/stats + `attach()` 采集）、`CdpHotPatcher.cs`（页面目标/主题/评估）、`CompatibilityRepairService.cs`（ManagerOptions.AzureBubble）、`MainWindow.xaml(.cs)`（天青蓝+统计条开关）、`engine-tests/Program.cs`（`--stats/--stats-hud-*` + 指标用例）、`generator-consistency.cjs`（统计条标记）、`client-baselines.json`（新安装归档）、`scripts/check-current.ps1`（新增 azure-theme 回归，门禁 33 项）。
-
-**关键哈希（可复核）**
-- 源码 bundle：`b2d318fdf1b2c74b03a13240c155d085b1ea087193fab4d797eb6c1280d79610`
-- 本机安装 app.asar：`36c5c16a51da0194952bf7dfda489427a9f34b71ee673d32cfacfc8e67b3d5fa`（安装内嵌 bundle == 源码）
-- 根目录 EXE：`a32bfabd327da88b90e21056e0a6b498b9412ae51da3f2d165bb5bd5dd5b7076`
-- 发布 ZIP：`371ad9d07a9bb0669b66c8e0f05ead71242c7fdadf8a33f2996c71b482b82050`
-
-**验证**：统一门禁 33/33；引擎 41/41 + 6 统计指标用例；天青蓝渲染回归 11 项；统计条无头夹具通过。真实安装归档 == 源码 bundle。
-
-**下一步（接手人）**
-1. 启动 Antigravity 确认统计条自动出现、三组在中间空白区居中、点击各组弹出对应卡片；确认主题/汉化正常。
-2. **发布 v1.3.5 到 GitHub**（Playbook C）：`gh release create v1.3.5` + 分步上传资产（EXE/ZIP 74MB，按第 6 节第 6 条）；发布后把 README/当前状态里的"未发布"改回"已发布"，`v135Verification.released=true`。
-3. 提交本轮改动（含 4 个新文件），补 `docs/history/v1.3.5-外观与统计条.md`（可选）。
-4. 可选微调：统计条图标可换成内联 SVG（现用 `⏱`/`🗄`/`◔` 字符）；布局已改为在中间空白区居中、数值常规字重。
-
-## 12. 参考/竞品速览（2026-11-02 调研）
-
-做统计条时的同类方案，供后续迭代参考（外部链接，注意各自 License）：
-- **Antigravity-Context-Window-Monitor**（IDE 扩展，最完整）：状态栏 token/上下文，读 Language Server 的 planner 响应/checkpoint，含配额/成本/模型活动/缓存命中仪表盘。github.com/AGI-is-going-to-arrive/Antigravity-Context-Window-Monitor
-- **bekirand/context-monitor**（IDE 插件 + 桌面浮动 HUD）：**直接读 `transcript.jsonl` 的 `input_tokens/cache_read_tokens`**，预测 auto-compaction、Safe Handoff。github.com/bekirand/context-monitor
-- **BetterGravity**（桌面版插件平台）：主题/纯 JS 插件/接口钩子/读 React 树/按 RPC 拦截 LS 流量/更新守护/可还原。github.com/YashjitPal/BetterGravity
-- **agy-hud**（Antigravity CLI 状态栏）：读 CLI 状态栏 JSON（`total_input_tokens/context_window_size/cost/quota`），配额走本地 `GetUserStatus`/`agy -p /usage`。github.com/franksde/agy-hud
-- **tokenline**（Claude/Gemini CLI）：缓存 TTL 倒计时、缓存节省%、5h/7d 限速节奏。github.com/inbrace-tech/tokenline
-- **usage / ai-status**（托盘/菜单栏）：跨工具配额/燃烧率/成本、HTML 报告。github.com/aqua5230/usage · github.com/gelzinn/ai-status
-- **benjihio/antigravity-chinese-patch**：另一套汉化补丁，含 Serif 字体优化、`app.asar.unpacked` 版本化备份、`--dry-run/--restore`。
-- 官方 Antigravity CLI 有 `/context` 命令可看上下文占用与分类明细。
