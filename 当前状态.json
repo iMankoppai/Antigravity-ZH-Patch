@@ -1,6 +1,6 @@
 {
   "project": "Antigravity-ZH",
-  "version": "1.3.6",
+  "version": "1.4.0",
   "adaptedAppVersion": "2.29.0",
   "termsCount": 6834,
   "architecture": "C# .NET 8 WPF Single-File Self-Contained EXE",
@@ -15,12 +15,12 @@
   "isolatedAsarSha256": "568409e59ebba687c6a7357b766d0b687d932b8cc1a1aff4f117c28b151c5491",
   "isolatedAsarNote": "2.29.0 隔离验证归档（含计划编辑器 on 连接词修复；词条 6,257）。",
   "installedKernelSha256": "d48b2f5ddcbedd0fa1f83c1a6f9673b271d86cff68334b9204baed8a16d81313",
-  "managerExeSha256": "5992df6b4880dc4adf917b964a7312d16a584b47fb0a491f59432f404ecdba0d",
+  "managerExeSha256": "a4121d00a232fe8c964c442724560fb16507a892e51eacf87b60e6f0aadd5794",
   "managerExeNote": "v1.3.6（内核 v74 + 适配 Antigravity 2.29.0）本地构建完成并已写入本机客户端；未发布到 GitHub Releases。",
-  "releaseZip": null,
-  "releaseZipSha256": null,
-  "publishedInfo": "v1.3.6；本地构建并已永久安装到本机客户端（未打包发布到 GitHub Releases）。",
-  "updatedAt": "2026-11-04T06:59:01.748Z",
+  "releaseZip": "Antigravity-ZH-1.4.0-Windows-x64.zip",
+  "releaseZipSha256": "bf3e6322b59959eb2ba26c3a9d1b576bb621b5a02e3ce97e15dd61a939f26d3d",
+  "publishedInfo": "即将发布 v1.4.0 到 GitHub Releases",
+  "updatedAt": "2026-11-04T08:36:16.871Z",
   "patchVersion": 74,
   "installedPatchVersion": 74,
   "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.1",
@@ -159,7 +159,7 @@
     "releaseZipSha256": "dd093b39699d56890ef9284e77ecef53d9baf52bd1ed19f03a559f41a4738221"
   },
   "pendingRelease": true,
-  "nextAction": "已永久安装 568409e5 内核，可启动客户端验收技能弹窗正文；如需发布按 Playbook C 打包 v1.3.6",
+  "nextAction": "推送 main 并创建 GitHub Release v1.4.0（EXE + ZIP）",
   "v136Verification": {
     "performed": true,
     "checkedAt": "2026-11-04T06:48:13.795Z",
@@ -174,8 +174,8 @@
     "pristineAsarSha256": "290e1b7a1caa430a0c5367c7b433e8d284e2ca5d0b305e91e5ce8ec926f43283",
     "isolatedAsarSha256": "568409e59ebba687c6a7357b766d0b687d932b8cc1a1aff4f117c28b151c5491",
     "installedAsarSha256": "568409e59ebba687c6a7357b766d0b687d932b8cc1a1aff4f117c28b151c5491",
-    "managerVersion": "1.3.6",
-    "managerExeSha256": "5992df6b4880dc4adf917b964a7312d16a584b47fb0a491f59432f404ecdba0d",
+    "managerVersion": "1.4.0",
+    "managerExeSha256": "a4121d00a232fe8c964c442724560fb16507a892e51eacf87b60e6f0aadd5794",
     "themeRegressionChecks": 11,
     "statsMetricsChecks": 6,
     "engineTests": 41,
@@ -187,7 +187,8 @@
     "rendererMarketplaceChecks": 11,
     "rendererMarketplaceDetailChecks": 6,
     "skillBodyFiles": 494,
-    "skillBodyDocs": 499
+    "skillBodyDocs": 499,
+    "releaseZipSha256": "bf3e6322b59959eb2ba26c3a9d1b576bb621b5a02e3ce97e15dd61a939f26d3d"
   },
   "skillBody": {
     "implemented": true,

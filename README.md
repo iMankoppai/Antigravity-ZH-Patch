@@ -1,6 +1,6 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.3.6-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Release](https://img.shields.io/badge/Release-v1.4.0-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Antigravity](https://img.shields.io/badge/Antigravity-2.29.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
@@ -8,7 +8,7 @@
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前源码版本 v1.3.6（汉化内核 v74）适配 Google Antigravity 2.29.0（Windows x64）；v1.3.6 为本地构建并已永久安装到本机客户端，尚未发布到 GitHub Releases（已发布最新为 v1.3.4）。** 界面词条 **6,834 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情，以及 **44 个合作插件的 494 篇技能正文**汉化。官方更新导致汉化失效时，可运行管理器重新安装，或点击【新版汉化适配】热恢复，详见 [`docs/新版汉化适配.md`](docs/新版汉化适配.md)。
+> **当前版本 v1.4.0（汉化内核 v74）适配 Google Antigravity 2.29.0（Windows x64），已发布到 GitHub Releases。** 界面词条 **6,834 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情，以及 **44 个合作插件的 494 篇技能正文**汉化。官方更新导致汉化失效时，可运行管理器重新安装，或点击【新版汉化适配】热恢复，详见 [`docs/新版汉化适配.md`](docs/新版汉化适配.md)。
 
 ---
 
@@ -57,7 +57,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
 2. 下载 **`AntigravityZhManager.exe`**，或使用项目根目录 / `dist/` 中的交付包；
-   > 说明：**v1.3.6 目前是本地构建、尚未上传 GitHub Releases**（已发布最新为 v1.3.4）。需要 v1.3.6 可直接运行本项目根目录的 `Antigravity汉化管理器.exe`。
+   > 说明：**v1.4.0 已发布到 GitHub Releases**；也可直接运行本项目根目录的 `Antigravity汉化管理器.exe`。
 3. 双击下载的 EXE，或解压 ZIP 后运行其中的 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -100,7 +100,7 @@ Antigravity ZH/
 
 ## 📦 版本记录
 
-### v1.3.6 (内核 v74) — 适配 Antigravity 2.29.0（本地构建，未发布 GitHub）
+### v1.4.0 (内核 v74) — 适配 Antigravity 2.29.0（已发布 GitHub）
 
 - **适配新版客户端**：支持 Google Antigravity **2.29.0**（Windows x64）。官方更新后重新"永久安装"即可恢复中文。
 - **新增界面汉化**：自动化/计划任务、语音模式、连接器与订阅、内置浏览器与下载、工作树/分支/远程、问卷与侧边问题等新版界面。
