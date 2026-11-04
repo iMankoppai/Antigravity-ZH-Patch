@@ -19,11 +19,11 @@
   "managerExeNote": "v1.3.6（内核 v74 + 适配 Antigravity 2.29.0）本地构建完成并已写入本机客户端；未发布到 GitHub Releases。",
   "releaseZip": "Antigravity-ZH-1.4.0-Windows-x64.zip",
   "releaseZipSha256": "bf3e6322b59959eb2ba26c3a9d1b576bb621b5a02e3ce97e15dd61a939f26d3d",
-  "publishedInfo": "即将发布 v1.4.0 到 GitHub Releases",
-  "updatedAt": "2026-11-04T08:36:16.871Z",
+  "publishedInfo": "v1.4.0 已发布到 GitHub Releases：https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.0",
+  "updatedAt": "2026-11-04T08:42:53.561Z",
   "patchVersion": 74,
   "installedPatchVersion": 74,
-  "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.3.1",
+  "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.0",
   "trayIcon": {
     "palette": "violet-purple",
     "bitDepth": 32,
@@ -159,7 +159,7 @@
     "releaseZipSha256": "dd093b39699d56890ef9284e77ecef53d9baf52bd1ed19f03a559f41a4738221"
   },
   "pendingRelease": true,
-  "nextAction": "推送 main 并创建 GitHub Release v1.4.0（EXE + ZIP）",
+  "nextAction": "v1.4.0 已发布；如实机发现技能弹窗残留英文，按插件补译后再发补丁版本",
   "v136Verification": {
     "performed": true,
     "checkedAt": "2026-11-04T06:48:13.795Z",
@@ -180,7 +180,7 @@
     "statsMetricsChecks": 6,
     "engineTests": 41,
     "rendererScheduleChecks": 8,
-    "released": false,
+    "released": true,
     "evidence": "work/2-29-0-probe/",
     "note": "v1.3.6 适配 Antigravity 2.29.0：UI 词条 210 + 自定义项市场卡片 62 + 详情摘要 515；**技能正文（SKILL.md）** 将 44 个 partner 插件、494 篇正文经 skill-details 管线渲染为中文（additionalDocuments=499），弹窗 doc-row-modal 按 fingerprint 匹配替换。内核 v74、词条 6,834、bundle d48b2f5d…；统一门禁 36/36，引擎 41/41。隔离归档 568409e5… 与 bundle 一致。本地构建，未发布 GitHub。",
     "rendererScheduledChecks": 8,
@@ -188,7 +188,9 @@
     "rendererMarketplaceDetailChecks": 6,
     "skillBodyFiles": 494,
     "skillBodyDocs": 499,
-    "releaseZipSha256": "bf3e6322b59959eb2ba26c3a9d1b576bb621b5a02e3ce97e15dd61a939f26d3d"
+    "releaseZipSha256": "bf3e6322b59959eb2ba26c3a9d1b576bb621b5a02e3ce97e15dd61a939f26d3d",
+    "releaseTag": "v1.4.0",
+    "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.0"
   },
   "skillBody": {
     "implemented": true,
