@@ -2,7 +2,7 @@
 
 写给接手本项目维护工作的人。目标：**不依赖任何口头交接，读完这份 + 按清单跑一遍，就能独立完成"官方更新后重新适配"的全流程**。
 
-- 编写日期：2026-10-31（2026-11-04 随 v1.3.6 更新）。对应交接状态：管理器 v1.3.6 / 汉化内核 v74 / 适配 Antigravity 2.29.0 / 词库 6,834 条。
+- 编写日期：2026-10-31（2026-11-04 随 v1.4.0 更新）。对应交接状态：管理器 v1.4.0 / 汉化内核 v74 / 适配 Antigravity 2.29.0 / 词库 6,834 条。
 - 当前基线（版本、哈希、最近验证）**只看一处**：根目录 [`当前状态.json`](当前状态.json)。本文件的数字是交接时点快照。
 - 规范性流程（怎样才算做对、发布判定标准）在 [`docs/项目维护与交付指导书.md`](docs/项目维护与交付指导书.md)；本文件是实操手册，两者冲突时以指导书 + 实际门禁为准。
 
@@ -105,7 +105,7 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 
 ## 7. 核心任务 Playbook C：发布
 
-> **现状**：v1.3.6 已完成本地构建、重编并写入本机客户端，但**尚未发布到 GitHub**（`当前状态.json` 的 `publishedInfo` 已标"未发布"）。发布时从本节第 1 步重走一遍，并把 README 徽章/头部里的"未发布"措辞改回"已发布"。
+> **现状**：v1.4.0 已完成构建并发布到 GitHub Releases（<https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.0>）。再次发版时从本节第 1 步重走一遍。
 
 1. `csproj` 三处版本号（Version/FileVersion/AssemblyVersion）→ README（徽章、头部、下载名、版本记录条目）→ `当前状态.json`（version/patchVersion/哈希/verification 块）。
 2. `dotnet publish -c Release -r win-x64 --self-contained true` 到独立候选目录（首次需先 restore）。
@@ -141,9 +141,9 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - **统计条边界**：token/缓存来自 `transcript.jsonl`，官方改日志格式或路径会失效；成本/额度是**估算/账号级**（非精确账单）；缓存 TTL 按 5 分钟假设；UI 选择器依赖输入底栏 DOM（`input-footer`、`permissions-selector-trigger`），官方改版可能需更新 `stats-hud.js`。
 - **技能正文边界**：弹窗正文按 SKILL.md 的 24KB 预览 fingerprint 匹配；官方改正文会导致失配、回退英文。bundle 因含 494 篇正文约 10.7MB，页面注入较重。`build-skill-detail-views.cjs` 重跑会清空 partner additionalDocuments，需用 `integrate-plugin-docs.cjs` 逐插件恢复；译文原文在 `localization/partner-skill-docs/`。
 
-## 10. 当前状态与技能正文（v1.3.6 / Antigravity 2.29.0）
+## 10. 当前状态与技能正文（v1.4.0 / Antigravity 2.29.0）
 
-**状态**：管理器 v1.3.6（内核 v74）**本地构建完成并已永久写入本机客户端（Antigravity 2.29.0），尚未发布到 GitHub**。
+**状态**：管理器 v1.4.0（内核 v74）已构建、永久写入本机客户端（Antigravity 2.29.0），并**已发布到 GitHub Releases**。
 
 **适配现状要点**
 - 主进程：新增 7 个模块（`wcvBrowserRegistry`/`wcvIpcHandlers`/`guestDialogController`/`webviewDownloadRouting`/`windowState`/`externalUrl`/`wcvZOrderController`），`utils/main/ipcHandlers/preload/scriptJail/updater` 等变更；但 anchor-coverage 的 **16 个锚点全部恰好命中 1 次 → AsarCleanPatcher 零改动**。
@@ -158,11 +158,11 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
   - 注：bundle 因容纳正文增至约 10.7MB，页面注入略重；若实测卡顿，可改为按技能懒加载。
 - 基线：2.29.0 已登记（原版 `290e1b7a…`；已知补丁版 `a32e0d93…` / `8e822fc8…` / `779388c0…` / `f775a0a4…` / `568409e5…`）。
 - 验证：统一门禁 **36/36**（失败 0、跳过 0），引擎 41/41；安装归档与隔离归档逐字节一致（`568409e5…`），内嵌 bundle == 源码（`d48b2f5d…`）。已永久安装 v74 / 6,834 条 + 494 篇技能正文到本机客户端。
-- 交付：根目录 `Antigravity汉化管理器.exe` 已更新为 v1.3.6（sha `5992df6b…`，约 79MB）。
+- 交付：根目录 `Antigravity汉化管理器.exe` 为 v1.4.0（sha `a4121d00…`，约 79MB）；发布 ZIP `Antigravity-ZH-1.4.0-Windows-x64.zip`（sha `bf3e6322…`）；Release：<https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.0>。
 
 **下一步（接手人）**
 1. 手动启动 Antigravity 2.29.0 实机验收：汉化、天青蓝气泡、统计状态条、**命令/技能弹窗正文**（如 `/mongodb-connection`、`/figma-use`、harness/vercel 任意技能），以及新版自动化/语音/连接器/下载等界面。
-2. 若发布：按 Playbook C 打包 v1.3.6 并 `gh release create`（EXE 约 79MB，按第 6 节第 6 条分步上传）。
+2. 若再发版：按 Playbook C 打包并 `gh release create`（EXE 约 79MB，按第 6 节第 6 条分步上传）。
 3. 注意：`scripts/check-current.ps1` 含中文且无 BOM，**必须用 pwsh 7**（5.1 会按 ANSI 读成乱码并报解析错误）。
 4. 技能正文再生/维护见上方"技能正文"小节与 `localization/partner-skill-docs/README.md`。
 

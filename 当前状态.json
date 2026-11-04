@@ -16,11 +16,11 @@
   "isolatedAsarNote": "2.29.0 隔离验证归档（含计划编辑器 on 连接词修复；词条 6,257）。",
   "installedKernelSha256": "d48b2f5ddcbedd0fa1f83c1a6f9673b271d86cff68334b9204baed8a16d81313",
   "managerExeSha256": "a4121d00a232fe8c964c442724560fb16507a892e51eacf87b60e6f0aadd5794",
-  "managerExeNote": "v1.3.6（内核 v74 + 适配 Antigravity 2.29.0）本地构建完成并已写入本机客户端；未发布到 GitHub Releases。",
+  "managerExeNote": "v1.4.0（内核 v74 + 适配 Antigravity 2.29.0）已发布到 GitHub Releases。",
   "releaseZip": "Antigravity-ZH-1.4.0-Windows-x64.zip",
   "releaseZipSha256": "bf3e6322b59959eb2ba26c3a9d1b576bb621b5a02e3ce97e15dd61a939f26d3d",
   "publishedInfo": "v1.4.0 已发布到 GitHub Releases：https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.0",
-  "updatedAt": "2026-11-04T08:42:53.561Z",
+  "updatedAt": "2026-11-04T08:46:21.588Z",
   "patchVersion": 74,
   "installedPatchVersion": 74,
   "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.0",
@@ -60,7 +60,7 @@
       "available": true,
       "default": false,
       "installedToClient": true,
-      "releaseStatus": "v1.3.6 已构建并永久安装到本机客户端（主题默认关，可在管理器开启）；未发布 GitHub",
+      "releaseStatus": "v1.4.0 已发布 GitHub Releases（主题默认关，可在管理器开启）",
       "runtimeMode": "CDP 运行时注入/移除（CdpHotPatcher.SetThemeAsync）",
       "permanentMode": "zh-bundle.attach() 读取 %APPDATA%\\Antigravity\\zh-theme.json 自动应用",
       "configPath": "%APPDATA%\\Antigravity\\zh-theme.json",
@@ -160,7 +160,18 @@
   },
   "pendingRelease": true,
   "nextAction": "v1.4.0 已发布；如实机发现技能弹窗残留英文，按插件补译后再发补丁版本",
-  "v136Verification": {
+  "skillBody": {
+    "implemented": true,
+    "source": "skill-details.json additionalDocuments (partner skill body renderedHtml)",
+    "partnerPlugins": 44,
+    "partnerSkillFiles": 494,
+    "catalogAdditionalDocuments": 499,
+    "popupSelector": "[data-testid=\"doc-row-modal\"]",
+    "note": "SKILL.md 正文中文 markdown 存于 localization/partner-skill-docs/<slug>/；经 integrate-plugin-docs.cjs 渲染为 renderedHtml 并入 skill-details.additionalDocuments（499 条）。重跑 build-skill-detail-views.cjs 会清空 partner 条目。",
+    "translationsDir": "localization/partner-skill-docs/",
+    "generator": "维护工具/partner-skill-docs/integrate-plugin-docs.cjs"
+  },
+  "v140Verification": {
     "performed": true,
     "checkedAt": "2026-11-04T06:48:13.795Z",
     "clientVersion": "2.29.0",
@@ -182,7 +193,7 @@
     "rendererScheduleChecks": 8,
     "released": true,
     "evidence": "work/2-29-0-probe/",
-    "note": "v1.3.6 适配 Antigravity 2.29.0：UI 词条 210 + 自定义项市场卡片 62 + 详情摘要 515；**技能正文（SKILL.md）** 将 44 个 partner 插件、494 篇正文经 skill-details 管线渲染为中文（additionalDocuments=499），弹窗 doc-row-modal 按 fingerprint 匹配替换。内核 v74、词条 6,834、bundle d48b2f5d…；统一门禁 36/36，引擎 41/41。隔离归档 568409e5… 与 bundle 一致。本地构建，未发布 GitHub。",
+    "note": "v1.4.0 适配 Antigravity 2.29.0：UI 词条 210 + 自定义项市场卡片 62 + 详情摘要 515 + 技能正文 494 篇（additionalDocuments=499）；内核 v74、词条 6,834、bundle d48b2f5d…；门禁 36/36，引擎 41/41；安装归档 568409e5… 与隔离一致。已发布 GitHub Releases v1.4.0。",
     "rendererScheduledChecks": 8,
     "rendererMarketplaceChecks": 11,
     "rendererMarketplaceDetailChecks": 6,
@@ -191,16 +202,5 @@
     "releaseZipSha256": "bf3e6322b59959eb2ba26c3a9d1b576bb621b5a02e3ce97e15dd61a939f26d3d",
     "releaseTag": "v1.4.0",
     "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.0"
-  },
-  "skillBody": {
-    "implemented": true,
-    "source": "skill-details.json additionalDocuments (partner skill body renderedHtml)",
-    "partnerPlugins": 44,
-    "partnerSkillFiles": 494,
-    "catalogAdditionalDocuments": 499,
-    "popupSelector": "[data-testid=\"doc-row-modal\"]",
-    "note": "SKILL.md 正文中文 markdown 存于 localization/partner-skill-docs/<slug>/；经 integrate-plugin-docs.cjs 渲染为 renderedHtml 并入 skill-details.additionalDocuments（499 条）。重跑 build-skill-detail-views.cjs 会清空 partner 条目。",
-    "translationsDir": "localization/partner-skill-docs/",
-    "generator": "维护工具/partner-skill-docs/integrate-plugin-docs.cjs"
   }
 }
