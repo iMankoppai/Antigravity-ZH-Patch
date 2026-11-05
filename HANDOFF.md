@@ -2,7 +2,7 @@
 
 写给接手本项目维护工作的人。目标：**不依赖任何口头交接，读完这份 + 按清单跑一遍，就能独立完成"官方更新后重新适配"的全流程**。
 
-- 编写日期：2026-10-31（2026-11-04 随 v1.4.0 更新）。对应交接状态：管理器 v1.4.0 / 汉化内核 v74 / 适配 Antigravity 2.29.0 / 词库 6,834 条。
+- 编写日期：2026-10-31（2026-11-04 随 v1.4.0 更新；2026-11-05 本机应用“短消息气泡单行”修复）。对应交接状态：管理器 v1.4.0 / 汉化内核 v74 / 适配 Antigravity 2.29.0 / 词库 6,834 条。
 - 当前基线（版本、哈希、最近验证）**只看一处**：根目录 [`当前状态.json`](当前状态.json)。本文件的数字是交接时点快照。
 - 规范性流程（怎样才算做对、发布判定标准）在 [`docs/项目维护与交付指导书.md`](docs/项目维护与交付指导书.md)；本文件是实操手册，两者冲突时以指导书 + 实际门禁为准。
 
@@ -102,6 +102,7 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 10. **渲染回归偶发 EBUSY**：`status-label-regression` 等无头 Chrome 用例偶发 `EBUSY ... DevToolsActivePort`（Chrome 临时 profile 句柄竞争）。单跑/复跑即过，不是代码问题；重跑全量即可。
 11. **Antigravity 无法从 agent 会话启动**：本环境 `Start-Process Antigravity.exe` 会立即退出（拿不到窗口），验证 UI 必须由用户手动启动。装内核关闭客户端时，优雅关闭常失败（超时/APP_NOT_FOUND），需 `taskkill /F /T /IM Antigravity.exe`（客户端空闲且已获授权时）。
 12. **统计条数据源是磁盘日志**：渲染层**没有** `require`/fs（已实测 `require=undefined`、`electronNative` 无文件 API），token 数据只能从 `transcript.jsonl` 读，只能在**主进程（`attach()`）或管理器侧**采集；不要在页面脚本里尝试读文件。
+13. **短消息气泡折行是 max-width 逐级百分比叠加**：2.29 用户消息层级存在 80%（官方 `max-w-[80%]`）+ 82%（外层）+ 82%（气泡框）三级 `max-width`，再叠加外层 `width: fit-content`，短句可用宽度会被压到约 96px（≈4 汉字/行）而折成两行；长句因内容够宽看不出。修复见 `theme-azure-bubble.css` 第 8 节（最外层整列宽、只保留单一 53% 总上限、内层不再逐级收窄）。排查这类宽度问题，实机用 CDP 打印祖先链每一层的 `computed width / minWidth / maxWidth` 最快，不要只盯最终元素。回归：`tests/renderer/azure-theme-regression.cjs`（含 2.29 真实层级夹具）。
 
 ## 7. 核心任务 Playbook C：发布
 
@@ -140,15 +141,16 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - `work/` 是 git 忽略的本机证据目录，换电脑即失效；台账里引用的哈希是可复核的最小事实，原始 bundle/asar 不保证长期存在。
 - **统计条边界**：token/缓存来自 `transcript.jsonl`，官方改日志格式或路径会失效；成本/额度是**估算/账号级**（非精确账单）；缓存 TTL 按 5 分钟假设；UI 选择器依赖输入底栏 DOM（`input-footer`、`permissions-selector-trigger`），官方改版可能需更新 `stats-hud.js`。
 - **技能正文边界**：弹窗正文按 SKILL.md 的 24KB 预览 fingerprint 匹配；官方改正文会导致失配、回退英文。bundle 因含 494 篇正文约 10.7MB，页面注入较重。`build-skill-detail-views.cjs` 重跑会清空 partner additionalDocuments，需用 `integrate-plugin-docs.cjs` 逐插件恢复；译文原文在 `localization/partner-skill-docs/`。
+- **天青蓝气泡宽度选择器依赖 2.29 用户消息 DOM**：短句单行修复基于 `user-input-step > div.w-full > div`（官方 `max-w-[80%]` 包裹层）等层级；官方若重构该结构，需同步更新 `theme-azure-bubble.css` 第 8 节，`azure-theme-regression.cjs` 会兜住这一层。
 
 ## 10. 当前状态与技能正文（v1.4.0 / Antigravity 2.29.0）
 
-**状态**：管理器 v1.4.0（内核 v74）已构建、永久写入本机客户端（Antigravity 2.29.0），并**已发布到 GitHub Releases**。
+**状态**：管理器 v1.4.0（内核 v74）已构建、永久写入本机客户端（Antigravity 2.29.0），并**已发布到 GitHub Releases**。2026-11-05 另在本机应用「短消息气泡单行」修复（bundle `0f29e10f…`、安装归档 `7d6b2c74…`），该修复**未发布**——当前哈希以 `当前状态.json` 的 `localFix20261105` 为准。
 
 **适配现状要点**
 - 主进程：新增 7 个模块（`wcvBrowserRegistry`/`wcvIpcHandlers`/`guestDialogController`/`webviewDownloadRouting`/`windowState`/`externalUrl`/`wcvZOrderController`），`utils/main/ipcHandlers/preload/scriptJail/updater` 等变更；但 anchor-coverage 的 **16 个锚点全部恰好命中 1 次 → AsarCleanPatcher 零改动**。
 - 前端：2.29 renderer 字面量新增 4,296，收录 **787 条**新词条（210 条 2.29 新 UI：`v74-ui-additions.json`；62 条「自定义项」市场卡片：`v74-marketplace-additions.json`；515 条「自定义项」插件详情页：`v74-marketplace-detail-additions.json` + `sync-v74-marketplace-detail.cjs`）。
-- 内核：`translate.js` patchVersion **73 → 74**；词条 **6,834**；bundle sha `d48b2f5d…`（含技能正文后约 10.7MB）。
+- 内核：`translate.js` patchVersion **73 → 74**；词条 **6,834**；发布时 bundle sha `d48b2f5d…`（含技能正文后约 10.7MB）；本机当前 bundle `0f29e10f…`（含短句单行修复）。
 - 自定义项市场：实机 CDP 只读导出 68 张插件卡片（含“再查看”展开项）+ 5 个分类；并从 51 个 partner 插件包（`marketplace.json` + 各 zip）提取详情页的建议提示词/技能/代理/规则描述逐条汉化；产品名等专名、代码/路径/URL、免责声明保留英文。新增 `marketplace-cards-regression.cjs`（11 项）与 `marketplace-detail-regression.cjs`（6 项），均纳入门禁。
 - 计划编辑器结构适配：2.29.0 用 `schedule-repeat` 下拉取代了 `schedule-frequency-trigger[data-frequency]`；`on` 连接词判断改为两种结构兼容（custom→“规则”、其余→“在”），补 `hours/week/month` 单位词条，并新增 `tests/renderer/schedule-summary-regression.cjs`（8 项，已纳入统一门禁）。
 - 技能正文（SKILL.md 全文）：把「命令/技能」弹窗（`[data-testid="doc-row-modal"]`，正文为 SKILL.md markdown，市场预览截断 24KB）汉化。`translate.js` 按正文 fingerprint/签名从 `skill-details.json` 匹配并替换成 `renderedHtml`；已把 **44 个合作插件、494 篇 SKILL.md** 全文译成中文，接入 `skill-details.additionalDocuments`（共 **499** 条，含原 6 条；其中 493 条为 partner 正文，1 篇 canva-cli 仅 frontmatter 无正文跳过）。官方 140 篇沿用原目录。
@@ -156,12 +158,12 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
   - 每条 additionalDocument 含 `markdownLength/markdownFingerprint`（英文正文 fingerprint）+ `signature` + 中文 `renderedHtml`，弹窗按此精确命中。
   - ⚠️ 维护陷阱：`scripts/build-skill-detail-views.cjs` 只按官方 fixtures 重建 `skill-details.json`，**重跑会丢掉全部 partner additionalDocuments**；若必须重跑，之后要对 44 个 slug 逐个再跑 `integrate-plugin-docs.cjs` 恢复。
   - 注：bundle 因容纳正文增至约 10.7MB，页面注入略重；若实测卡顿，可改为按技能懒加载。
-- 基线：2.29.0 已登记（原版 `290e1b7a…`；已知补丁版 `a32e0d93…` / `8e822fc8…` / `779388c0…` / `f775a0a4…` / `568409e5…`）。
-- 验证：统一门禁 **36/36**（失败 0、跳过 0），引擎 41/41；安装归档与隔离归档逐字节一致（`568409e5…`），内嵌 bundle == 源码（`d48b2f5d…`）。已永久安装 v74 / 6,834 条 + 494 篇技能正文到本机客户端。
-- 交付：根目录 `Antigravity汉化管理器.exe` 为 v1.4.0（sha `a4121d00…`，约 79MB）；发布 ZIP `Antigravity-ZH-1.4.0-Windows-x64.zip`（sha `bf3e6322…`）；Release：<https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.0>。
+- 基线：2.29.0 已登记（原版 `290e1b7a…`；已知补丁版 `a32e0d93…` / `8e822fc8…` / `779388c0…` / `f775a0a4…` / `568409e5…` / `7d6b2c74…`（短句修复后安装版））。
+- 验证：统一门禁 **36/36**（失败 0、跳过 0），引擎 41/41；本机当前安装归档 `7d6b2c74…`，内嵌 bundle == 源码 `0f29e10f…`（含短句单行修复）。已永久安装 v74 / 6,834 条 + 494 篇技能正文到本机客户端。
+- 交付：根目录 `Antigravity汉化管理器.exe` 已替换为本机构建（sha `2bec719b…`，含短句单行修复）；已发布 ZIP 仍为 v1.4.0（sha `bf3e6322…`）；Release：<https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.0>。
 
 **下一步（接手人）**
-1. 手动启动 Antigravity 2.29.0 实机验收：汉化、天青蓝气泡、统计状态条、**命令/技能弹窗正文**（如 `/mongodb-connection`、`/figma-use`、harness/vercel 任意技能），以及新版自动化/语音/连接器/下载等界面。
+1. 手动启动 Antigravity 2.29.0 实机验收：汉化、天青蓝气泡（**重点看短消息是否单行、长句是否仍安全折行**）、统计状态条、**命令/技能弹窗正文**（如 `/mongodb-connection`、`/figma-use`、harness/vercel 任意技能），以及新版自动化/语音/连接器/下载等界面。
 2. 若再发版：按 Playbook C 打包并 `gh release create`（EXE 约 79MB，按第 6 节第 6 条分步上传）。
 3. 注意：`scripts/check-current.ps1` 含中文且无 BOM，**必须用 pwsh 7**（5.1 会按 ANSI 读成乱码并报解析错误）。
 4. 技能正文再生/维护见上方"技能正文"小节与 `localization/partner-skill-docs/README.md`。
