@@ -189,4 +189,31 @@
       color: #374151 !important;
       opacity: 1 !important;
     }
+
+    /* 8. 短消息单行修复：Antigravity 2.29 的用户消息层级里 max-width 在
+       80%（官方 max-w-[80%]）+ 82%（外层）+ 82%（气泡框）三级叠加，
+       短句会被压到约 96px（≈4 个汉字/行）而折成两行，看着别扭。
+       这里把最外层行固定为整列宽，只在官方 80% 包裹层保留一个总上限
+       （≈0.82×0.80×0.82≈53%，即维持原有长句宽度），内层不再逐级按
+       百分比收窄。短句按内容自然撑开为单行，长句仍在原宽度安全折行；
+       min-width:96px 的短气泡最小宽度保留。 */
+    [data-testid="user-input-step"] > div.w-full {
+      width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    [data-testid="user-input-step"] > div.w-full > div {
+      max-width: 53% !important;
+    }
+
+    .bg-card-border:has([data-testid="user-message-bubble"]) {
+      width: fit-content !important;
+      max-width: 100% !important;
+    }
+
+    [data-testid="user-message-bubble"],
+    [data-testid="user-message-bubble"] div[class*="max-h-"],
+    [data-testid="user-message-bubble"] [data-quotable="true"] {
+      max-width: 100% !important;
+    }
   
