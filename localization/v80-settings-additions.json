@@ -1,0 +1,50 @@
+{
+  "notes": {
+    "date": "2026-11-11",
+    "appVersion": "2.31.0",
+    "kernel": 80,
+    "surface": "设置（常规/外观/浏览器/快捷键/对话）与自动化空状态",
+    "evidence": "运行中 2.31.0 实机只读扫描：work/settings-scan.json；自动化侧栏 [data-testid=sidecar-list-empty] 实测为单节点 'No automations yet'。",
+    "scope": [
+      "设置-常规：Interface Layout 及 Knowledge Work / Software Engineering 两种界面模式名称与说明。",
+      "设置-外观：Conversation Steps / Font Size / Code Preview。",
+      "设置-浏览器：Built-in Browser / Open Links In / External Browser / Download Location / Change… / Browsing History / Browser Subagent。",
+      "设置-快捷键：侧边面板与语音静音相关项。",
+      "设置-对话：Settings for conversations outside of projects.",
+      "设置-常规：System default（语音）；自动化页空状态 No automations yet。"
+    ],
+    "skipped": [
+      "品牌/产品/模型/字体/发行版名：Antigravity、Gemini 3.8 Flash、Google Sans、Google AI Pro、Fola、Ubuntu、Google Chrome 等。",
+      "用户账号名、邮箱占位符、快捷键键名（Ctrl/Shift/Alt）。",
+      "swarm 侧边栏中的自定义项文档内容（非设置 UI）。"
+    ]
+  },
+  "dictionary": {
+    "Interface Layout": "界面布局",
+    "Knowledge Work": "知识工作",
+    "Simplified interface for research, writing, and everyday tasks.": "面向研究、写作和日常任务的简化界面。",
+    "Software Engineering": "软件工程",
+    "Full interface for coding, developer tools, and managing agents.": "面向编码、开发者工具和智能体管理的完整界面。",
+    "Conversation Steps": "对话步骤",
+    "Font Size": "字号",
+    "Code Preview": "代码预览",
+    "Built-in Browser": "内置浏览器",
+    "Open Links In": "链接打开方式",
+    "External Browser": "外部浏览器",
+    "Download Location": "下载位置",
+    "Change...": "更改…",
+    "Change…": "更改…",
+    "Browsing History": "浏览历史",
+    "Browser Subagent": "浏览器子智能体",
+    "System default": "系统默认",
+    "No automations yet": "暂无自动化",
+    "Previous Side Panel Tab": "上一个侧边面板标签页",
+    "Next Side Panel Tab": "下一个侧边面板标签页",
+    "Mute Voice Mic": "静音语音麦克风",
+    "Mute Voice Speaker": "静音语音扬声器",
+    "Toggle Side Panel": "切换侧边面板",
+    "Toggle Maximize Side Panel": "切换最大化侧边面板",
+    "Maximize Side Panel": "最大化侧边面板",
+    "Settings for conversations outside of projects.": "项目之外对话的设置。"
+  }
+}

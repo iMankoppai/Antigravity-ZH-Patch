@@ -179,6 +179,14 @@
     "Vesper": {
       "kind": "theme",
       "reason": "编辑器主题名，保留原名。"
+    },
+    "Register OAuth App": {
+      "kind": "ui-label",
+      "reason": "Looker 界面按钮名，保留英文以便对照操作。"
+    },
+    "Admin > API > Use API Explorer": {
+      "kind": "ui-path",
+      "reason": "Looker 后台真实界面路径，保留英文以便对照操作。"
     }
   }
 }

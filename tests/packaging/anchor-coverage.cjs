@@ -27,7 +27,7 @@ const anchors = [
   { file: 'dist/main.js', needle: 'const electron_1 = require("electron");', label: 'AppUserModelId 挂点' },
   { file: 'dist/main.js', needle: '    settingsService = new settingsService_1.SettingsService(storageManager);\n    // Handle deep link URL from command line arguments (All platforms)\n', label: '托盘后台挂点' },
   { file: 'dist/main.js', needle: '                        void win.loadURL(newUrl);', label: '主窗口注入挂点' },
-  { file: 'dist/utils.js', needle: '    // Prevent the menu dropdown from being very wide due to long page titles', label: 'setAppDetails 挂点' },
+  { file: 'dist/utils.js', needle: '    // Truncation keeps the menu dropdown from being very wide.', label: 'setAppDetails 挂点' },
   { file: 'dist/utils.js', needle: 'exports.showQuitConfirmation = false;\nfunction setShowQuitConfirmation(value) {\n', label: '关闭到托盘导出' },
   { file: 'dist/utils.js', needle: '    }\n    void win.loadURL(url);\n', label: '关闭到托盘事件' },
   { file: 'dist/utils.js', needle: '    void win.loadURL(url);', label: '工具窗口注入挂点' },

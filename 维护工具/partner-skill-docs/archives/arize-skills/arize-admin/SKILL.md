@@ -1,0 +1,312 @@
+---
+name: arize-admin
+description: "Manages Arize users, organizations, spaces, projects, roles, role bindings, resource restrictions, and API keys via the ax CLI. Use for enterprise admin workflows: inviting and offboarding users, onboarding new teams, creating custom roles for SAML/SSO mappings, assigning roles to users, restricting project-level access, and managing service keys for multi-tenant architectures. Covers ax users, ax organizations, ax spaces, ax projects, ax roles, ax role-bindings, and ax api-keys."
+metadata:
+  author: arize
+  version: "1.0"
+compatibility: Requires the ax CLI (≥ 0.39.0) and a configured Arize profile with org-admin privileges.
+---
+
+# Arize Admin Skill
+
+Programmatic management of Arize users, organizations, spaces, roles, permissions, and API keys — the building blocks for enterprise access control.
+
+> **Privilege requirement:** Most operations require **org-admin** or **account-admin** privileges. If commands return `403 Forbidden`, the authenticated profile lacks sufficient permissions.
+
+> **Destructive-action rule:** Commands that delete, revoke, remove, or irreversibly modify resources (`delete`, `revoke`, `remove-user`, `unrestrict`) require **explicit user confirmation before execution**. When a user asks you to perform one of these operations:
+> 1. Summarize exactly what will happen (e.g., "This will delete user jane@example.com and cascade-revoke their API keys and remove all their org/space memberships and role bindings.")
+> 2. Ask the user to confirm (use `AskUserQuestion`).
+> 3. Only after the user confirms, run the command with `--force` to skip the CLI's interactive prompt.
+>
+> Never run a `--force` destructive command without confirming with the user first.
+
+## When to Use
+
+- Invite users to the account, assign them to orgs and spaces
+- Offboard a user and revoke all their access in one command
+- Onboard a new team: create a space, create a custom role, assign users, generate a service key
+- Create custom roles for SAML/SSO attribute mappings (need stable role IDs)
+- Restrict a project so only explicitly bound users can access it
+- Create scoped service keys for CI/CD pipelines or multi-tenant architectures
+- Rotate or revoke API keys
+- Create or delete projects within a space
+
+## Upfront Questions
+
+For multi-step workflows, **collect all required information before running any `ax` commands**. Use `AskUserQuestion` to avoid back-and-forth mid-workflow. Fetch live data first (e.g. org list) so you can present real options rather than asking the user to recall IDs.
+
+### Onboarding a new team
+1. Run `ax organizations get NAME -o json` when the org name is known; use `ax organizations list -o json` to present org names as options.
+2. Use `AskUserQuestion` (single call, up to 4 questions) to gather:
+   - **Which org?** — present the org names from the list as options
+   - **Space name** — what to call the new team's space
+   - **Team members** — names and emails to invite (user can type via "Other"; ask if none yet)
+   - **Service key?** — whether to generate a service key for CI/CD pipelines
+
+### Offboarding a user
+Ask before running any commands:
+- **Which user?** — email address (then look up with `ax users get EMAIL -o json`)
+
+### Restricting a project
+Ask before running any commands:
+- **Which space and project?** — to look up the project global ID
+- **Which users get explicit access?** — emails of users to bind to the restricted project
+
+### Inviting users (standalone)
+Ask before running any commands:
+- **Name and email** — for each user to invite
+- **Role** — `ADMIN`, `MEMBER`, or `ANNOTATOR` (present as options; account-level user creation has no `READ_ONLY` role)
+- **Invite mode** — `EMAIL_LINK`, `TEMPORARY_PASSWORD`, or `NONE` (`--invite-mode` is required)
+
+### Revoking or rotating an API key
+Ask before running any commands:
+- **Which key?** — run `ax api-keys list -o json` and present options by name and status; or ask for `KEY_ID`
+- **Revoke or rotate?** — `revoke` invalidates immediately; `refresh` issues a new key with the same scope and invalidates the old one immediately unless `--grace-period-seconds` is passed
+
+If the user says "delete" an API key, use `ax api-keys revoke` to invalidate it.
+
+## Concepts
+
+- **Organization** — a named grouping within an account (e.g. one per business unit). Spaces live inside organizations. Users are added to the account first, then to orgs, then to spaces.
+- **Space** — a workspace that isolates traces, datasets, and projects. A user must be an org member before they can be added to a space within that org.
+- **Role** — a named set of permissions. Predefined roles are system-managed. Custom roles are created by admins. The roles for org/space membership (`ADMIN`, `MEMBER`, `READ_ONLY`, `ANNOTATOR`) are separate from custom RBAC roles used with `ax role-bindings`.
+- **Role binding** — fine-grained assignment of a custom role to a user on a specific resource (a space or a project).
+- **Resource restriction** — marks a project so that only users with an explicit role binding on that project can access it. Roles bound at any higher hierarchy level (space, org, account) are excluded.
+- **API key** — either a *user* key (authenticates as the creator, full user permissions) or a *service* key (scoped to a specific space, for automated pipelines).
+
+## Prerequisites
+
+Proceed directly — run the `ax` command you need. Do NOT check versions or profiles upfront.
+
+If an `ax` command fails:
+- `command not found` or version error → see [references/ax-setup.md](references/ax-setup.md)
+- `401 Unauthorized` / missing API key → run `ax profiles show`; follow [references/ax-profiles.md](references/ax-profiles.md)
+- `403 Forbidden` → the active profile lacks admin privileges; see [references/ax-profiles.md](references/ax-profiles.md) (never ask the user to paste an admin key into chat)
+- **Security:** Never read `.env` files or search the filesystem for credentials. Exception: the non-secret `ARIZE_SPACE_ID` line (see [Space](references/ax-profiles.md#space)). Use `ax profiles` for Arize credentials. Never ask the user to paste secrets into chat. Never echo, log, or display raw API key values. For missing credentials, see [references/ax-profiles.md](references/ax-profiles.md).
+
+> **OAuth login option:** Users can authenticate via browser-based OAuth PKCE instead of API keys by running `ax auth login` (then `ax auth logout` to revoke). The active profile must be an OAuth profile, created with `ax profiles create --auth-method oauth`. Inform users of this option if they ask about authentication alternatives — do **not** run `ax auth login` yourself, as it opens a browser interactively.
+
+---
+
+## Users
+
+A user must exist in the account before they can be added to an org or space. **Account-level roles:** `ADMIN`, `MEMBER`, `ANNOTATOR`
+
+```bash
+ax users list                                  # all users
+ax users list --email "jane"                   # substring filter
+ax users list --status ACTIVE                  # ACTIVE or INVITED
+ax users list -l 100 -o json                   # paginate, get global IDs
+
+ax users get USER_ID_OR_EMAIL                   # direct lookup; list is for browsing
+
+ax users create \
+  --full-name "Jane Doe" \
+  --email jane@example.com \
+  --role MEMBER \
+  --invite-mode EMAIL_LINK        # or: NONE | TEMPORARY_PASSWORD
+
+ax users update USER_ID --full-name "Jane Smith"
+ax users update USER_ID --is-developer          # grant developer flag
+
+ax users delete --id USER_ID --force   # ⚠ confirm first — cascades: org/space memberships, API key revocation, role bindings
+ax users delete --email jane@example.com --force   # or resolve by email instead of ID
+
+ax users resend-invitation USER_ID
+ax users reset-password USER_ID
+```
+
+---
+
+## Organizations
+
+**Organization roles:** `ADMIN`, `MEMBER`, `READ_ONLY`, `ANNOTATOR`
+
+```bash
+ax organizations list
+ax organizations list --name "platform"
+ax organizations list -l 100 -o json
+
+ax organizations get "Platform Team"
+
+ax organizations create --name "Platform Team" --description "Core ML platform"
+
+ax organizations update "Platform Team" --name "ML Platform" --description "Updated"
+
+# Add user (must exist in account first)
+ax organizations add-user "Platform Team" --user-id USER_ID --role MEMBER
+
+# Remove user (also removes from all child spaces) — ⚠ confirm first
+ax organizations remove-user "Platform Team" --user-id USER_ID --force
+
+# Delete organization: ⚠ irreversible; deletes org and all resources inside (spaces, projects, experiments, datasets)
+ax organizations delete "Platform Team" --force
+```
+
+---
+
+## Spaces
+
+**Space roles:** `ADMIN`, `MEMBER`, `READ_ONLY`, `ANNOTATOR`
+
+```bash
+ax spaces list
+ax spaces list --organization-id ORG_ID
+
+ax spaces get "my-workspace"
+
+# --organization-id required; get ORG_ID from ax organizations list -o json
+ax spaces create --name "team-alpha" --organization-id ORG_ID
+
+ax spaces update "team-alpha" --name "team-alpha-v2"
+
+ax spaces delete "team-alpha" --force   # ⚠ confirm first — irreversible; deletes all resources
+
+# User must be an org member before being added to a space
+ax spaces add-user "team-alpha" --user-id USER_ID --role MEMBER
+ax spaces remove-user "team-alpha" --user-id USER_ID --force   # ⚠ confirm first
+```
+
+---
+
+## Roles
+
+Custom RBAC roles used with `ax role-bindings`. Separate from the simpler `ADMIN`/`MEMBER`/`READ_ONLY`/`ANNOTATOR` roles in org/space membership.
+
+```bash
+ax roles list                          # all roles
+ax roles list --is-custom -o json      # custom only — get stable IDs for SAML mappings
+ax roles list --is-predefined
+
+ax roles get "Data Scientist"          # inspect permissions
+
+# --permissions is comma-separated; fully replaces on update
+ax roles create \
+  --name "Data Scientist" \
+  --permissions "PROJECT_READ,DATASET_CREATE,EXPERIMENT_CREATE" \
+  --description "Read traces, create datasets and experiments"
+
+ax roles update "Data Scientist" --permissions "PROJECT_READ,DATASET_CREATE,EXPERIMENT_CREATE,EVALUATOR_CREATE"
+
+ax roles delete "Data Scientist" --force   # ⚠ confirm first — predefined roles cannot be deleted
+```
+
+**Finding available permissions:** Run `ax roles get <predefined-role> -o json` on a system role (e.g. `Member`, `Admin`) to see valid permission names.
+
+---
+
+## Role Bindings
+
+Fine-grained assignment of a custom role to a user on a specific resource (space or project).
+
+```bash
+# Assign at space level
+ax role-bindings create \
+  --user-id USER_GLOBAL_ID \
+  --role-id ROLE_GLOBAL_ID \
+  --resource-type SPACE \
+  --resource-id SPACE_GLOBAL_ID
+
+# Assign at project level
+ax role-bindings create \
+  --user-id USER_GLOBAL_ID \
+  --role-id ROLE_GLOBAL_ID \
+  --resource-type PROJECT \
+  --resource-id PROJECT_GLOBAL_ID
+
+ax role-bindings get BINDING_ID
+ax role-bindings update BINDING_ID --role-id NEW_ROLE_ID
+ax role-bindings delete BINDING_ID --force   # ⚠ confirm first
+
+# List bindings for a resource type (--resource-type is required)
+ax role-bindings list --resource-type SPACE
+ax role-bindings list --resource-type PROJECT --user-id USER_GLOBAL_ID -o json
+```
+
+Idempotent — if a binding already exists for the user on that resource, exits without error.
+
+---
+
+## Resource Restrictions
+
+Restricts a **project, dashboard, or prompt** so only users with an explicit role binding on that resource can access it. Space/org-level roles are excluded.
+
+```bash
+ax resource-restrictions list                                          # all restrictions, paginated
+ax resource-restrictions list --resource-type DASHBOARD                # filter to one resource type (PROJECT, DASHBOARD, or PROMPT)
+ax resource-restrictions list --limit 50 --cursor PAGINATION_CURSOR    # fetch next page
+
+ax resource-restrictions restrict --resource-id RESOURCE_GLOBAL_ID     # idempotent
+ax resource-restrictions unrestrict --resource-id RESOURCE_GLOBAL_ID --force   # ⚠ confirm first
+
+# Finding a project ID
+ax projects get NAME --space "my-workspace" -o json
+```
+
+---
+
+## API Keys
+
+> **Scope:** `ax api-keys list` returns only keys owned by the **authenticated user**. For org-wide auditing, use the Arize UI (Settings > API Keys).
+
+```bash
+ax api-keys list
+ax api-keys list --key-type SERVICE --status ACTIVE -o json
+
+# User key — authenticates as creator, inherits their full permissions
+ax api-keys create --name "CI pipeline" --expires-at "2027-01-01T00:00:00"
+
+# Service key — bot user scoped to org(s)/space(s) via --assignments JSON
+# (recommended for CI/CD pipelines; get ORG_ID from `ax organizations list -o json`)
+ax api-keys create-service-key \
+  --name "team-alpha-traces" \
+  --assignments '[{"org_id": "ORG_ID", "spaces": [{"space": "team-alpha"}]}]' \
+  --expires-at "2027-01-01T00:00:00"
+
+ax api-keys revoke KEY_ID --force   # ⚠ confirm first — invalidates the key immediately
+
+# Rotation — issues a new key with same scope; old key dies immediately
+# unless --grace-period-seconds keeps it valid while clients switch over
+ax api-keys refresh KEY_ID --grace-period-seconds 3600
+ax api-keys refresh KEY_ID --expires-at "2028-01-01T00:00:00"
+```
+
+> **The raw key is displayed once.** Save it immediately in your secrets manager. It cannot be retrieved again.
+
+Scope `create-service-key` entirely through `--assignments`; run `ax api-keys create-service-key --help` for the assignment JSON shape, role defaults, and `--account-role`. Pass `--env-file PATH` to write the new key to `ARIZE_API_KEY` in a dotenv or .envrc file, so the key lands in a file rather than the conversation.
+
+---
+
+## Projects
+
+Projects live inside spaces and contain traces, datasets, and experiments.
+
+```bash
+ax projects list --space SPACE
+ax projects list --space SPACE --name "playground"   # substring filter
+ax projects list --space SPACE -l 100 -o json        # get base64 IDs
+
+ax projects get NAME_OR_ID --space SPACE
+
+ax projects create --name "my-project" --space SPACE
+
+ax projects update NAME_OR_ID --name "new-project-name" --space SPACE
+
+ax projects delete NAME_OR_ID --space SPACE --force   # ⚠ confirm first — deletes all traces and datasets
+```
+
+> **Note:** Project IDs (base64 strings) are used by `ax spans export`, `ax traces export`, and `ax resource-restrictions`. If commands reject a project name, take the `id` field from `ax projects get NAME --space SPACE -o json`; `ax projects list` is for browsing.
+
+---
+
+## Enterprise Workflows & Troubleshooting
+
+Step-by-step workflows (onboard a team, SAML/SSO mappings, project restriction, offboarding, multi-tenant keys) and a troubleshooting table are in [references/REFERENCE.md](references/REFERENCE.md).
+
+---
+
+## Related Skills
+
+- **arize-instrumentation**: Set up tracing in an LLM app once a space is ready.
+- **arize-trace**: Export and inspect traces within a managed space.
+- **arize-dataset**: Create and manage datasets within a space.

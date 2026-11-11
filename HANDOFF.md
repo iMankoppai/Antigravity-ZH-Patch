@@ -2,7 +2,7 @@
 
 写给接手本项目维护工作的人。目标：**不依赖任何口头交接，读完这份 + 按清单跑一遍，就能独立完成"官方更新后重新适配"的全流程**。
 
-- 编写日期：2026-10-31（2026-11-04 随 v1.4.0 更新；2026-11-05 本机应用“短消息气泡单行”修复）。对应交接状态：管理器 v1.4.0 / 汉化内核 v74 / 适配 Antigravity 2.29.0 / 词库 6,834 条。
+- 编写日期：2026-10-31（2026-11-04 随 v1.4.0 更新；2026-11-05 本机应用“短消息气泡单行”修复；2026-11-10 随 v1.5.0 适配 2.30.0；2026-11-10 晚随 v1.6.0 适配 2.31.0）。对应交接状态：管理器 v1.4.1 / 汉化内核 v80（2026-11-11 正式发布）/ 适配 Antigravity 2.31.0 / 词库 7,218 条。
 - 当前基线（版本、哈希、最近验证）**只看一处**：根目录 [`当前状态.json`](当前状态.json)。本文件的数字是交接时点快照。
 - 规范性流程（怎样才算做对、发布判定标准）在 [`docs/项目维护与交付指导书.md`](docs/项目维护与交付指导书.md)；本文件是实操手册，两者冲突时以指导书 + 实际门禁为准。
 
@@ -30,7 +30,7 @@ cd "C:\Users\24844\Desktop\Tool\Antigravity ZH"
 pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 ```
 
-预期：**33 项门禁全 PASS**（失败 0、跳过 0）。这跑通了，说明环境、词库、内核、打包一致性全部健康——之后任何改动都以"门禁仍然全绿"为底线。浏览器回归需要 Chrome；安装层比较默认指向本机客户端 `%LOCALAPPDATA%\Programs\antigravity\resources\app.asar`。
+预期：**36 项门禁全 PASS**（失败 0、跳过 0）。这跑通了，说明环境、词库、内核、打包一致性全部健康——之后任何改动都以"门禁仍然全绿"为底线。浏览器回归需要 Chrome；安装层比较默认指向本机客户端 `%LOCALAPPDATA%\Programs\antigravity\resources\app.asar`。
 
 ## 3. 架构速览
 
@@ -103,6 +103,7 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 11. **Antigravity 无法从 agent 会话启动**：本环境 `Start-Process Antigravity.exe` 会立即退出（拿不到窗口），验证 UI 必须由用户手动启动。装内核关闭客户端时，优雅关闭常失败（超时/APP_NOT_FOUND），需 `taskkill /F /T /IM Antigravity.exe`（客户端空闲且已获授权时）。
 12. **统计条数据源是磁盘日志**：渲染层**没有** `require`/fs（已实测 `require=undefined`、`electronNative` 无文件 API），token 数据只能从 `transcript.jsonl` 读，只能在**主进程（`attach()`）或管理器侧**采集；不要在页面脚本里尝试读文件。
 13. **短消息气泡折行是 max-width 逐级百分比叠加**：2.29 用户消息层级存在 80%（官方 `max-w-[80%]`）+ 82%（外层）+ 82%（气泡框）三级 `max-width`，再叠加外层 `width: fit-content`，短句可用宽度会被压到约 96px（≈4 汉字/行）而折成两行；长句因内容够宽看不出。修复见 `theme-azure-bubble.css` 第 8 节（最外层整列宽、只保留单一 53% 总上限、内层不再逐级收窄）。排查这类宽度问题，实机用 CDP 打印祖先链每一层的 `computed width / minWidth / maxWidth` 最快，不要只盯最终元素。回归：`tests/renderer/azure-theme-regression.cjs`（含 2.29 真实层级夹具）。
+14. **官方会改注释措辞，锚点要留双份**：2.30.0 把 `dist/utils.js` 里 setAppDetails 的锚点注释从 `// Prevent the menu dropdown from being very wide due to long page titles` 改成 `// Truncation keeps the menu dropdown from being very wide.`。`AsarCleanPatcher` 现在先试新锚点、再回退旧锚点，避免旧版重装时静默跳过。新增/改锚点时，`tests/packaging/anchor-coverage.cjs` 的 needle 必须同步更新到当前装机的原版（该门禁用本机原版/备份交叉核对），否则会 0 命中失败。
 
 ## 7. 核心任务 Playbook C：发布
 
@@ -143,7 +144,32 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - **技能正文边界**：弹窗正文按 SKILL.md 的 24KB 预览 fingerprint 匹配；官方改正文会导致失配、回退英文。bundle 因含 494 篇正文约 10.7MB，页面注入较重。`build-skill-detail-views.cjs` 重跑会清空 partner additionalDocuments，需用 `integrate-plugin-docs.cjs` 逐插件恢复；译文原文在 `localization/partner-skill-docs/`。
 - **天青蓝气泡宽度选择器依赖 2.29 用户消息 DOM**：短句单行修复基于 `user-input-step > div.w-full > div`（官方 `max-w-[80%]` 包裹层）等层级；官方若重构该结构，需同步更新 `theme-azure-bubble.css` 第 8 节，`azure-theme-regression.cjs` 会兜住这一层。
 
-## 10. 当前状态与技能正文（v1.4.0 / Antigravity 2.29.0）
+## 10. 当前状态与技能正文（v1.6.0 / Antigravity 2.31.0）
+
+**2026-11-11 续（内核 v80，本地）：补全设置页（常规/外观/浏览器/快捷键/对话）与自动化空状态「No automations yet」漏译（+26 词条，含多文本节点空状态处理）；已永久安装（安装归档 ce312eff…，内嵌 bundle == 源码 db94927a…）；已随 v1.4.1 发布 GitHub。详见 docs/v80-设置漏译补全.md。**
+
+**2026-11-11 续（内核 v79，本地）：六插件 Gmail/Looker/Arize AX/invideo/Neo4j/Spacefast 共 90 篇 SKILL.md 技能正文已汉化并接入 skill-details（additionalDocuments 589）；已永久安装（安装归档 503ca1be…，内嵌 bundle == 源码 e222078…）；未发布。详见 docs/v79-自定义项技能正文汉化.md。**
+
+**2026-11-11 续（内核 v78，本地）：已将 Gmail / Looker / Arize AX / invideo / Neo4j / Spacefast 六个插件详情页（概览、建议提示词、命令/技能描述，含 Looker/invideo 富文本指南）汉化；词条 7,192。已永久安装到本机 2.31.0（安装归档 `8a79f7ac…`，内嵌 bundle == 源码 `835d53e0…`）；未发布。详见 `docs/v78-自定义项插件详情汉化.md`。**
+
+**2026-11-11 追加（内核 v77，本地）：自定义项市场（More Plugins）新增 6 个项目的卡片描述、分区标题与底部第三方开发者工具免责声明已汉化，并修 CodeRabbit/Context7 描述及 invideo 误译规则；词条 6,994。已永久安装到本机 2.31.0（安装归档 `766777bf…`，内嵌 bundle == 源码 `aded25a0…`）；未发布。详见 `docs/v77-自定义项市场补全.md`。**
+
+**2026-11-10 晚更新：v1.6.0 适配 Antigravity 2.31.0**
+- 客户端 **2.31.0** 原版 `03f3d094…`（5,274,972 字节）；相对 2.30.0 无新增/删除模块，仅 `ipcHandlers.js`、`webviewBrowser.js`、`webviewDownloadRouting.js`、`preload.js`、`guestPermissionPolicy.js`、`package.json` 变化；**16 个注入锚点全部恰好命中 1 次 → AsarCleanPatcher 零改动**。证据在 `work/2-31-0-probe/`。
+- 前端 renderer 经 CDP 拉取（11,871,831 字节）；新增字面量 2,373 个，UI 候选 76 条，核对后新增 **37 条**词条（`localization/v76-ui-additions.json` + `scripts/sync-v76-localization.cjs`，协调器/授权代码/环境等），并新增命名问候语与登录相关动态规则。
+- 内核 `patchVersion` **75 → 76**；词条 **6,984**；bundle `2a94893b…`；隔离/永久安装归档 `1f09c0e6…`（15,991,515 字节）；manager EXE v1.6.0。统一门禁 36/36、引擎 41/41。
+- 实机热加载验证：首页可见英文只剩「Antigravity / 项目名 / 分支名 / 模型名」等有意保留项。
+- **未发布 GitHub**（本地构建）。实机验收需人工启动客户端。
+
+**以下为 v1.5.0 / 2.30.0 历史细节，保留作参考**
+
+**2026-11-10 更新：v1.5.0 适配 Antigravity 2.30.0**
+- 客户端 **2.30.0** 原版 `00153a89…`（5,242,783 字节）；主进程新增 20 个浏览器/访客框架模块、改动 369 个文件，但 **16 个注入锚点全部恰好命中 1 次**；唯一失配是 `dist/utils.js` 的 setAppDetails 注释（旧 `// Prevent the menu dropdown…` → 新 `// Truncation keeps the menu dropdown…`），`AsarCleanPatcher` 已改为新旧双锚点兼容，引擎结构零其它改动。证据在 `work/2-30-0-probe/`。
+- 前端 renderer 通过 CDP 从本地服务 `/main.js` 拉取（11,717,794 字节）；新增字面量 4,117 个，UI 过滤候选 306 条，逐条上下文核对后新增 **113 条**词条（`localization/v75-ui-additions.json` + `scripts/sync-v75-localization.cjs`），并新增 4 条动态规则（MCP 启动失败计数、远程模式文件上传限制、LSP 引用计数、成员数）。
+- 内核 `patchVersion` **74 → 75**；词条 **6,947**；bundle `584471f8…`；隔离/永久安装归档 `405f4fe7…`（15,955,974 字节）；manager EXE `16612bc5…`。统一门禁 36/36、引擎 41/41。
+- **未发布 GitHub**（本地构建）。实机验收需人工启动客户端。
+
+**以下为 v1.4.0 / 2.29.0 历史细节，保留作参考**
 
 **状态**：管理器 v1.4.0（内核 v74）已构建、永久写入本机客户端（Antigravity 2.29.0），并**已发布到 GitHub Releases**。2026-11-05 另在本机应用「短消息气泡单行」修复（bundle `0f29e10f…`、安装归档 `7d6b2c74…`），该修复**未发布**——当前哈希以 `当前状态.json` 的 `localFix20261105` 为准。
 

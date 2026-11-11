@@ -274,10 +274,26 @@ namespace AntigravityZhManager.Services
                 // 3. utilsJs
                 if (!utilsJs.Contains("setAppDetails"))
                 {
-                    utilsJs = utilsJs.Replace(
-                        "    // Prevent the menu dropdown from being very wide due to long page titles",
-                        "    if (process.platform === 'win32') win.setAppDetails({ appId: 'electron.app.Antigravity' });\n    // Prevent the menu dropdown from being very wide due to long page titles"
-                    );
+                    // 2.30.0 改了这处注释措辞：旧版是 "Prevent the menu dropdown from being
+                    // very wide due to long page titles"，新版为 "Truncation keeps the menu
+                    // dropdown from being very wide."。两个锚点都只在 createHubWindow 内命中，
+                    // 按新版优先、旧版兜底的顺序注入，保持对各版本的兼容。
+                    const string newSetAppAnchor = "    // Truncation keeps the menu dropdown from being very wide.";
+                    const string oldSetAppAnchor = "    // Prevent the menu dropdown from being very wide due to long page titles";
+                    if (utilsJs.Contains(newSetAppAnchor))
+                    {
+                        utilsJs = utilsJs.Replace(
+                            newSetAppAnchor,
+                            "    if (process.platform === 'win32') win.setAppDetails({ appId: 'electron.app.Antigravity' });\n" + newSetAppAnchor
+                        );
+                    }
+                    else
+                    {
+                        utilsJs = utilsJs.Replace(
+                            oldSetAppAnchor,
+                            "    if (process.platform === 'win32') win.setAppDetails({ appId: 'electron.app.Antigravity' });\n" + oldSetAppAnchor
+                        );
+                    }
                 }
 
                 if (!utilsJs.Contains("closeWindowToBackground"))

@@ -1,0 +1,446 @@
+---
+name: arize-evaluator
+description: Handles LLM-as-judge and code evaluator workflows on Arize including creating/updating evaluators, running evaluations on spans or experiments, managing tasks, trigger-run operations, column mapping, and continuous monitoring. Use when the user mentions create evaluator, LLM judge, code evaluator, hallucination, faithfulness, correctness, relevance, run eval, score spans, score experiment, trigger-run, column mapping, continuous monitoring, or improve evaluator prompt.
+metadata:
+  author: arize
+  version: "1.0"
+compatibility: Requires the ax CLI and a configured Arize profile with an AI integration.
+---
+
+# Arize Evaluator Skill
+
+> **`SPACE`** — `--space` flags accept a space **name** (e.g., `my-workspace`) or a base64 space **ID** (e.g., `U3BhY2U6...`). Find yours with `ax spaces list`.
+
+This skill covers designing, creating, and running **evaluators** on Arize — both **LLM-as-judge (template)** evaluators and **code evaluators** (deterministic, no LLM required). An evaluator defines the judge; a **task** is how you run it against real data.
+
+---
+
+## Prerequisites
+
+Proceed directly with the task — run the `ax` command you need. Do NOT check versions, env vars, or profiles upfront.
+
+If an `ax` command fails, troubleshoot based on the error:
+- `command not found` or version error → see [references/ax-setup.md](references/ax-setup.md)
+- `401 Unauthorized` / missing API key → run `ax profiles show` to inspect the current profile. If the profile is missing or the API key is wrong, follow [references/ax-profiles.md](references/ax-profiles.md) to create/update it. If the user doesn't have their key, direct them to https://app.arize.com/admin > API Keys
+- Space unknown → see [Space](references/ax-profiles.md#space)
+- LLM provider call fails (missing provider credentials) → run `ax ai-integrations list --space SPACE` to check for platform-managed credentials. If none exist, use the **arize-ai-provider-integration** skill — never ask the user to paste a provider key into chat.
+- **Security:** Never read `.env` files or search the filesystem for credentials. Exception: the non-secret `ARIZE_SPACE_ID` line (see [Space](references/ax-profiles.md#space)). Use `ax profiles` for Arize credentials and `ax ai-integrations` for LLM provider keys. Never ask the user to paste secrets into chat. For missing credentials, see [references/ax-profiles.md](references/ax-profiles.md).
+- **CRITICAL — Never fabricate evaluation results:** If an evaluation task fails, is cancelled, or produces no scores, report the failure clearly and explain what went wrong. Do NOT perform a "manual evaluation," invent quality scores, estimate percentages, or present any agent-generated analysis as if it came from the Arize evaluation system. Instead suggest: (1) fix the identified issue and retry, (2) try running from the Arize UI, (3) verify integration credentials with `ax ai-integrations list`, (4) contact support at https://arize.com/contact/
+
+---
+
+## Concepts
+
+### What is an Evaluator?
+
+An **evaluator** is an LLM-as-judge definition. It contains:
+
+| Field | Description |
+|-------|-------------|
+| **Template** | The judge prompt. Uses `{variable}` placeholders (e.g. `{input}`, `{output}`, `{context}`) that get filled in at run time via a task's column mappings. |
+| **Classification choices** | The set of allowed output labels (e.g. `factual` / `hallucinated`). Binary is the default and most common. Each choice can optionally carry a numeric score. |
+| **AI Integration** | Stored LLM provider credentials (OpenAI, Anthropic, Bedrock, etc.) the evaluator uses to call the judge model. |
+| **Model** | The specific judge model (e.g. `gpt-4o`, `claude-sonnet-4-5`). |
+| **Invocation params** | Optional JSON of model settings like `{"temperature": 0}`. Low temperature is recommended for reproducibility. |
+| **Optimization direction** | Whether higher scores are better (`MAXIMIZE`) or worse (`MINIMIZE`). Sets how the UI renders trends. |
+| **Data granularity** | Whether the evaluator runs at the **span**, **trace**, or **session** level. Most evaluators run at the span level. |
+
+Evaluators are **versioned** — every prompt or model change creates a new immutable version. The most recent version is active.
+
+**Code evaluators** are the deterministic alternative — no AI integration or model, just Python. They run as a class subclassing `CodeEvaluator`, not a bare function, and have their own strict import-path and `evaluate()`-signature contract. Getting either wrong makes a run cancel silently at `0/0/0`. See "Custom Python code evaluators" in [references/cli-reference.md](references/cli-reference.md) before writing one.
+
+**Remote evaluators** call a customer-hosted HTTP endpoint and are created with `ax evaluators create-evaluator remote`, which takes an evaluator integration ID; run `ax evaluators create-evaluator remote --help` for its flags.
+
+### What is a Task?
+
+A **task** is how you run one or more evaluators against real data. Tasks are attached to a **project** (live traces/spans) or a **dataset** (experiment runs). A task contains:
+
+| Field | Description |
+|-------|-------------|
+| **Evaluators** | List of evaluators to run. You can run multiple in one task. |
+| **Column mappings** | Maps each evaluator's template variables to actual field paths on spans or experiment runs (e.g. `"input" → "attributes.input.value"`). This is what makes evaluators portable across projects and experiments. |
+| **Query filter** | SQL-style expression to select which spans/runs to evaluate (e.g. `"attributes.openinference.span.kind = 'LLM'"`). Set it with the task-level `--query-filter`. Optional but important for precision. |
+| **Continuous** | For project tasks: whether to automatically score new spans as they arrive. |
+| **Sampling rate** | For continuous project tasks: fraction of new spans to evaluate (0–1). |
+
+---
+
+## Data Granularity
+
+Set `--data-granularity` when creating the evaluator (`ax evaluators create-evaluator template` / `create-evaluator code`), not on the task — it controls what unit of data that evaluator scores whenever it runs against a **project task** (not dataset/experiment tasks — those evaluate experiment runs directly). It defaults to `span`.
+
+| Level | What it evaluates | Use for | Result column prefix |
+|-------|-------------------|---------|---------------------|
+| `span` (default) | Individual spans | Q&A correctness, hallucination, relevance | `eval.{name}.label` / `.score` / `.explanation` |
+| `trace` | All spans in a trace, grouped by `context.trace_id` | Agent trajectory, task correctness — anything that needs the full call chain | `trace_eval.{name}.label` / `.score` / `.explanation` |
+| `session` | All traces in a session, grouped by `attributes.session.id` and ordered by start time | Multi-turn coherence, overall tone, conversation quality | `session_eval.{name}.label` / `.score` / `.explanation` |
+
+### How trace and session aggregation works
+
+For **trace** granularity, spans sharing the same `context.trace_id` are grouped together. Column values used by the evaluator template are comma-joined into a single string (each value truncated to 100K characters) before being passed to the judge model.
+
+For **session** granularity, the same trace-level grouping happens first, then traces are ordered by `start_time` and grouped by `attributes.session.id`. Session-level values are capped at 100K characters total.
+
+### The `{conversation}` template variable
+
+At session granularity, `{conversation}` is a special template variable that renders as a JSON array of `{input, output}` turns across all traces in the session, built from `attributes.input.value` / `attributes.llm.input_messages` (input side) and `attributes.output.value` / `attributes.llm.output_messages` (output side).
+
+At span or trace granularity, `{conversation}` is treated as a regular template variable and resolved via column mappings like any other.
+
+> **Note:** For `{conversation}` to work, spans must carry `attributes.session.id`. See the **arize-instrumentation** skill for how to emit `session.id` from application code, including the `force_flush()` pattern required for Jupyter notebooks and short-lived scripts.
+
+### Multi-evaluator tasks
+
+A task can contain evaluators at different granularities. At runtime the system uses the **highest** granularity (session > trace > span) for data fetching and automatically **splits into one child run per evaluator**. Filter with the task-level `--query-filter`, which applies to every evaluator in the task.
+
+---
+
+## Basic CRUD
+
+Full command reference for **AI integrations**, **evaluators** (template and code), and **tasks** — every flag, with examples — is in [references/cli-reference.md](references/cli-reference.md). The workflows below include the commands you need inline.
+
+---
+
+## Workflow A: Create an evaluator for a project
+
+Use this when the user says something like *"create an evaluator for my Playground Traces project"*.
+
+### Step 1: Confirm the project name
+
+`ax spans export` accepts a project name with `--space SPACE` — no ID lookup needed. To confirm a known name or get its base64 `"id"` (use the `id` when a name hits a validation error), fetch it directly:
+
+```bash
+ax projects get PROJECT --space SPACE -o json
+```
+
+When the project name is unknown, `ax projects list --space SPACE -o json` lists projects for browsing; use the matching `"name"` as `PROJECT`.
+
+### Step 2: Understand what to evaluate
+
+If the user specified the evaluator type (hallucination, correctness, relevance, etc.) → skip to Step 3.
+
+If not, sample recent spans to base the evaluator on actual data:
+
+```bash
+ax spans export PROJECT --space SPACE -l 10 --days 30 --stdout
+```
+
+Inspect `attributes.input`, `attributes.output`, span kinds, and any existing annotations. Identify failure modes (e.g. hallucinated facts, off-topic answers, missing context) and propose **1–3 concrete evaluator ideas**. Let the user pick.
+
+Each suggestion must include: the evaluator name (bold), a one-sentence description of what it judges, and the binary label pair in parentheses. Format each like:
+
+1. **Name** — Description of what is being judged. (`label_a` / `label_b`)
+
+Example:
+1. **Response Correctness** — Does the agent's response correctly address the user's financial query? (`correct` / `incorrect`)
+2. **Hallucination** — Does the response fabricate facts not grounded in retrieved context? (`factual` / `hallucinated`)
+
+### Step 3: Confirm or create an AI integration
+
+```bash
+ax ai-integrations list --space SPACE -o json
+```
+
+If a suitable integration exists, note its ID. If not, create one using the **arize-ai-provider-integration** skill. Ask the user which provider/model they want for the judge.
+
+### Step 4: Create the evaluator
+
+Use the template design best practices below. Keep the evaluator name and variables **generic** — the task (Step 6) handles project-specific wiring via `column_mappings`.
+
+```bash
+ax evaluators create-evaluator template \
+  --name "Hallucination" \
+  --space SPACE \
+  --template-name "hallucination" \
+  --commit-message "Initial version" \
+  --ai-integration-id INT_ID \
+  --model-name "gpt-4o" \
+  --include-explanations \
+  --use-function-calling \
+  --classification-choices '{"factual": 1, "hallucinated": 0}' \
+  --template 'You are an evaluator. Given the user question and the model response, decide if the response is factual or contains unsupported claims.
+
+User question: {input}
+
+Model response: {output}
+
+Respond with exactly one of these labels: hallucinated, factual'
+```
+
+### Step 5: Ask — backfill, continuous, or both?
+
+**Recommended approach:** Always start with a small backfill (~100 historical spans) to validate the evaluator before turning on continuous monitoring. This lets you catch column mapping errors, wrong span kinds, and template issues on known data before scoring all future production spans. Only enable continuous after a backfill confirms correct scoring.
+
+Before creating the task, ask:
+
+> "Would you like to:
+> (a) Run a **backfill** on historical spans (one-time)?
+> (b) Set up **continuous** evaluation on new spans going forward?
+> (c) **Both** — backfill first to validate, then keep scoring new spans automatically? (recommended)"
+
+### Step 6: Determine column mappings from real span data
+
+Do not guess paths. Pull a sample and inspect what fields are actually present:
+
+```bash
+ax spans export PROJECT --space SPACE -l 5 --days 7 --stdout
+```
+
+For each template variable (`{input}`, `{output}`, `{context}`), find the matching JSON path. Common starting points — **always verify on your actual data before using**:
+
+| Template var | LLM span | CHAIN span |
+|---|---|---|
+| `input` | `attributes.input.value` | `attributes.input.value` |
+| `output` | `attributes.llm.output_messages.0.message.content` | `attributes.output.value` |
+| `context` | `attributes.retrieval.documents.contents` | — |
+| `tool_output` | `attributes.input.value` (fallback) | `attributes.output.value` |
+
+**Validate span kind alignment:** If the evaluator prompt assumes LLM final text but the task targets CHAIN spans (or vice versa), runs can cancel or score the wrong text. Make sure the `query_filter` on the task matches the span kind you mapped.
+
+**Filters run against the eval index:** span kind is `attributes.openinference.span.kind` — `span_kind` is not a column and silently matches nothing. Custom attributes such as `attributes.metadata.*` may not be indexed either. If a filter returns 0 spans despite data existing, remove it to confirm the window has data.
+
+**Full example `--evaluators` JSON:**
+
+```json
+[
+  {
+    "evaluator_id": "EVAL_ID",
+    "column_mappings": {
+      "input": "attributes.input.value",
+      "output": "attributes.llm.output_messages.0.message.content",
+      "context": "attributes.retrieval.documents.contents"
+    }
+  }
+]
+```
+
+Include a mapping for **every** variable the template references. Omitting one causes runs to produce no valid scores.
+
+### Step 7: Create the task
+
+**Backfill only (a):**
+```bash
+ax tasks create-evaluation \
+  --name "Hallucination Backfill" \
+  --task-type TEMPLATE_EVALUATION \
+  --project PROJECT --space SPACE \
+  --evaluators '[{"evaluator_id": "EVAL_ID", "column_mappings": {"input": "attributes.input.value", "output": "attributes.output.value"}}]' \
+  --query-filter "attributes.openinference.span.kind = 'LLM'" \
+  --no-continuous
+```
+
+**Continuous only (b):**
+```bash
+ax tasks create-evaluation \
+  --name "Hallucination Monitor" \
+  --task-type TEMPLATE_EVALUATION \
+  --project PROJECT --space SPACE \
+  --evaluators '[{"evaluator_id": "EVAL_ID", "column_mappings": {"input": "attributes.input.value", "output": "attributes.output.value"}}]' \
+  --query-filter "attributes.openinference.span.kind = 'LLM'" \
+  --is-continuous \
+  --sampling-rate 0.1
+```
+
+**Both (c):** Use `--is-continuous` on create, then also trigger a backfill run in Step 8.
+
+### Step 8: Trigger a backfill run (if requested)
+
+> **Eval index lag:** The eval index is built asynchronously from the primary trace store and can lag **1–2 hours**. For your first test run, use a time window ending at least 2 hours in the past. If you set `--data-end-time` to "now" on spans ingested in the last hour, the run will complete successfully but score 0 spans.
+
+First find what time range has data:
+```bash
+ax spans export PROJECT --space SPACE -l 100 --days 1 --stdout   # try last 24h first
+ax spans export PROJECT --space SPACE -l 100 --days 7 --stdout   # widen if empty
+```
+
+Use the `start_time` / `end_time` fields from real spans to set the window. For the first validation run, cap `--max-spans` at ~100 to get quick feedback:
+
+```bash
+ax tasks trigger-run TASK_ID \
+  --data-start-time "2026-03-20T00:00:00" \
+  --data-end-time "2026-03-21T23:59:59" \
+  --max-spans 100 \
+  --wait
+```
+
+Review scores and explanations before widening to the full backfill or enabling continuous.
+
+---
+
+## Workflow B: Create an evaluator for an experiment
+
+Use this when the user says something like *"create an evaluator for my experiment"* or *"evaluate my dataset runs"*.
+
+**If the user says "dataset" but doesn't have an experiment:** A task must target an experiment (not a bare dataset). Ask:
+> "Evaluation tasks run against experiment runs, not datasets directly. Would you like help creating an experiment on that dataset first?"
+
+If yes, use the **arize-experiment** skill to create one, then return here.
+
+### Step 1: Find the dataset and experiment names
+
+```bash
+ax datasets list --space SPACE
+ax experiments list --dataset DATASET_NAME --space SPACE -o json
+```
+
+Note the dataset name and the experiment name(s) to score. These accept names or IDs in subsequent commands — names are preferred.
+
+### Step 2: Understand what to evaluate
+
+If the user specified the evaluator type → skip to Step 3.
+
+If not, inspect a recent experiment run to base the evaluator on actual data:
+
+```bash
+ax experiments export EXPERIMENT_NAME --dataset DATASET_NAME --space SPACE --stdout | python3 -c "import sys,json; runs=json.load(sys.stdin); print(json.dumps(runs[0], indent=2))"
+```
+
+Look at the `output`, `input`, `evaluations`, and `metadata` fields. Identify gaps (metrics the user cares about but doesn't have yet) and propose **1–3 evaluator ideas**. Each suggestion must include: the evaluator name (bold), a one-sentence description, and the binary label pair in parentheses — same format as Workflow A, Step 2.
+
+### Step 3: Confirm or create an AI integration
+
+Same as Workflow A, Step 3.
+
+### Step 4: Create the evaluator
+
+Same as Workflow A, Step 4. Keep variables generic.
+
+### Step 5: Determine column mappings from real run data
+
+Run data shape differs from span data. Inspect:
+
+```bash
+ax experiments export EXPERIMENT_NAME --dataset DATASET_NAME --space SPACE --stdout | python3 -c "import sys,json; runs=json.load(sys.stdin); print(json.dumps(runs[0], indent=2))"
+```
+
+Common mapping for experiment runs:
+- `output` → `"output"` (top-level field on each run)
+- `input` → check if it's on the run or embedded in the linked dataset examples
+
+If `input` is not on the run JSON, export dataset examples to find the path:
+```bash
+ax datasets export DATASET_NAME --space SPACE --stdout | python3 -c "import sys,json; ex=json.load(sys.stdin); print(json.dumps(ex[0], indent=2))"
+```
+
+### Step 6: Create the task
+
+`--experiment-ids` takes the base64 ID from `ax experiments list --space SPACE -o json`.
+
+```bash
+ax tasks create-evaluation \
+  --name "Experiment Correctness" \
+  --task-type TEMPLATE_EVALUATION \
+  --dataset DATASET_NAME --space SPACE \
+  --experiment-ids "EXP_ID" \
+  --evaluators '[{"evaluator_id": "EVAL_ID", "column_mappings": {"output": "output"}}]' \
+  --no-continuous
+```
+
+### Step 7: Trigger and monitor
+
+```bash
+ax tasks trigger-run TASK_ID \
+  --experiment-ids "EXP_ID" \
+  --wait
+
+ax tasks list-runs TASK_ID
+ax tasks get-run RUN_ID
+```
+
+---
+
+## Best Practices for Template Design
+
+### 1. Use generic, portable variable names
+
+Use `{input}`, `{output}`, and `{context}` — not names tied to a specific project or span attribute (e.g. do not use `{attributes_input_value}`). The evaluator itself stays abstract; the **task's `column_mappings`** is where you wire it to the actual fields in a specific project or experiment. This lets the same evaluator run across multiple projects and experiments without modification.
+
+### 2. Default to binary labels
+
+Use exactly two clear string labels (e.g. `hallucinated` / `factual`, `correct` / `incorrect`, `pass` / `fail`). Binary labels are:
+- Easiest for the judge model to produce consistently
+- Most common in the industry
+- Simplest to interpret in dashboards
+
+If the user insists on more than two choices, that's fine — but recommend binary first and explain the tradeoff (more labels → more ambiguity → lower inter-rater reliability).
+
+### 3. Be explicit about what the model must return
+
+The template must tell the judge model to respond with **only** the label string — nothing else. Set `--classification-choices` for label output; the label strings in the prompt must **exactly match** its keys (same spelling, same casing). Omit `--classification-choices` only for freeform (non-classification) output.
+
+Good:
+```
+Respond with exactly one of these labels: hallucinated, factual
+```
+
+Bad (too open-ended):
+```
+Is this hallucinated? Answer yes or no.
+```
+
+### 4. Keep temperature low
+
+Pass `--invocation-params '{"temperature": 0}'` for reproducible scoring. Higher temperatures introduce noise into evaluation results.
+
+### 5. Use `--include-explanations` for debugging
+
+During initial setup, always include explanations so you can verify the judge is reasoning correctly before trusting the labels at scale.
+
+### 6. Pass the template in single quotes in bash
+
+Single quotes prevent the shell from interpolating `{variable}` placeholders. Double quotes will cause issues:
+
+```bash
+# Correct
+--template 'Judge this: {input} → {output}'
+
+# Wrong — shell may interpret { } or fail
+--template "Judge this: {input} → {output}"
+```
+
+---
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| `ax: command not found` | See [references/ax-setup.md](references/ax-setup.md) |
+| `401 Unauthorized` | API key may not have access to this space. Verify at https://app.arize.com/admin > API Keys |
+| `Evaluator not found` | `ax evaluators get NAME_OR_ID --space SPACE` (`ax evaluators list --space SPACE` is for human browsing) |
+| `Integration not found` | `ax ai-integrations get NAME_OR_ID --space SPACE` (`list` is for human browsing) |
+| `Task not found` | `ax tasks get TASK_ID` (`ax tasks list --space SPACE` is for human browsing) |
+| `project and dataset-id are mutually exclusive` | Use only one when creating a task |
+| `experiment-ids required for dataset tasks` | Add `--experiment-ids` to `create` and `trigger-run` |
+| `sampling-rate only valid for project tasks` | Remove `--sampling-rate` from dataset tasks |
+| `project '...' not found` or validation error on `ax spans export` | Add `--space SPACE`; if it persists, look up the base64 project ID via `ax projects get PROJECT --space SPACE -o json` and use the `id` field instead |
+| Template validation errors | Use single-quoted `--template '...'` in bash; single braces `{var}`, not `{{var}}` |
+| Run stuck in `pending` | `ax tasks get-run RUN_ID`; then `ax tasks cancel-run RUN_ID` |
+| Run `completed`, 0 spans | Widen time window; eval index may not cover older data |
+| Scores look wrong | Add `--include-explanations` and inspect judge reasoning on a few samples |
+| Time format error on `trigger-run` | Use `2026-03-21T09:00:00` — no trailing `Z` |
+| Run failed: "missing rails and classification choices" | Add `--classification-choices '{"label_a": 1, "label_b": 0}'` on `ax evaluators create-evaluator template` (new) or `create-evaluator-version template` (existing) — labels must match the template |
+| Run `completed`, all spans skipped | Query filter matched spans but column mappings are wrong or template variables don't resolve — export a sample span and verify paths |
+| `query_filter` set but 0 spans scored, or `No data found` | Use `attributes.openinference.span.kind`, not `span_kind`. Custom attributes may not be indexed. Remove the filter to confirm spans exist in the window. |
+| Spans of the wrong kind scored | Set the span-kind filter on the task's `--query-filter` rather than a per-evaluator `query_filter` |
+| Custom **code** evaluator run cancels ~3s with `0/0/0` (successes/errors/skipped) | Wrong import path or `evaluate()` signature — see the "CRITICAL" callout under **Custom Python code evaluators** in [references/cli-reference.md](references/cli-reference.md). Must import from `arize.experimental.datasets.experiments.evaluators.base` (not `arize.experiments`) and declare named `evaluate()` params, not just `**kwargs`. |
+
+### Diagnosing cancelled runs
+
+For cancelled runs (~1s or ~3min), wrong span kind, and column-mapping mismatches, work through the ordered checklist (credentials → model name → column-mapping/path checks → time window → span kind → variable resolution) in [references/troubleshooting.md](references/troubleshooting.md).
+
+---
+
+## Related Skills
+
+- **arize-ai-provider-integration**: Full CRUD for LLM provider integrations (create, update, delete credentials)
+- **arize-trace**: Export spans to discover column paths and time ranges
+- **arize-experiment**: Create experiments and export runs for experiment column mappings
+- **arize-dataset**: Export dataset examples to find input fields when runs omit them
+- **arize-prompts**: Manage prompt templates in the Prompt Hub; use with evaluators to score versioned prompts
+- **arize-link**: Deep links to evaluators and tasks in the Arize UI
+
+---
+
+## Save Credentials for Future Use
+
+See [references/ax-profiles.md](references/ax-profiles.md) § Save Credentials for Future Use.

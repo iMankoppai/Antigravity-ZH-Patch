@@ -1236,6 +1236,174 @@
           "recordedAt": "2026-11-05T13:47:42.038Z"
         }
       ]
+    },
+    {
+      "productVersion": "2.30.0",
+      "platform": "win32",
+      "arch": "x64",
+      "pristine": {
+        "sha256": "00153a89ea4d870d192b7beacae2c26057fa6d698ab8ee777017105c582e60ee",
+        "bytes": 5242783,
+        "productVersion": "2.30.0",
+        "source": "current-unpatched",
+        "path": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar",
+        "recordedAt": "2026-11-10T06:22:00.000Z"
+      },
+      "compatibility": {
+        "packageSignatureSha256": "dd534ff5211df214041d89c743c21ce7cd3df62ec5ae26f7a71376a5ad1b67cf",
+        "targetSha256": {
+          "dist/ipcHandlers.js": "b9acebf9800f4b28bb2d3324b6aecac84fa645677bb2fad0ef6092433799972a",
+          "dist/main.js": "0d297f7b38f73777e61fdcde103f026b1ae69af91e37edc937c9b37d5fe73d6e",
+          "dist/utils.js": "0c4d101773515c827dd91c3b60bdcc4a04591758bb9b4280c46350987c7d17dd",
+          "dist/tray.js": "6c6b0968b45a1c7088e459657d57a9efd72d3733614349095f17b6ee94b47135",
+          "dist/ideInstall/wizard.js": "20814ba365ceb5f386afe856277f5dc85bf9db994d1a77579430f100f3725666",
+          "dist/provisionSplash.js": "737f40f02130440a9ec9a3fed83c2e62290029aece6d0ad558136fa510c45f35"
+        }
+      },
+      "requiredTargets": [
+        "dist/ipcHandlers.js",
+        "dist/main.js",
+        "dist/utils.js",
+        "dist/tray.js"
+      ],
+      "requiredEntries": {
+        "dist/ipcHandlers.js": true,
+        "dist/main.js": true,
+        "dist/tray.js": true,
+        "dist/utils.js": true
+      },
+      "requiredAnchors": [
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspace'",
+          "count": 1
+        },
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspaces'",
+          "count": 1
+        },
+        {
+          "target": "dist/main.js",
+          "text": "void win.loadURL(newUrl);",
+          "count": 1
+        },
+        {
+          "target": "dist/utils.js",
+          "text": "void win.loadURL(url);",
+          "count": 1
+        },
+        {
+          "target": "dist/tray.js",
+          "text": "Menu.buildFromTemplate(actions)",
+          "count": 1
+        }
+      ],
+      "missingTargets": [],
+      "knownPatchedSha256": [
+        {
+          "sha256": "405f4fe7b178ec2ffb51b946789f2673c89a77b287652b66648b6014746153e7",
+          "kernelSha256": "584471f8e567f713796961f9c61779e09e068a74e1d41e098dc7b9b9e4519546",
+          "bytes": 15955974,
+          "recordedAt": "2026-11-10T06:30:00.000Z"
+        }
+      ]
+    },
+    {
+      "productVersion": "2.31.0",
+      "platform": "win32",
+      "arch": "x64",
+      "pristine": {
+        "sha256": "03f3d09472c08a6225a6c2625d28839781c8e6596b8b6f57ff7ff5d575bdbbb4",
+        "bytes": 5274972,
+        "productVersion": "2.31.0",
+        "source": "current-unpatched",
+        "path": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar",
+        "recordedAt": "2026-11-10T15:20:00.000Z"
+      },
+      "compatibility": {
+        "packageSignatureSha256": "dd534ff5211df214041d89c743c21ce7cd3df62ec5ae26f7a71376a5ad1b67cf",
+        "targetSha256": {
+          "dist/ipcHandlers.js": "e45b442a3e8a55e521ead048bb858a1bbe8c282e1a5f9d7fab9366b843a44ead",
+          "dist/main.js": "0d297f7b38f73777e61fdcde103f026b1ae69af91e37edc937c9b37d5fe73d6e",
+          "dist/utils.js": "0c4d101773515c827dd91c3b60bdcc4a04591758bb9b4280c46350987c7d17dd",
+          "dist/tray.js": "6c6b0968b45a1c7088e459657d57a9efd72d3733614349095f17b6ee94b47135",
+          "dist/ideInstall/wizard.js": "20814ba365ceb5f386afe856277f5dc85bf9db994d1a77579430f100f3725666",
+          "dist/provisionSplash.js": "737f40f02130440a9ec9a3fed83c2e62290029aece6d0ad558136fa510c45f35"
+        }
+      },
+      "requiredTargets": [
+        "dist/ipcHandlers.js",
+        "dist/main.js",
+        "dist/utils.js",
+        "dist/tray.js"
+      ],
+      "requiredEntries": {
+        "dist/ipcHandlers.js": true,
+        "dist/main.js": true,
+        "dist/tray.js": true,
+        "dist/utils.js": true
+      },
+      "requiredAnchors": [
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspace'",
+          "count": 1
+        },
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspaces'",
+          "count": 1
+        },
+        {
+          "target": "dist/main.js",
+          "text": "void win.loadURL(newUrl);",
+          "count": 1
+        },
+        {
+          "target": "dist/utils.js",
+          "text": "void win.loadURL(url);",
+          "count": 1
+        },
+        {
+          "target": "dist/tray.js",
+          "text": "Menu.buildFromTemplate(actions)",
+          "count": 1
+        }
+      ],
+      "missingTargets": [],
+      "knownPatchedSha256": [
+        {
+          "sha256": "1f09c0e656a68510a21ae30dc0f476271e2b34cf986af571bba37a7481a8f0db",
+          "kernelSha256": "2a94893bba58b182cc2191151fb8713f8c1b48fb569052f1930304c5238f8ef2",
+          "bytes": 15991515,
+          "recordedAt": "2026-11-10T15:44:00.000Z"
+        },
+        {
+          "sha256": "766777bfd05dcf418fa24fcf74ca3818cf08233cb138f5c21ae39fd05b2ec44f",
+          "kernelSha256": "aded25a07ed02a5b11bfe28f908e2d8a32c78dc4c201c0c70d445097a714e71e",
+          "bytes": 15994230,
+          "recordedAt": "2026-11-11T04:21:00.000Z"
+        },
+        {
+          "sha256": "8a79f7ac3b0673255674a1454a1f7126e123f6eb4c1c29aa058bbc905aadebea",
+          "kernelSha256": "835d53e03cc26c85b84a76b0a90a2e8d821c6929a8284a3338eb142b7daae9c0",
+          "bytes": 16074622,
+          "recordedAt": "2026-11-11T04:49:17.679Z"
+        },
+        {
+          "sha256": "503ca1be4e5a8bd5a393d82f60a934acb24b8afaf29ae68b8212c75400f55bcb",
+          "kernelSha256": "fe2220789e25d5a2334e09ea169aa0b1a6128a6f7fbc29d9f836375da7f23e55",
+          "bytes": 17272140,
+          "recordedAt": "2026-11-11T05:15:17.265Z"
+        },
+        {
+          "sha256": "ce312effd77755fe197856449b1b39f6593acaf9af6ae92dd3a595f4d506c32a",
+          "kernelSha256": "db94927ab595bc3abb91632c4abba6a318e3f3982141c2d93bce97bb41b13c9b",
+          "bytes": 17274209,
+          "recordedAt": "2026-11-11T05:30:03.085Z"
+        }
+      ]
     }
   ]
 }

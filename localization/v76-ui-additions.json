@@ -1,0 +1,52 @@
+{
+  "notes": {
+    "date": "2026-11-10",
+    "appVersion": "2.31.0",
+    "evidence": "work/2-31-0-probe/：2.31.0 原版 app.asar（sha256 03f3d094…，5,274,972 字节）与 2.30.0 原版（00153a89…）逐文件差分；renderer 经 CDP 从本地服务 /main.js 拉取（renderer-2.31.0.js，11,871,831 字节），对比 2.30.0（11,711,794 字节）。新增字面量 2,373 个，UI 过滤候选 76 条，逐条上下文核对后收录。",
+    "skipped": [
+      "Tailwind/CSS 类名与内联布局数值（!border-transparent、grid-cols-…、linear-gradient… 等）。",
+      "开发者诊断与内部错误：Rpc failed due to xhr error、Sandbox fetch redirect not followed、Invalid loopback URL、Exactly one of blob and text must be set、[refreshCsrfToken]…、unknown worker RPC method…。",
+      "被 DOM 拆分的片段（Finish signing in to … / in your browser. 等改用动态规则处理）。",
+      "布尔开关与键名等程序内部标识。"
+    ]
+  },
+  "dictionary": {
+    "Environments": "环境",
+    "Coordinator": "协调器",
+    "Coordinators": "协调器",
+    "No coordinators": "暂无协调器",
+    "New coordinator": "新建协调器",
+    "New Coordinator": "新建协调器",
+    "Create Coordinator": "创建协调器",
+    "Coordinator name": "协调器名称",
+    "Coordinator goal": "协调器目标",
+    "Coordinator settings": "协调器设置",
+    "Project location": "项目位置",
+    "Authorization code": "授权代码",
+    "Submit code": "提交代码",
+    "Needs your approval": "需要你的批准",
+    "e.g. Release helper": "例如：发布助手",
+    "Plan upgrade required": "需要升级套餐",
+    "Choose icon and color": "选择图标和颜色",
+    "Paste authorization code": "粘贴授权代码",
+    "Toggle Google Cloud projects": "切换 Google Cloud 项目",
+    "Good to see you. What's next?": "很高兴见到你。接下来做什么？",
+    "Hey there, what should we build today?": "你好，今天想构建什么？",
+    "Welcome back. Where should we pick up?": "欢迎回来。从哪里继续？",
+    "What should this coordinator accomplish?": "这个协调器要完成什么？",
+    "Couldn't start the coordinator:": "无法启动协调器：",
+    "Couldn't create the coordinator. Try again.": "无法创建协调器，请重试。",
+    "Sign-in didn't finish. Try again.": "登录未完成，请重试。",
+    "Account connection was not completed.": "账号连接未完成。",
+    "Switched to authorization code sign-in": "已切换为授权代码登录",
+    "Trouble signing in? Enter authorization code": "登录遇到问题？输入授权代码",
+    "Create a project on this computer or remotely.": "在本机或远程创建项目。",
+    "Network error. Check your connection and try again.": "网络错误。请检查网络连接后重试。",
+    "Authorization code sign-in is unavailable in this version.": "此版本不支持授权代码登录。",
+    "Authorization code was rejected. Paste a fresh code and try again.": "授权代码被拒绝。请粘贴新的代码后重试。",
+    "Sign in in your browser, then paste the authorization code shown on the callback page.": "请在浏览器中登录，然后粘贴回调页面上显示的授权代码。",
+    "You can follow the workers in the Dashboard, and I'll post an update when something finishes or needs you.": "你可以在仪表盘中关注各个工作线程，当有任务完成或需要你处理时，我会发布更新。",
+    ". I coordinate the work for this project. Ask me a question or hand me a task, and I'll answer directly or start workers that run in parallel.": "。我负责协调本项目的工作。你可以向我提问或交办任务，我会直接回答，或启动并行运行的工作线程。",
+    "Pick a model to change it.": "请选择一个模型以更改。"
+  }
+}

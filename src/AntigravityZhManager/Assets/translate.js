@@ -1,5 +1,5 @@
 (() => {
-  const patchVersion = 74;
+  const patchVersion = 80;
   const skillDetails = window.__antigravityZhSkillDetails || { documents: [], translations: {} };
   const detailDocuments = [...skillDetails.documents, ...(skillDetails.additionalDocuments || []), ...(skillDetails.builtinDocuments || [])];
   const reviewedReadmeBlocks = new Map((skillDetails.readmeBlocks || []).map(b => [b.source, b]));
@@ -256,7 +256,7 @@
     [/^New secret for (.+)$/, m => `${m[1]} 的新密钥`],
     [/^Reconnect (.+)$/, m => `重新连接 ${m[1]}`],
     [/^Disconnect (.+)$/, m => `断开 ${m[1]} 的连接`],
-    [/^Connect (?!to\b|an?\b)(.+)$/, m => `连接 ${m[1]}`],
+    [/^Connect (?!to\b|an?\b|your\b)(.+)$/, m => `连接 ${m[1]}`],
     [/^Couldn't load apps: ([\s\S]+)$/, m => `无法加载应用：${m[1]}`],
     [/^No apps found for "(.+)"\.$/, m => `未找到与“${m[1]}”匹配的应用。`],
     [/^Cancel Questionnaire and Stop the Agent \((.+)\)$/, m => `取消问卷并停止智能体（${m[1]}）`],
@@ -670,6 +670,20 @@
 
 
   regexTranslations.unshift(
+    // 2.31.0 新增：登录授权代码与协调器相关动态模板；带用户名的问候语
+    [/^Hey (.+), what should we build today\?$/, m => `你好 ${m[1]}，今天想构建什么？`],
+    [/^Welcome back, (.+)\. Where should we pick up\?$/, m => `欢迎回来，${m[1]}。从哪里继续？`],
+    [/^Good to see you, (.+)\. What's next\?$/, m => `很高兴见到你，${m[1]}。接下来做什么？`],
+    [/^Finish signing in to (.+) in your browser\.$/, m => `请在浏览器中完成登录以使用 ${m[1]}。`],
+    [/^Sign in from the (.+) panel\.$/, m => `请从 ${m[1]} 面板登录。`],
+    [/^Sign in to use (.+)!$/, m => `登录后即可使用 ${m[1]}！`],
+    // 2.30.0 新增：MCP 服务器启动失败计数（单复数）、远程模式文件类型上传限制、
+    // LSP 引用面板计数、成员数。
+    [/^(\d+) MCP servers? failed to start$/i, m => `${m[1]} 个 MCP 服务器启动失败`],
+    [/^([A-Za-z0-9.]{1,12}) file uploads are not currently supported in remote mode$/i, m => `远程模式下暂不支持 ${m[1]} 文件上传`],
+    [/^Showing first (\d+) references$/, m => `正在显示前 ${m[1]} 个引用`],
+    [/^(\d+) references?$/, m => `${m[1]} 个引用`],
+    [/^(\d+) members?$/, m => `${m[1]} 位成员`],
     [/^Playback speed ([\d.]+)x$/, m => `播放速度 ${m[1]} 倍`],
     [/^(Mute|Unmute|Fullscreen|Exit fullscreen) \(([mf])\)$/, m => `${translations.get(m[1])}（${m[2]}）`],
     [/^Zoom ([\d.]+)%, reset to fit$/, m => `缩放 ${m[1]}%，重置为适合窗口`],
@@ -1096,6 +1110,19 @@
     if (node.parentElement?.closest('[data-antigravity-zh-detail-view]')) return;
     if (shouldSkipTextNode(node)) { restoreNode(node); return; }
     const parent = node.parentElement;
+    // 空状态被 React 拆成多个文本节点时按整句处理（如 “No automations yet”）
+    const emptyState = parent?.closest('[data-testid="sidecar-list-empty"] p');
+    if (emptyState && emptyState.textContent.trim() === 'No automations yet') {
+      if (emptyState.dataset.zhDone === '1') return;
+      const first = emptyState.firstChild;
+      if (first) writeText(first, '暂无自动化', originalText(first));
+      const walker = document.createTreeWalker(emptyState, NodeFilter.SHOW_TEXT);
+      let idx = 0, next;
+      while ((next = walker.nextNode())) { if (idx++ === 0) continue; writeText(next, '', originalText(next)); }
+      emptyState.dataset.zhDone = '1';
+      return;
+    }
+    if (emptyState && emptyState.dataset.zhDone === '1' && emptyState.textContent.trim() === '暂无自动化') return;
     if (translateDetailText(node)) return;
     if (translatePermissionSentence(node)) return;
     if (translateSplitHintSentence(node)) return;
