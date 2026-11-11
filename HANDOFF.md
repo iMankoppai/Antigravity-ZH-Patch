@@ -144,7 +144,7 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - **技能正文边界**：弹窗正文按 SKILL.md 的 24KB 预览 fingerprint 匹配；官方改正文会导致失配、回退英文。bundle 因含 494 篇正文约 10.7MB，页面注入较重。`build-skill-detail-views.cjs` 重跑会清空 partner additionalDocuments，需用 `integrate-plugin-docs.cjs` 逐插件恢复；译文原文在 `localization/partner-skill-docs/`。
 - **天青蓝气泡宽度选择器依赖 2.29 用户消息 DOM**：短句单行修复基于 `user-input-step > div.w-full > div`（官方 `max-w-[80%]` 包裹层）等层级；官方若重构该结构，需同步更新 `theme-azure-bubble.css` 第 8 节，`azure-theme-regression.cjs` 会兜住这一层。
 
-## 10. 当前状态与技能正文（v1.6.0 / Antigravity 2.31.0）
+## 10. 当前状态与技能正文（v1.4.1 / Antigravity 2.31.0）
 
 **2026-11-11 续（内核 v80，本地）：补全设置页（常规/外观/浏览器/快捷键/对话）与自动化空状态「No automations yet」漏译（+26 词条，含多文本节点空状态处理）；已永久安装（安装归档 ce312eff…，内嵌 bundle == 源码 db94927a…）；已随 v1.4.1 发布 GitHub。详见 docs/v80-设置漏译补全.md。**
 

@@ -60,7 +60,7 @@
       "available": true,
       "default": false,
       "installedToClient": true,
-      "releaseStatus": "v1.6.0 本地构建（未发布 GitHub；主题默认关，可在管理器开启）",
+      "releaseStatus": "v1.4.1 已发布 GitHub（主题默认关，可在管理器开启）",
       "runtimeMode": "CDP 运行时注入/移除（CdpHotPatcher.SetThemeAsync）",
       "permanentMode": "zh-bundle.attach() 读取 %APPDATA%\\Antigravity\\zh-theme.json 自动应用",
       "configPath": "%APPDATA%\\Antigravity\\zh-theme.json",
