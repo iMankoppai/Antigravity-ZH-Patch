@@ -344,5 +344,36 @@
     "released": true,
     "note": "v1.4.1 正式发布；内核 v80，含设置页补全与六插件 90 篇技能正文。",
     "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.1"
+  },
+  "cleanup20261111": {
+    "date": "2026-11-11",
+    "freedMB": 885.5,
+    "totalMBAfter": 773.4,
+    "removed": [
+      "src/AntigravityZhManager/bin",
+      "src/AntigravityZhManager/obj",
+      "tests/packaging/engine-tests/bin",
+      "tests/packaging/engine-tests/obj",
+      "work/publish-v77",
+      "work/publish-v78",
+      "work/publish-v79",
+      "work/publish-v80",
+      "work/old-manager-v16-kernelv76.exe",
+      "work/old-manager-v16-kernelv77.exe",
+      "work/old-manager-v16-kernelv78.exe",
+      "work/old-manager-v16-kernelv79.exe"
+    ],
+    "kept": [
+      "work/publish-v1.4.1",
+      "work/old-manager-v16-local-v80.exe",
+      "work/2-29-0-probe",
+      "work/2-30-0-probe",
+      "work/2-31-0-probe",
+      "work/v72",
+      "work/v68",
+      "dist/Antigravity-ZH-1.4.1-Windows-x64.zip",
+      "dist/Antigravity-ZH-1.4.0-Windows-x64.zip"
+    ],
+    "note": "安全清理，仅删除 gitignore 的构建缓存与本机旧备份；git status 干净。"
   }
 }

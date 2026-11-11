@@ -107,7 +107,7 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 
 ## 7. 核心任务 Playbook C：发布
 
-> **现状**：v1.4.0 已完成构建并发布到 GitHub Releases（<https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.0>）。再次发版时从本节第 1 步重走一遍。
+> **现状**：v1.4.1 已完成构建并发布到 GitHub Releases（<https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.1>）。再次发版时从本节第 1 步重走一遍。
 
 1. `csproj` 三处版本号（Version/FileVersion/AssemblyVersion）→ README（徽章、头部、下载名、版本记录条目）→ `当前状态.json`（version/patchVersion/哈希/verification 块）。
 2. `dotnet publish -c Release -r win-x64 --self-contained true` 到独立候选目录（首次需先 restore）。
@@ -159,7 +159,7 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - 前端 renderer 经 CDP 拉取（11,871,831 字节）；新增字面量 2,373 个，UI 候选 76 条，核对后新增 **37 条**词条（`localization/v76-ui-additions.json` + `scripts/sync-v76-localization.cjs`，协调器/授权代码/环境等），并新增命名问候语与登录相关动态规则。
 - 内核 `patchVersion` **75 → 76**；词条 **6,984**；bundle `2a94893b…`；隔离/永久安装归档 `1f09c0e6…`（15,991,515 字节）；manager EXE v1.6.0。统一门禁 36/36、引擎 41/41。
 - 实机热加载验证：首页可见英文只剩「Antigravity / 项目名 / 分支名 / 模型名」等有意保留项。
-- **未发布 GitHub**（本地构建）。实机验收需人工启动客户端。
+- **已并入 v1.4.1 发布。** 实机验收需人工启动客户端。
 
 **以下为 v1.5.0 / 2.30.0 历史细节，保留作参考**
 
@@ -167,7 +167,7 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - 客户端 **2.30.0** 原版 `00153a89…`（5,242,783 字节）；主进程新增 20 个浏览器/访客框架模块、改动 369 个文件，但 **16 个注入锚点全部恰好命中 1 次**；唯一失配是 `dist/utils.js` 的 setAppDetails 注释（旧 `// Prevent the menu dropdown…` → 新 `// Truncation keeps the menu dropdown…`），`AsarCleanPatcher` 已改为新旧双锚点兼容，引擎结构零其它改动。证据在 `work/2-30-0-probe/`。
 - 前端 renderer 通过 CDP 从本地服务 `/main.js` 拉取（11,717,794 字节）；新增字面量 4,117 个，UI 过滤候选 306 条，逐条上下文核对后新增 **113 条**词条（`localization/v75-ui-additions.json` + `scripts/sync-v75-localization.cjs`），并新增 4 条动态规则（MCP 启动失败计数、远程模式文件上传限制、LSP 引用计数、成员数）。
 - 内核 `patchVersion` **74 → 75**；词条 **6,947**；bundle `584471f8…`；隔离/永久安装归档 `405f4fe7…`（15,955,974 字节）；manager EXE `16612bc5…`。统一门禁 36/36、引擎 41/41。
-- **未发布 GitHub**（本地构建）。实机验收需人工启动客户端。
+- **已并入 v1.4.1 发布。** 实机验收需人工启动客户端。
 
 **以下为 v1.4.0 / 2.29.0 历史细节，保留作参考**
 
@@ -194,3 +194,8 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 3. 注意：`scripts/check-current.ps1` 含中文且无 BOM，**必须用 pwsh 7**（5.1 会按 ANSI 读成乱码并报解析错误）。
 4. 技能正文再生/维护见上方"技能正文"小节与 `localization/partner-skill-docs/README.md`。
 
+## 11. 本机目录整理（2026-11-11）
+
+- 执行安全清理：删除构建缓存 src/**/bin|obj、tests/**/bin|obj（约 277 MB），已被 v1.4.1 取代的 work/publish-v77~v80（约 305 MB），以及 work/old-manager-v16-kernelv76~v79.exe（约 304 MB），共释放约 **885 MB**（项目总大小约 1.6 GB → 773 MB）。
+- 保留：全部源码/词条/文档、work/publish-v1.4.1、work/old-manager-v16-local-v80.exe（回滚用）、历史探针证据（work/2-29-0/2-30-0/2-31-0-probe、72、68）、dist/Antigravity-ZH-1.4.1…zip 与 1.4.0…zip。
+- git status 干净；删除项均为 gitignore 的构建/本机缓存，不影响已提交内容。
