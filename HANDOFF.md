@@ -2,7 +2,7 @@
 
 写给接手本项目维护工作的人。目标：**不依赖任何口头交接，读完这份 + 按清单跑一遍，就能独立完成"官方更新后重新适配"的全流程**。
 
-- 编写日期：2026-10-31（2026-11-04 随 v1.4.0 更新；2026-11-05 本机应用“短消息气泡单行”修复；2026-11-10 随 v1.5.0 适配 2.30.0；2026-11-10 晚随 v1.6.0 适配 2.31.0）。对应交接状态：管理器 v1.4.1 / 汉化内核 v80（2026-11-11 正式发布）/ 适配 Antigravity 2.31.0 / 词库 7,218 条。
+- 编写日期：2026-10-31（2026-11-04 随 v1.4.0 更新；2026-11-05 本机应用“短消息气泡单行”修复；2026-11-10 随 v1.5.0 适配 2.30.0；2026-11-10 晚随 v1.6.0 适配 2.31.0；2026-11-12 随 v1.4.2（本地，未发布）适配 2.31.2 纯版本号重打包）。对应交接状态：管理器 v1.4.2（本地构建，未发布）/ 汉化内核 v80（2026-11-11 正式发布）/ 适配 Antigravity 2.31.2 / 词库 7,218 条。
 - 当前基线（版本、哈希、最近验证）**只看一处**：根目录 [`当前状态.json`](当前状态.json)。本文件的数字是交接时点快照。
 - 规范性流程（怎样才算做对、发布判定标准）在 [`docs/项目维护与交付指导书.md`](docs/项目维护与交付指导书.md)；本文件是实操手册，两者冲突时以指导书 + 实际门禁为准。
 
@@ -107,7 +107,7 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 
 ## 7. 核心任务 Playbook C：发布
 
-> **现状**：v1.4.1 已完成构建并发布到 GitHub Releases（<https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.1>）。再次发版时从本节第 1 步重走一遍。
+> **现状**：v1.4.1 已完成构建并发布到 GitHub Releases（<https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.1>）。**v1.4.2（适配 2.31.2，内核仍 v80）已本地构建、`dist/` 已刷新，但未发布 GitHub**——如需发布从本节第 1 步重走一遍（版本号已是 1.4.2，重点是 `gh release create v1.4.2` 上传资产并把 README/HANDOFF 的"未发布"改为"已发布"）。
 
 1. `csproj` 三处版本号（Version/FileVersion/AssemblyVersion）→ README（徽章、头部、下载名、版本记录条目）→ `当前状态.json`（version/patchVersion/哈希/verification 块）。
 2. `dotnet publish -c Release -r win-x64 --self-contained true` 到独立候选目录（首次需先 restore）。
@@ -144,7 +144,9 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - **技能正文边界**：弹窗正文按 SKILL.md 的 24KB 预览 fingerprint 匹配；官方改正文会导致失配、回退英文。bundle 因含 494 篇正文约 10.7MB，页面注入较重。`build-skill-detail-views.cjs` 重跑会清空 partner additionalDocuments，需用 `integrate-plugin-docs.cjs` 逐插件恢复；译文原文在 `localization/partner-skill-docs/`。
 - **天青蓝气泡宽度选择器依赖 2.29 用户消息 DOM**：短句单行修复基于 `user-input-step > div.w-full > div`（官方 `max-w-[80%]` 包裹层）等层级；官方若重构该结构，需同步更新 `theme-azure-bubble.css` 第 8 节，`azure-theme-regression.cjs` 会兜住这一层。
 
-## 10. 当前状态与技能正文（v1.4.1 / Antigravity 2.31.0）
+## 10. 当前状态与技能正文（v1.4.2 / Antigravity 2.31.2）
+
+**2026-11-12（管理器 v1.4.2，本地，未发布）：适配 Antigravity 2.31.2（纯版本号更新）。** 官方更新 2.31.0 → 2.31.2：逐文件差分 1112→1112（无增删），仅 `package.json` 版本号变化，**68 个 `dist/*.js` 与 2.31.0 逐字节一致**；渲染端 `main.js`（11,871,831 字节）**逐字节相同**，新增字面量 0；**347 个 chrome-devtools-mcp 解包模块 integrity 哈希也全部一致**；16 个注入锚点全部命中 1 次 → **内核/词库/规则零改动（保持 v80 / 7,218）**。登记 2.31.2 基线（原版 `94452cf0…`、已知补丁版 `5a6c9cc0…`）；统一门禁 36/36（隔离与本机安装后各一遍）、引擎 41/41；本机永久安装归档 == 隔离归档 `5a6c9cc0…`，内嵌 bundle == 源码 `db94927a…`。重建管理器 v1.4.2（`144be61c…`）与 `dist/Antigravity-ZH-1.4.2-Windows-x64.zip`（`533bb1a6…`），**未发布 GitHub**。官方 Changelog 最新公开条目仍为 v2.31.0（2026-11-09），查无 2.31.2 条目，判断为静默热修／渠道重打包。详见 [`docs/v81-2.31.2适配.md`](docs/v81-2.31.2适配.md)。
 
 **2026-11-11 续（内核 v80，本地）：补全设置页（常规/外观/浏览器/快捷键/对话）与自动化空状态「No automations yet」漏译（+26 词条，含多文本节点空状态处理）；已永久安装（安装归档 ce312eff…，内嵌 bundle == 源码 db94927a…）；已随 v1.4.1 发布 GitHub。详见 docs/v80-设置漏译补全.md。**
 

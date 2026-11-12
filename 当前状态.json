@@ -1,7 +1,7 @@
 {
   "project": "Antigravity-ZH",
-  "version": "1.4.1",
-  "adaptedAppVersion": "2.31.0",
+  "version": "1.4.2",
+  "adaptedAppVersion": "2.31.2",
   "termsCount": 7218,
   "architecture": "C# .NET 8 WPF Single-File Self-Contained EXE",
   "cleanMode": true,
@@ -10,17 +10,17 @@
   "sourcePath": "src/AntigravityZhManager",
   "installDir": "C:/Users/24844/AppData/Local/Programs/antigravity",
   "officialBackup": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar.bak",
-  "officialAsarSha256": "03f3d09472c08a6225a6c2625d28839781c8e6596b8b6f57ff7ff5d575bdbbb4",
-  "installedAsarSha256": "ce312effd77755fe197856449b1b39f6593acaf9af6ae92dd3a595f4d506c32a",
-  "isolatedAsarSha256": "ce312effd77755fe197856449b1b39f6593acaf9af6ae92dd3a595f4d506c32a",
-  "isolatedAsarNote": "2.31.0 永久安装归档（v80 内核）；引擎 --apply-installed 直写本机，内嵌 bundle == 源码 db94927a…。",
+  "officialAsarSha256": "94452cf0ce71bb4c21cfbdd51b31c0c6404e7aeb99539bdecce8954175b9dbaf",
+  "installedAsarSha256": "5a6c9cc0d12589bc40a74179ff645ab4a0a2580f26035fb0fd2fc1b2e1f2b6d4",
+  "isolatedAsarSha256": "5a6c9cc0d12589bc40a74179ff645ab4a0a2580f26035fb0fd2fc1b2e1f2b6d4",
+  "isolatedAsarNote": "2.31.2 永久安装归档（v80 内核）；引擎 --apply-installed 直写本机，内嵌 bundle == 源码 db94927a…；安装归档与隔离归档逐字节一致。",
   "installedKernelSha256": "db94927ab595bc3abb91632c4abba6a318e3f3982141c2d93bce97bb41b13c9b",
-  "managerExeSha256": "e59788956bc015abd0968ab90306f885f206d5bb9e0695f2174a7050977b7b02",
-  "managerExeNote": "v1.4.1（内核 v80 + 六插件 90 篇技能正文）已发布 GitHub Releases。",
-  "releaseZip": "dist/Antigravity-ZH-1.4.1-Windows-x64.zip",
-  "releaseZipSha256": "f8e0a79a129837ec30167a700a8291c49334e3768e9366c1e81bfc90e1f0538a",
-  "publishedInfo": "v1.4.1 已发布 GitHub Releases：https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.1",
-  "updatedAt": "2026-11-11T05:38:30.892Z",
+  "managerExeSha256": "144be61cf5ef2bdff5e01aef4d943984f3461d8adf3fc9b4dfb057f785f2ffb5",
+  "managerExeNote": "v1.4.2（内核 v80）本地构建、未发布 GitHub；本轮为 2.31.2 纯版本号适配，仅登记基线并重打包，内核/词库零改动。",
+  "releaseZip": "dist/Antigravity-ZH-1.4.2-Windows-x64.zip",
+  "releaseZipSha256": "533bb1a671c8089c5318496a98f21ab9742e46b865b70ecfe9984fa7fa116fce",
+  "publishedInfo": "v1.4.2 为本地构建，未发布 GitHub；GitHub 最新正式发布仍为 v1.4.1（适配 2.31.0）。",
+  "updatedAt": "2026-11-12T13:16:52.808Z",
   "patchVersion": 80,
   "installedPatchVersion": 80,
   "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.1",
@@ -96,7 +96,7 @@
     "configPath": "%APPDATA%\\\\Antigravity\\\\zh-stats.json"
   },
   "previousReleaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.0",
-  "localOnly": false,
+  "localOnly": true,
   "sourceKernelSha256": "db94927ab595bc3abb91632c4abba6a318e3f3982141c2d93bce97bb41b13c9b",
   "permanentInstallPending": false,
   "installedDiskPatchVersion": 80,
@@ -174,7 +174,7 @@
     "releaseZipSha256": "dd093b39699d56890ef9284e77ecef53d9baf52bd1ed19f03a559f41a4738221"
   },
   "pendingRelease": false,
-  "nextAction": "v1.4.1 已发布 GitHub Releases；如需继续维护，后续改动按 Playbook C 升版本并发布。",
+  "nextAction": "已完成 Antigravity 2.31.2 纯版本号适配（基线登记 + 本机永久安装 + 本地 v1.4.2 构建）；如需对外发布，走 Playbook C：gh release create v1.4.2 并上传 dist 资产。",
   "skillBody": {
     "implemented": true,
     "source": "skill-details.json additionalDocuments (partner skill body renderedHtml)",
@@ -375,5 +375,32 @@
       "dist/Antigravity-ZH-1.4.0-Windows-x64.zip"
     ],
     "note": "安全清理，仅删除 gitignore 的构建缓存与本机旧备份；git status 干净。"
+  },
+  "v81Verification": {
+    "performed": true,
+    "checkedAt": "2026-11-12T13:16:52.809Z",
+    "clientVersion": "2.31.2",
+    "patchVersion": 80,
+    "termsCount": 7218,
+    "newDictionaryEntries": 0,
+    "kind": "pure-version-bump",
+    "pristineAsarSha256": "94452cf0ce71bb4c21cfbdd51b31c0c6404e7aeb99539bdecce8954175b9dbaf",
+    "pristineBytes": 5274972,
+    "bundleSha256": "db94927ab595bc3abb91632c4abba6a318e3f3982141c2d93bce97bb41b13c9b",
+    "isolatedAsarSha256": "5a6c9cc0d12589bc40a74179ff645ab4a0a2580f26035fb0fd2fc1b2e1f2b6d4",
+    "installedAsarSha256": "5a6c9cc0d12589bc40a74179ff645ab4a0a2580f26035fb0fd2fc1b2e1f2b6d4",
+    "isolatedBytes": 17274209,
+    "managerVersion": "1.4.2",
+    "managerExeSha256": "144be61cf5ef2bdff5e01aef4d943984f3461d8adf3fc9b4dfb057f785f2ffb5",
+    "requiredChecks": 36,
+    "failed": 0,
+    "skipped": 0,
+    "engineTests": 41,
+    "audit": {
+      "mainProcess": "2.31.0→2.31.2 逐文件差分：1112→1112 文件，无新增/删除；仅 package.json 内容变化（版本号），68 个 dist/*.js 全部逐字节一致；16 个注入锚点全部恰好命中 1 次 → AsarCleanPatcher 零改动。",
+      "renderer": "renderer main.js 11,871,831 字节，与 2.31.0 逐字节相同；新增字面量 0 → 无需新增词条/规则。"
+    },
+    "released": false,
+    "note": "v1.4.2 适配 Antigravity 2.31.2：纯版本号更新，内核保持 v80、词条 7,218；登记 2.31.2 基线（原版 94452cf0…、已知补丁版 5a6c9cc0…）；统一门禁 36/36、引擎 41/41；本机永久安装归档与隔离归档逐字节一致，内嵌内核 == 源码 db94927a…。本地构建未发布 GitHub。"
   }
 }

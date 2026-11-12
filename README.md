@@ -1,14 +1,14 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.4.1-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
-[![Antigravity](https://img.shields.io/badge/Antigravity-2.31.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Release](https://img.shields.io/badge/Release-v1.4.2-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Antigravity](https://img.shields.io/badge/Antigravity-2.31.2-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.4.1（汉化内核 v80）适配 Google Antigravity 2.31.0（Windows x64），已发布 GitHub Releases。** 界面词条 **7,218 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情，以及 **44 个合作插件的 494 篇技能正文**、**Gmail / Looker / Arize AX / invideo / Neo4j / Spacefast 六插件 90 篇技能正文**汉化。官方更新导致汉化失效时，可运行管理器重新安装，或点击【新版汉化适配】热恢复，详见 [`docs/新版汉化适配.md`](docs/新版汉化适配.md)。
+> **当前版本 v1.4.2（汉化内核 v80）适配 Google Antigravity 2.31.2（Windows x64），本地构建（未发布 GitHub）。** 界面词条 **7,218 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情，以及 **44 个合作插件的 494 篇技能正文**、**Gmail / Looker / Arize AX / invideo / Neo4j / Spacefast 六插件 90 篇技能正文**汉化。官方更新导致汉化失效时，可运行管理器重新安装，或点击【新版汉化适配】热恢复，详见 [`docs/新版汉化适配.md`](docs/新版汉化适配.md)。
 
 ---
 
@@ -57,7 +57,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
 2. 下载 **`AntigravityZhManager.exe`**，或使用项目根目录 / `dist/` 中的交付包；
-   > 说明：**v1.4.1 已发布 GitHub Releases**；也可直接运行本项目根目录的 `Antigravity汉化管理器.exe`。
+   > 说明：**v1.4.2 为本地构建（未发布 GitHub）**；GitHub 上最新正式发布为 v1.4.1，也可直接运行本项目根目录的 `Antigravity汉化管理器.exe`。
 3. 双击下载的 EXE，或解压 ZIP 后运行其中的 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -85,7 +85,7 @@ Antigravity ZH/
 ```
 
 ### 技术规格
-- **适配软件**：**Google Antigravity 2.31.0**（Windows x64）
+- **适配软件**：**Google Antigravity 2.31.2**（Windows x64）
 - **汉化内核**：v80（词条 7,218 条）
 - **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、工作状态、插件市场与主题设置）
 - **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入
@@ -99,6 +99,12 @@ Antigravity ZH/
 ---
 
 ## 📦 版本记录
+
+### v1.4.2 (内核 v80) — 适配 Antigravity 2.31.2（本地构建，未发布）
+
+- **适配新版客户端**：支持 Google Antigravity **2.31.2**（Windows x64）。这是一次**纯版本号更新**：68 个 `dist/*.js` 主进程模块与 2.31.0 逐字节一致（仅 `package.json` 版本号变化），渲染端 `main.js`（11,871,831 字节）逐字节相同，16 个注入锚点全部恰好命中 1 次——**内核、词库与翻译规则零改动**（保持内核 v80、词条 7,218）。
+- **基线登记**：新增 2.31.2 官方原版基线（原版 `94452cf0…`，5,274,972 字节）与已知补丁版归档（`5a6c9cc0…`）。官方更新后重新"永久安装"即可恢复中文。
+- 本机已永久安装并校验（安装归档 5a6c9cc0…，内嵌内核 db94927a…，与隔离归档逐字节一致）。
 
 ### v1.4.1 (内核 v80) — 适配 Antigravity 2.31.0（已发布 GitHub）
 
