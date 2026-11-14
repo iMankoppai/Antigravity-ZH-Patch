@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const withFixture = require('./lib/chrome-fixture.cjs');
 const dictionary = require('../../src/AntigravityZhManager/Assets/dictionaries.json');
 const additions = require('../../localization/v74-marketplace-detail-additions.json');
-const detail = JSON.parse(fs.readFileSync('work/2-29-0-probe/detail-strings.json', 'utf8'));
+const detail = JSON.parse(fs.readFileSync('tests/renderer/fixtures/marketplace-detail-strings.json', 'utf8'));
 const runtime = fs.readFileSync('src/AntigravityZhManager/Assets/translate.js', 'utf8');
 
 const pick = (type) => detail.todo.find((x) => x.type === type && additions.dictionary[x.text]);
