@@ -29,12 +29,14 @@ function loadSources() {
 function buildBundle(dict, translateSrc) {
   const detailCatalogue = JSON.parse(fs.readFileSync(path.join(assets, 'skill-details.json'), 'utf8'));
   const nativeSrc = fs.readFileSync(path.join(assets, 'native-ui.js'), 'utf8');
+  const themeCss = fs.readFileSync(path.join(assets, 'theme-azure-bubble.css'), 'utf8');
   new vm.Script(nativeSrc);
   const bundleLines = [
     "'use strict';",
     "const dict = " + JSON.stringify(dict) + ";",
     "const translateCode = " + JSON.stringify(translateSrc) + ";",
     "const skillDetails = " + JSON.stringify(detailCatalogue) + ";",
+    "const themeCss = " + JSON.stringify(themeCss) + ";",
     nativeSrc,
     "const nativeUi = createNativeUi(dict);",
     "const windows = new WeakSet();",
@@ -65,6 +67,18 @@ function buildBundle(dict, translateSrc) {
     "      translateCode + '\\n' +",
     "      '})()';",
     "    contents.executeJavaScript(script, false).catch(() => {});",
+    "    let themeOn = false;",
+    "    try { const fs = require('fs'); const path = require('path'); const base = process.env.APPDATA || process.env.HOME || ''; if (base) { const cfg = JSON.parse(fs.readFileSync(path.join(base, 'Antigravity', 'zh-theme.json'), 'utf8')); themeOn = cfg && cfg.azureBubble === true; } } catch {}",
+    "    const themeScript = '(() => {\\n' +",
+    "      '  const id = \"ag-azure-bubble-style\";\\n' +",
+    "      '  let el = document.getElementById(id);\\n' +",
+    "      '  if (!' + themeOn + ') { if (el) el.remove(); window.__antigravityZhThemeEnabled = false; return; }\\n' +",
+    "      '  if (!el) { el = document.createElement(\"style\"); el.id = id; (document.head || document.documentElement).appendChild(el); }\\n' +",
+    "      '  const css = ' + JSON.stringify(themeCss) + ';\\n' +",
+    "      '  if (el.textContent !== css) el.textContent = css;\\n' +",
+    "      '  window.__antigravityZhThemeEnabled = true;\\n' +",
+    "      '})()';",
+    "    contents.executeJavaScript(themeScript, false).catch(() => {});",
     "  };",
     "",
     "  contents.on('dom-ready', inject);",

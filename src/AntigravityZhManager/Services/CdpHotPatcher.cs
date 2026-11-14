@@ -137,6 +137,8 @@ public static class CdpHotPatcher
                 var value = await EvaluateAsync(page, script, timeout.Token);
                 if (!value.TryGetProperty("value", out var success) || success.ValueKind != JsonValueKind.True)
                     throw new IOException("页面未确认汉化成功。");
+                if (IsThemeEnabled())
+                    await EvaluateAsync(page, ThemeScript(true), timeout.Token);
             }
             string message = $"已验证 {pages.Count} 个窗口实时汉化生效（v{resources.Version} / {resources.Count} 条，含 {resources.DetailCount} 份完整技能正文）。";
             log?.Invoke("⚡ " + message);
@@ -165,5 +167,75 @@ public static class CdpHotPatcher
             return true;
         }
         catch (Exception ex) { log?.Invoke("窗口英文恢复失败：" + ex.Message); return false; }
+    }
+
+    private static string ThemeConfigPath() =>
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Antigravity", "zh-theme.json");
+
+    public static bool IsThemeEnabled()
+    {
+        try
+        {
+            string p = ThemeConfigPath();
+            if (!File.Exists(p)) return false;
+            using var doc = JsonDocument.Parse(File.ReadAllText(p));
+            return doc.RootElement.TryGetProperty("azureBubble", out var v) && v.ValueKind == JsonValueKind.True;
+        }
+        catch { return false; }
+    }
+
+    public static void SetThemeEnabled(bool enable)
+    {
+        try
+        {
+            string p = ThemeConfigPath();
+            Directory.CreateDirectory(Path.GetDirectoryName(p)!);
+            File.WriteAllText(p, JsonSerializer.Serialize(new { azureBubble = enable }));
+        }
+        catch { }
+    }
+
+    private static string ThemeScript(bool enable)
+    {
+        string css = JsonSerializer.Serialize(Resource("theme-azure-bubble.css"));
+        string core = enable
+            ? "if(!el){el=document.createElement('style');el.id=id;(document.head||document.documentElement).appendChild(el);}var css=" + css + ";if(el.textContent!==css){el.textContent=css;}window.__antigravityZhThemeEnabled=true;"
+            : "if(el){el.remove();}window.__antigravityZhThemeEnabled=false;";
+        return "(() => { var id='ag-azure-bubble-style'; var el=document.getElementById(id); " + core + " })()";
+    }
+
+    // 在当前前台窗口即时应用/移除天青蓝气泡（仅改色），不写归档、不影响会话与输入。
+    public static async Task<bool> SetThemeAsync(bool enable, Action<string>? log = null)
+    {
+        try
+        {
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(8));
+            var pages = await TargetsAsync(timeout.Token);
+            foreach (var page in pages)
+            {
+                var value = await EvaluateAsync(page, ThemeScript(enable), timeout.Token);
+                if (!value.TryGetProperty("value", out _)) return false;
+            }
+            log?.Invoke(enable ? "🎨 天青蓝对话气泡（纯配色）已应用到当前窗口。" : "🎨 已移除天青蓝对话气泡，恢复官方默认配色。");
+            return true;
+        }
+        catch (Exception ex) { log?.Invoke("🎨 天青蓝气泡切换失败：" + ex.Message); return false; }
+    }
+
+    public static async Task<bool> CheckThemeAsync()
+    {
+        try
+        {
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            foreach (var page in await TargetsAsync(timeout.Token))
+            {
+                var value = await EvaluateAsync(page,
+                    "Boolean(window.__antigravityZhThemeEnabled === true && document.getElementById('ag-azure-bubble-style'))",
+                    timeout.Token);
+                if (!value.TryGetProperty("value", out var on) || on.ValueKind != JsonValueKind.True) return false;
+            }
+            return true;
+        }
+        catch { return false; }
     }
 }

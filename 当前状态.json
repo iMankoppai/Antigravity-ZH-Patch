@@ -12,15 +12,15 @@
   "officialBackup": "C:/Users/24844/AppData/Local/Programs/antigravity/resources/app.asar.bak",
   "officialAsarSha256": "5b493943e67e500638555315594d5b1acbc7a02e6dac3c786651921c1ee8519f",
   "installedAsarSha256": "5b493943e67e500638555315594d5b1acbc7a02e6dac3c786651921c1ee8519f",
-  "isolatedAsarSha256": "4283f494c3b8a3aaeae603aea99e3b98b99f8044f6bac482eabba1a440f18cda",
-  "isolatedAsarNote": "2.32.1 隔离演习归档（v81 内核，7,349 词条；已适配 SSH 远程与多智能体预览面板并移除天青蓝气泡），内嵌 bundle == 源码 1830819d…。本机因客户端正在运行，已先通过热注入验证 v81 生效，待客户端退出后执行永久写入。",
-  "installedKernelSha256": "1830819d7ab1a5ce2485493c00822ae04ca3ad3bf18ffb067674dac396d60f34",
-  "managerExeSha256": "dd726aeecb166cc140f6cff36245d21e4f5274cbc3bf1936b8fd83968df5828b",
-  "managerExeNote": "v1.5.0（内核 v81，2.32.1 适配版）：新增 2.32.1 全量适配、彻底移除天青蓝气泡外观补丁，并新增强制结束 Antigravity 残留进程功能（含 language_server 等安装目录子进程清理与防误杀保护）。",
+  "isolatedAsarSha256": "e80b13336fac9b52bc8e8db38aa77bcd6b6840c08d582fa7fadd252997373002",
+  "isolatedAsarNote": "2.32.1 隔离演习归档（v81 内核，7,349 词条；已适配 SSH 远程与多智能体预览面板，并升级为轻量纯配色天青蓝气泡），内嵌 bundle == 源码 ed87c3d8…。待客户端空闲退出后可执行永久写入。",
+  "installedKernelSha256": "ed87c3d8a7290667ca4a4fd389e08adcd28fbbee087ca7661e0890da5f09de73",
+  "managerExeSha256": "658d57fc8978d56caf4790bfefd2a5a4c2e0a8bbf273e3226c67ecf730668fd9",
+  "managerExeNote": "v1.5.0（内核 v81，2.32.1 适配版）：新增 2.32.1 全量适配、接入轻量纯配色天青蓝气泡（仅换色、保留官方布局），并新增一键强制结束 Antigravity 残留进程功能。",
   "releaseZip": "dist/Antigravity-ZH-1.5.0-Windows-x64.zip",
-  "releaseZipSha256": "9c4827d596a27eb105ea4ca741bb8efa1ac6fd90d0ffd045251e02d44bd204a",
-  "publishedInfo": "v1.5.0（适配 2.32.1、v81 内核、已移除天青蓝气泡、新增一键强杀进程）正式发布版本。",
-  "updatedAt": "2026-11-14T12:08:00.000Z",
+  "releaseZipSha256": "5c70154c8269ca623aceb7345ebe25f62c2ded3e7d738433836017ae71df5a31",
+  "publishedInfo": "v1.5.0（适配 2.32.1、v81 内核、轻量纯配色天青蓝气泡、新增一键强杀进程）本地已重编译并更新。",
+  "updatedAt": "2026-11-14T12:30:00.000Z",
   "patchVersion": 81,
   "installedPatchVersion": 81,
   "releaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.5.0",
@@ -57,9 +57,11 @@
   },
   "appearance": {
     "azureBubble": {
-      "available": false,
-      "removedAt": "2026-11-14",
-      "reason": "Antigravity 2.32.1 官方已原生实现右对齐圆角气泡样式，按用户要求彻底移除天青蓝气泡外观补丁及管理器选项。"
+      "available": true,
+      "mode": "color-only",
+      "defaultEnabled": true,
+      "regressionChecks": 12,
+      "reason": "保留 Antigravity 2.32.1 官方原生气泡布局与下移按钮，仅对 [data-testid=\"user-message-bubble\"] 及其直接外框覆写柔和天青蓝配色（深色主题自动适配为深海蓝）。"
     },
     "forceKillProcess": {
       "available": true,
@@ -70,7 +72,7 @@
   },
   "previousReleaseUrl": "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.1",
   "localOnly": false,
-  "sourceKernelSha256": "1830819d7ab1a5ce2485493c00822ae04ca3ad3bf18ffb067674dac396d60f34",
+  "sourceKernelSha256": "ed87c3d8a7290667ca4a4fd389e08adcd28fbbee087ca7661e0890da5f09de73",
   "permanentInstallPending": true,
   "installedDiskPatchVersion": 0,
   "localFix20261105": {

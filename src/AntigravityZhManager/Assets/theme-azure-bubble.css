@@ -1,0 +1,31 @@
+/* 天青蓝对话气泡纯配色补丁（2.32.1+ 轻量版）
+ * 仅修改用户消息气泡的背景、边框与文字颜色，完全保留官方原生排版、圆角尺寸与下移操作按钮。
+ */
+
+body:not(.theme-dark) .agy-user-bubble-frame:has(> [data-testid="user-message-bubble"]) {
+  background-color: #D5E8FD !important;
+}
+
+body:not(.theme-dark) [data-testid="user-message-bubble"] {
+  background-color: #EAF3FE !important;
+  color: #13263E !important;
+}
+
+body:not(.theme-dark) [data-testid="user-message-bubble"] [data-testid="user-message-content"],
+body:not(.theme-dark) [data-testid="user-message-bubble"] [data-testid="user-message-content"] :is(p, li, strong, em) {
+  color: #13263E !important;
+}
+
+body.theme-dark .agy-user-bubble-frame:has(> [data-testid="user-message-bubble"]) {
+  background-color: rgba(56, 139, 253, 0.28) !important;
+}
+
+body.theme-dark [data-testid="user-message-bubble"] {
+  background-color: #1A2E44 !important;
+  color: #E8F1FC !important;
+}
+
+body.theme-dark [data-testid="user-message-bubble"] [data-testid="user-message-content"],
+body.theme-dark [data-testid="user-message-bubble"] [data-testid="user-message-content"] :is(p, li, strong, em) {
+  color: #E8F1FC !important;
+}

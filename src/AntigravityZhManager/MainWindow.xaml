@@ -337,6 +337,8 @@
                         <WrapPanel Grid.Row="2" Margin="0,0,0,10" VerticalAlignment="Center">
                             <CheckBox x:Name="ChkCloseToTray" Content="关闭客户端窗口时最小化到托盘" IsChecked="True" Checked="RepairOptions_Changed" Unchecked="RepairOptions_Changed"/>
                             <CheckBox x:Name="ChkTrayMenu" Content="客户端托盘双击唤醒与中文菜单" IsChecked="True" Checked="RepairOptions_Changed" Unchecked="RepairOptions_Changed"/>
+                            <CheckBox x:Name="ChkAzureBubble" Content="🎨 天青蓝对话气泡（纯配色）" IsChecked="True" Checked="AzureBubble_Changed" Unchecked="AzureBubble_Changed"
+                                      ToolTip="仅更换用户聊天气泡的背景/边框/文字为柔和天青蓝（深色主题自动适配），完全保留官方原生圆角与排版；开闭立即生效，永久安装后自动随启动应用"/>
                         </WrapPanel>
 
                         <Button Grid.Row="3" x:Name="BtnInstallClean" Content="📦 一键嵌入汉化 (ASAR 内嵌封装)" 

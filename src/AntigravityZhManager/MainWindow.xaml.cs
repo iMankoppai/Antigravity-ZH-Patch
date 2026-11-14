@@ -31,6 +31,8 @@ namespace AntigravityZhManager
             InitializeComponent();
             ChkCloseToTray.IsChecked = _options.CloseClientToTray;
             ChkTrayMenu.IsChecked = _options.ChineseTrayMenu;
+            ChkAzureBubble.IsChecked = _options.AzureBubble;
+            if (CdpHotPatcher.IsThemeEnabled() != _options.AzureBubble) CdpHotPatcher.SetThemeEnabled(_options.AzureBubble);
             var menu = new System.Windows.Forms.ContextMenuStrip();
             menu.Items.Add("打开汉化管理器", null, (_, _) => Dispatcher.BeginInvoke(new Action(ShowManager)));
             menu.Items.Add("退出管理器", null, async (_, _) => await Dispatcher.InvokeAsync(QuitAsync).Task.Unwrap());
@@ -76,6 +78,31 @@ namespace AntigravityZhManager
         {
             if (_loading) return;
             ApplyOptions(_options with { CloseClientToTray = ChkCloseToTray.IsChecked == true, ChineseTrayMenu = ChkTrayMenu.IsChecked == true });
+        }
+
+        // 天青蓝气泡开关：仅改色、保留官方布局；保存偏好并写入 zh-theme.json，运行时立即通过 CDP 切换。
+        private async void AzureBubble_Changed(object sender, RoutedEventArgs e)
+        {
+            if (_loading) return;
+            bool enabled = ChkAzureBubble.IsChecked == true;
+            ApplyOptions(_options with { AzureBubble = enabled });
+            CdpHotPatcher.SetThemeEnabled(enabled);
+            if (_currentInfo.IsRunning)
+            {
+                await _repair.Operations.WaitAsync();
+                try
+                {
+                    bool ok = await CdpHotPatcher.SetThemeAsync(enabled, AppendLog);
+                    if (!ok) AppendLog("⚠️ 天青蓝气泡即时切换未完成，请确认客户端窗口已就绪后再次勾选。");
+                }
+                finally { _repair.Operations.Release(); }
+            }
+            else
+            {
+                AppendLog(enabled
+                    ? "🎨 已记录天青蓝气泡（纯配色）偏好；永久安装后客户端启动时会自动应用。"
+                    : "🎨 已关闭天青蓝气泡配色。");
+            }
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)

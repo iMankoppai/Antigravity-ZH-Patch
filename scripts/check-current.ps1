@@ -122,6 +122,7 @@ $null = Invoke-Check 'notification-hook' @('tests/renderer/notification-hook.cjs
         $null = Invoke-Check 'global-localization-regression' @('tests/renderer/global-localization-regression.cjs') $true
         $null = Invoke-Check 'skill-details-regression' @('tests/renderer/skill-details-regression.cjs') $true
         $null = Invoke-Check 'skill-detail-react-regression' @('tests/renderer/skill-detail-react-regression.cjs') $true
+        $null = Invoke-Check 'azure-theme-regression' @('tests/renderer/azure-theme-regression.cjs') $true
         $null = Invoke-Check 'schedule-summary-regression' @('tests/renderer/schedule-summary-regression.cjs') $true
         $null = Invoke-Check 'marketplace-cards-regression' @('tests/renderer/marketplace-cards-regression.cjs') $true
         $null = Invoke-Check 'marketplace-detail-regression' @('tests/renderer/marketplace-detail-regression.cjs') $true
