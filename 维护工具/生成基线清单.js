@@ -80,6 +80,7 @@ if (pristine) {
   // Optional windows are also rewritten by the installer. Omitting their hash
   // makes an otherwise identical future build fail the compatibility check.
   if (pristine.archive.read('dist/provisionSplash.js')) targets.push('dist/provisionSplash.js');
+  if (pristine.archive.read('dist/remote/disconnectedPage.js')) targets.push('dist/remote/disconnectedPage.js');
   const pkg = pristine.pkg;
   const signature = pkg.name + '\n' + pkg.main + '\n' + Object.keys(pkg.dependencies || {}).sort().map(k => k + '=' + pkg.dependencies[k]).join('\n');
   baseline.compatibility = {

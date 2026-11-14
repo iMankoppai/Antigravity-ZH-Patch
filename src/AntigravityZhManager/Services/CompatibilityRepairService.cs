@@ -8,7 +8,6 @@ public sealed record ManagerOptions
     public string PreferredExePath { get; init; } = "";
     public bool CloseClientToTray { get; init; } = true;
     public bool ChineseTrayMenu { get; init; } = true;
-    public bool AzureBubble { get; init; } = false;
 }
 
 public sealed class ManagerSettingsStore

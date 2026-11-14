@@ -31,9 +31,6 @@ namespace AntigravityZhManager
             InitializeComponent();
             ChkCloseToTray.IsChecked = _options.CloseClientToTray;
             ChkTrayMenu.IsChecked = _options.ChineseTrayMenu;
-            ChkAzureBubble.IsChecked = _options.AzureBubble;
-            if (CdpHotPatcher.IsThemeEnabled() != _options.AzureBubble) CdpHotPatcher.SetThemeEnabled(_options.AzureBubble);
-            ChkStatsHud.IsChecked = StatsHudService.GetEnabled();
             var menu = new System.Windows.Forms.ContextMenuStrip();
             menu.Items.Add("打开汉化管理器", null, (_, _) => Dispatcher.BeginInvoke(new Action(ShowManager)));
             menu.Items.Add("退出管理器", null, async (_, _) => await Dispatcher.InvokeAsync(QuitAsync).Task.Unwrap());
@@ -66,7 +63,6 @@ namespace AntigravityZhManager
             await _repair.Operations.WaitAsync();
             _exitRequested = true;
             _repair.Operations.Release();
-            try { await StatsHudService.StopAsync(); } catch { }
             Close();
         }
 
@@ -80,54 +76,6 @@ namespace AntigravityZhManager
         {
             if (_loading) return;
             ApplyOptions(_options with { CloseClientToTray = ChkCloseToTray.IsChecked == true, ChineseTrayMenu = ChkTrayMenu.IsChecked == true });
-        }
-
-        // 天青蓝气泡开关：保存偏好并写入主题配置；客户端运行时立即通过 CDP 应用/移除，
-        // 永久安装后由 zh-bundle.attach() 在每次启动/加载时读取配置自动应用。
-        private async void AzureBubble_Changed(object sender, RoutedEventArgs e)
-        {
-            if (_loading) return;
-            bool enabled = ChkAzureBubble.IsChecked == true;
-            ApplyOptions(_options with { AzureBubble = enabled });
-            CdpHotPatcher.SetThemeEnabled(enabled);
-            if (_currentInfo.IsRunning)
-            {
-                await _repair.Operations.WaitAsync();
-                try
-                {
-                    bool ok = await CdpHotPatcher.SetThemeAsync(enabled, AppendLog);
-                    if (!ok) AppendLog("⚠️ 天青蓝气泡即时切换未完成，请确认客户端窗口已就绪后再次勾选。");
-                }
-                finally { _repair.Operations.Release(); }
-            }
-            else
-            {
-                AppendLog(enabled
-                    ? "🎨 已记录天青蓝气泡偏好；永久安装后客户端启动时会自动应用。"
-                    : "🎨 已关闭天青蓝气泡。");
-            }
-        }
-
-        // 统计状态条开关：持久化到 zh-stats.json；永久安装后由客户端启动时自动显示。
-        private async void StatsHud_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (_loading) return;
-            bool on = ChkStatsHud.IsChecked == true;
-            // 持久化常驻开关：永久安装后由客户端启动时自动读取并显示。
-            StatsHudService.SetEnabled(on);
-            if (!on)
-            {
-                await StatsHudService.StopAsync(AppendLog);
-                AppendLog("📊 统计状态条已关闭（常驻开关已保存为关）。");
-                return;
-            }
-            if (!_currentInfo.IsRunning)
-            {
-                AppendLog("📊 已设为常驻：启动 Antigravity 后会自动显示（需已永久安装内核）。");
-                return;
-            }
-            bool ok = await StatsHudService.StartAsync(AppendLog);
-            if (!ok) AppendLog("📊 常驻已开启；当前窗口未能立即显示，重启客户端后会自动出现。");
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -161,9 +109,19 @@ namespace AntigravityZhManager
                 if (_currentInfo.IsRunning)
                 {
                     StatusDot.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#10B981"));
-                    TxtAppRunningStatus.Text = $"Antigravity{verTag} 运行中 (PID: {_currentInfo.ProcessId})";
+                    string countTag = _currentInfo.RunningProcessCount > 0 ? $"，共 {_currentInfo.RunningProcessCount} 个进程" : "";
+                    TxtAppRunningStatus.Text = $"Antigravity{verTag} 运行中 (PID: {_currentInfo.ProcessId}{countTag})";
                     TxtAppRunningStatus.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8FAFC"));
                     BtnHotInject.IsEnabled = true;
+                    BtnForceKill.IsEnabled = true;
+                }
+                else if (_currentInfo.RunningProcessCount > 0)
+                {
+                    StatusDot.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F59E0B"));
+                    TxtAppRunningStatus.Text = $"Antigravity{verTag} 检测到后台残留进程 ({_currentInfo.RunningProcessCount} 个)";
+                    TxtAppRunningStatus.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FBBF24"));
+                    BtnHotInject.IsEnabled = false;
+                    BtnForceKill.IsEnabled = true;
                 }
                 else
                 {
@@ -171,6 +129,7 @@ namespace AntigravityZhManager
                     TxtAppRunningStatus.Text = $"Antigravity{verTag} 未运行";
                     TxtAppRunningStatus.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#94A3B8"));
                     BtnHotInject.IsEnabled = false;
+                    BtnForceKill.IsEnabled = false;
                 }
 
                 // 路径展示（完整显示）
@@ -240,6 +199,54 @@ namespace AntigravityZhManager
             else
             {
                 MessageBox.Show("当前安装目录无效或尚未定位。", "提示", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private async void BtnForceKill_Click(object sender, RoutedEventArgs e)
+        {
+            int count = ClientProcessGuard.CountRunningClientProcesses(_currentInfo.InstallDir, includeAllAntigravityNamed: true);
+            if (count == 0)
+            {
+                AppendLog("ℹ️ 当前未检测到正在运行或后台残留的 Antigravity 进程。");
+                await RefreshAppStatusAsync();
+                return;
+            }
+
+            var confirm = MessageBox.Show(
+                $"检测到 {count} 个正在运行或后台残留的 Antigravity 相关进程。\n\n" +
+                "强制结束将立即终止客户端及后台语言服务器等进程，未保存的编辑内容可能会丢失。\n\n" +
+                "是否立即强制结束全部相关进程？",
+                "确认强制结束 Antigravity 进程",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (confirm != MessageBoxResult.Yes) return;
+
+            BtnForceKill.IsEnabled = false;
+            await _repair.Operations.WaitAsync();
+            try
+            {
+                AppendLog($"🛑 用户触发强制结束 Antigravity 进程（当前检测到 {count} 个）...");
+                var result = await ClientProcessGuard.ForceKillClientAsync(
+                    _currentInfo.InstallDir,
+                    timeoutMs: 5000,
+                    includeAllAntigravityNamed: true,
+                    log: AppendLog);
+
+                AppendLog((result.Success ? "✅ " : "⚠️ ") + result.Message);
+                if (result.FoundCount > 0)
+                {
+                    MessageBox.Show(
+                        result.Message,
+                        result.Success ? "已结束进程" : "部分进程未能结束",
+                        MessageBoxButton.OK,
+                        result.Success ? MessageBoxImage.Information : MessageBoxImage.Warning);
+                }
+            }
+            finally
+            {
+                _repair.Operations.Release();
+                await RefreshAppStatusAsync();
             }
         }
 
@@ -345,9 +352,6 @@ namespace AntigravityZhManager
             {
                 bool closeToTray = ChkCloseToTray.IsChecked == true;
                 bool trayMenu = ChkTrayMenu.IsChecked == true;
-                bool azureBubble = ChkAzureBubble.IsChecked == true;
-                // 永久安装前把外观偏好落到主题配置，attach() 启动时据此应用。
-                CdpHotPatcher.SetThemeEnabled(azureBubble);
 
                 var result = await AsarCleanPatcher.InstallCleanPatchAsync(_currentInfo.AsarPath, closeToTray, trayMenu, AppendLog, allowCompatibleUpdates: true);
                 if (result.Success)

@@ -12,6 +12,7 @@ namespace AntigravityZhManager.Services
     {
         public bool IsRunning { get; set; }
         public int ProcessId { get; set; }
+        public int RunningProcessCount { get; set; }
         public string ExePath { get; set; } = string.Empty;
         public string InstallDir { get; set; } = string.Empty;
         public string AsarPath { get; set; } = string.Empty;
@@ -67,20 +68,30 @@ namespace AntigravityZhManager.Services
             try
             {
                 var processes = Process.GetProcessesByName("Antigravity");
-                if (processes.Length > 0)
+                try
                 {
-                    var p = processes[0];
-                    info.IsRunning = true;
-                    info.ProcessId = p.Id;
-                    try
+                    if (processes.Length > 0)
                     {
-                        info.ExePath = p.MainModule?.FileName ?? string.Empty;
-                        if (!string.IsNullOrEmpty(info.ExePath) && File.Exists(info.ExePath))
+                        var p = processes[0];
+                        info.IsRunning = true;
+                        info.ProcessId = p.Id;
+                        try
                         {
-                            info.DetectSource = "运行中的前台进程 (PID: " + p.Id + ")";
+                            info.ExePath = p.MainModule?.FileName ?? string.Empty;
+                            if (!string.IsNullOrEmpty(info.ExePath) && File.Exists(info.ExePath))
+                            {
+                                info.DetectSource = "运行中的前台进程 (PID: " + p.Id + ")";
+                            }
                         }
+                        catch { }
                     }
-                    catch { }
+                }
+                finally
+                {
+                    foreach (var p in processes)
+                    {
+                        try { p.Dispose(); } catch { }
+                    }
                 }
             }
             catch { }
@@ -200,6 +211,8 @@ namespace AntigravityZhManager.Services
                 }
                 catch { }
             }
+
+            info.RunningProcessCount = ClientProcessGuard.CountRunningClientProcesses(info.InstallDir, includeAllAntigravityNamed: true);
 
             return info;
         }

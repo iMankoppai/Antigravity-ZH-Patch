@@ -216,6 +216,8 @@ namespace AntigravityZhManager.Services
                 string wizardJs = GetFileText("dist/ideInstall/wizard.js");
                 string? provisionJs = fileEntries.Any(e => e.Path == "dist/provisionSplash.js")
                     ? GetFileText("dist/provisionSplash.js") : null;
+                string? disconnectedPageJs = fileEntries.Any(e => e.Path == "dist/remote/disconnectedPage.js")
+                    ? GetFileText("dist/remote/disconnectedPage.js") : null;
 
                 // 1. ipcHandlers
                 ipcHandlers = ipcHandlers
@@ -365,6 +367,25 @@ namespace AntigravityZhManager.Services
                         "    require('./zh-bundle.js').attach(win, 'data:text/html;charset=utf-8,');\n" + provisionLoad);
                 }
 
+                // 2.32.1 新增：SSH 断线/重连页面采用无脚本 CSP 的 data: URL，直接汉化静态文案。
+                if (disconnectedPageJs != null)
+                {
+                    const string disconnectedTitleAnchor = "const title = connecting ? 'Reconnecting…' : 'Disconnected';";
+                    const string disconnectedReconnectAnchor = "<a class=\"button primary\" href=\"${action('reconnect')}\">Reconnect</a>";
+                    if (disconnectedPageJs.Split(disconnectedTitleAnchor).Length != 2 ||
+                        disconnectedPageJs.Split(disconnectedReconnectAnchor).Length != 2)
+                        throw new InvalidDataException("SSH 断线页面注入锚点数量异常，拒绝写入。");
+                    disconnectedPageJs = disconnectedPageJs
+                        .Replace(disconnectedTitleAnchor, "const title = connecting ? '正在重新连接…' : '已断开连接';")
+                        .Replace("? `Reconnecting to ${host}…`", "? `正在重新连接到 ${host}…`")
+                        .Replace(": `Disconnected from ${host}`;", ": `已断开与 ${host} 的连接`;")
+                        .Replace("? `Agents keep running on ${host}.`", "? `智能体仍会在 ${host} 上继续运行。`")
+                        .Replace(": `Agents keep running on ${host} unless its server stopped.`;", ": `只要 ${host} 上的服务器未停止，智能体就会继续运行。`;")
+                        .Replace(disconnectedReconnectAnchor, "<a class=\"button primary\" href=\"${action('reconnect')}\">重新连接</a>")
+                        .Replace("<a class=\"button\" href=\"${action('close')}\">Close</a>", "<a class=\"button\" href=\"${action('close')}\">关闭</a>")
+                        .Replace("<html lang=\"en\">", "<html lang=\"zh-CN\">");
+                }
+
                 // 写入前自检：确认每个注入点都真正命中。官方版本更新可能移除或改变
                 // 锚点，此时 String.Replace 会静默空操作却仍报成功，因此校验失败时
                 // 直接拒绝写入，保留原有归档。
@@ -410,6 +431,11 @@ namespace AntigravityZhManager.Services
                 {
                     AssertInjectionApplied("dist/provisionSplash.js", provisionJs, "zh-bundle.js");
                     modifiedEntries["dist/provisionSplash.js"] = Encoding.UTF8.GetBytes(provisionJs);
+                }
+                if (disconnectedPageJs != null)
+                {
+                    AssertInjectionApplied("dist/remote/disconnectedPage.js", disconnectedPageJs, "正在重新连接…", "重新连接");
+                    modifiedEntries["dist/remote/disconnectedPage.js"] = Encoding.UTF8.GetBytes(disconnectedPageJs);
                 }
 
                 // 在 header 中注册 dist/zh-bundle.js

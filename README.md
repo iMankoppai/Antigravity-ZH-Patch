@@ -1,14 +1,14 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.4.2-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
-[![Antigravity](https://img.shields.io/badge/Antigravity-2.31.2-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Release](https://img.shields.io/badge/Release-v1.5.0-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Antigravity](https://img.shields.io/badge/Antigravity-2.32.1-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.4.2（汉化内核 v80）适配 Google Antigravity 2.31.2（Windows x64），本地构建（未发布 GitHub）。** 界面词条 **7,218 条**，另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文及 6 份规则／智能体详情，以及 **44 个合作插件的 494 篇技能正文**、**Gmail / Looker / Arize AX / invideo / Neo4j / Spacefast 六插件 90 篇技能正文**汉化。官方更新导致汉化失效时，可运行管理器重新安装，或点击【新版汉化适配】热恢复，详见 [`docs/新版汉化适配.md`](docs/新版汉化适配.md)。
+> **当前版本 v1.5.0（汉化内核 v81）适配 Google Antigravity 2.32.1（Windows x64）。** 界面词条 **7,349 条**，全面适配 2.32.1 多智能体预览舞台面板（`Stage` / `Desktop` / `Layout`）、SSH 远程主机连接弹窗与文件选择器原生对话框，并另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文、6 份规则／智能体详情、44 个合作插件 494 篇技能正文以及 6 插件 90 篇技能正文汉化。官方更新导致汉化失效时，可运行管理器重新安装，或点击【新版汉化适配】热恢复，详见 [`docs/新版汉化适配.md`](docs/新版汉化适配.md)。
 
 ---
 
@@ -33,13 +33,10 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
   - **智能体与任务操作**：`已列出 1 个任务`、`已终止任务`、`已向任务发送输入`、`已调用子代理`、`已设定定时任务` 等，支持 React 拆分节点与动态更新；文件名、行号、命令和任务名称保持原样。
 
 - **🎨 界面与生态全面汉化**  
-  深度覆盖插件扩展市场（Google Workspace、科学计算套件、开发工具等）、所有个性化外观主题及权限审查弹窗。
+  深度覆盖插件扩展市场（Google Workspace、科学计算套件、开发工具等）、SSH 远程管理界面、多智能体预览舞台面板、所有个性化外观主题及文件选择/权限审查原生弹窗。
 
-- **💠 天青蓝对话气泡（可选外观）**  
-  可选开启纯净天青蓝用户消息气泡：图文上下分离、短句单行舒展、长句安全折行、时间/复制/撤销按钮下移至气泡外、解除官方吸顶悬浮。客户端运行时**即时生效**，**永久安装后启动自动应用**，随时一键还原官方默认。纯 CSS 外观补丁，**不修改任何文本内容与业务逻辑**。
-
-- **📊 会话统计状态条（可选）**  
-  在客户端底部实时显示当前会话的 **轮数 / 步数 / tok/秒 / 总 token / 缓存命中率 / 缓存 TTL 倒计时 / 上下文占用 / 距 auto-compact 约几步 / 成本估算 / 配额积分**（上下文按 App 的**自动压缩上限**计：Gemini 3.8 Flash ≈256k、Claude 4.6 ≈160k、GPT-OSS 120B ≈80k，**不是模型理论 1M 窗口**；成本为 API 等价估算；配额/积分来自 App 自身的 `GetUserStatus`）。数据来自本机会话日志 `transcript.jsonl`（**只读、不外传**）。**开启常驻后随 Antigravity 启动自动显示（内嵌内核）**：底栏三组内联（⏱ 轮/步·tok/s ｜ 🗄 总token·缓存命中 ｜ ◔ 上下文%）在模型选择器与右侧控件之间的中间空白区**居中**，点击某一组只弹出对应的一张卡片（会话统计 / Token 用量 / 上下文已用），三卡独立不连体；也可随时在管理器中关闭。类似 DSH/Claude Code 的 statusline 体验。
+- **🛑 一键强制结束残留进程**  
+  顶部状态栏实时统计运行中的 `Antigravity` 与后台语言服务器进程（含托盘退出后仍滞留的后台残留进程），支持一键安全确认并彻底终止全部客户端及安装目录子进程。
 
 - **↩️ 官方纯净英文一键秒级还原**  
   随时从官方备份文件还原原生 ASAR，清除内存热注入，100% 恢复官方初始状态。
@@ -56,8 +53,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`AntigravityZhManager.exe`**，或使用项目根目录 / `dist/` 中的交付包；
-   > 说明：**v1.4.2 为本地构建（未发布 GitHub）**；GitHub 上最新正式发布为 v1.4.1，也可直接运行本项目根目录的 `Antigravity汉化管理器.exe`。
+2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.5.0-Windows-x64.zip`**（或直接使用仓库根目录的 `Antigravity汉化管理器.exe`）；
 3. 双击下载的 EXE，或解压 ZIP 后运行其中的 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -85,11 +81,10 @@ Antigravity ZH/
 ```
 
 ### 技术规格
-- **适配软件**：**Google Antigravity 2.31.2**（Windows x64）
-- **汉化内核**：v80（词条 7,218 条）
-- **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、工作状态、插件市场与主题设置）
-- **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入
-- **可选增强**：天青蓝气泡外观（`theme-azure-bubble.css`，运行时+永久）；会话统计状态条（`stats-hud.js` + `StatsHudService`，主进程读 `transcript.jsonl`、内嵌 `attach()` 随启动自动显示、默认 DSH 风格三组内联居中、点击各组弹对应独立卡片）
+- **适配软件**：**Google Antigravity 2.32.1**（Windows x64）
+- **汉化内核**：v81（词条 7,349 条）
+- **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、原生文件对话框、SSH 远程管理、工作状态、插件市场与主题设置）
+- **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入 + 安装目录进程树守卫清理
 
 ### 开发者 / 维护者
 - 源码结构：`src/`（C# 管理器与内嵌资源 Assets）、`localization/`（词条、基线与技能正文译文）、`tests/`（回归与门禁）。
@@ -100,13 +95,21 @@ Antigravity ZH/
 
 ## 📦 版本记录
 
-### v1.4.2 (内核 v80) — 适配 Antigravity 2.31.2（本地构建，未发布）
+### v1.5.0 (内核 v81) — 适配 Antigravity 2.32.1（已发布 GitHub）
+
+- **适配新版客户端**：支持 Google Antigravity **2.32.1**（Windows x64）；主进程 16 个核心锚点 + 2 处右键菜单点全命中，新增 `dist/remote/disconnectedPage.js` 断线页静态汉化与文件选择/保存原生对话框（`showOpenDialog` / `showSaveDialog`）本地化包装，登记 2.32.1 官方原版与补丁基线。
+- **渲染端增量汉化**：在 `dictionaries.json` 新增 131 条 UI 文案（累计 **7,349 条**），覆盖多智能体预览舞台面板（`Stage` / `Desktop` / `Layout` / `Resume` / 隐私遮罩）、SSH 远程主机弹窗与机器切换器、512 KB/100 列预览限制、TLS 证书与环境脚本提示；`translate.js` 同步升级 `patchVersion = 81`，支持动态思考/光标状态模板与 SSH 拆分句还原。
+- **功能精简**：由于 Antigravity 2.32.1 官方已原生提供右对齐圆角用户消息气泡，彻底移除自制「天青蓝对话气泡」外观补丁（`theme-azure-bubble.css` 等），保留官方原版样式。
+- **新增强制结束进程**：顶部运行状态栏实时统计运行中与后台残留进程（含 `resources\bin\language_server.exe`），新增 **【🛑 强制结束进程】** 按钮及防误杀过滤与进程树强杀守护。
+
+### v1.4.1 (内核 v80) — 适配 Antigravity 2.31.2（本地构建）
 
 - **适配新版客户端**：支持 Google Antigravity **2.31.2**（Windows x64）。这是一次**纯版本号更新**：68 个 `dist/*.js` 主进程模块与 2.31.0 逐字节一致（仅 `package.json` 版本号变化），渲染端 `main.js`（11,871,831 字节）逐字节相同，16 个注入锚点全部恰好命中 1 次——**内核、词库与翻译规则零改动**（保持内核 v80、词条 7,218）。
-- **基线登记**：新增 2.31.2 官方原版基线（原版 `94452cf0…`，5,274,972 字节）与已知补丁版归档（`5a6c9cc0…`）。官方更新后重新"永久安装"即可恢复中文。
-- 本机已永久安装并校验（安装归档 5a6c9cc0…，内嵌内核 db94927a…，与隔离归档逐字节一致）。
+- **移除「会话统计状态条」功能**：删除管理器勾选项与运行时/永久安装中的统计注入（`StatsHudService` / `stats-hud.js`），客户端底部不再显示统计条。
+- **基线登记**：新增 2.31.2 官方原版基线（原版 `94452cf0…`，5,274,972 字节）与已知补丁版归档（`5a6c9cc0…`、`02da254b…`）。官方更新后重新"永久安装"即可恢复中文。
+- 本机已永久安装并校验（安装归档 02da254b…，内嵌内核 026520bb…，与源码 bundle 逐字节一致）。
 
-### v1.4.1 (内核 v80) — 适配 Antigravity 2.31.0（已发布 GitHub）
+### v1.4.1 首发 (内核 v80) — 适配 Antigravity 2.31.0（已发布 GitHub）
 
 - **适配新版客户端**：支持 Google Antigravity **2.31.0**（Windows x64）；主进程 16 个注入锚点全部命中，无需改 AsarCleanPatcher。
 - **新增界面汉化**：「协调器（Coordinator）」整套界面、授权代码登录、环境设置、命名问候等（37 条）。

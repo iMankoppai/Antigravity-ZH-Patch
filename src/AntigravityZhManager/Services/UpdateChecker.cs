@@ -22,7 +22,7 @@ namespace AntigravityZhManager.Services
 
     public static class UpdateChecker
     {
-        public const string CurrentVersion = "1.2.0";
+        public const string CurrentVersion = "1.5.0";
         public const string ProjectReleasesUrl = "https://github.com/iMankoppai/Antigravity-ZH-Patch/releases";
         private const string GitHubApiUrl = "https://api.github.com/repos/iMankoppai/Antigravity-ZH-Patch/releases/latest";
         private const string FallbackMetadataUrl = "https://raw.githubusercontent.com/iMankoppai/Antigravity-ZH-Patch/main/dist/release-metadata.json";

@@ -181,7 +181,7 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Antigravity 汉化管理器" FontSize="19" FontWeight="Bold" Foreground="#FFFFFF"/>
                         <Border Background="#1E293B" CornerRadius="4" Padding="7,2" Margin="10,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="v1.3.5" Foreground="#94A3B8" FontSize="11"/>
+                            <TextBlock Text="v1.5.0" Foreground="#94A3B8" FontSize="11"/>
                         </Border>
                     </StackPanel>
                     <TextBlock Text="纯净 ASAR 原生内嵌架构 · 支持免重启临时汉化与一键恢复默认" FontSize="12" Foreground="#64748B" Margin="0,3,0,0"/>
@@ -212,10 +212,17 @@
 
                 <!-- 第一行：运行状态 -->
                 <Grid Margin="0,0,0,8">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                         <Ellipse x:Name="StatusDot" Width="9" Height="9" Fill="#10B981" Margin="0,0,8,0"/>
                         <TextBlock x:Name="TxtAppRunningStatus" Text="正在检测 Antigravity…" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC"/>
                     </StackPanel>
+                    <Button Grid.Column="1" x:Name="BtnForceKill" Content="🛑 强制结束进程" Style="{StaticResource DangerButtonStyle}"
+                            Padding="10,4" FontSize="12" IsEnabled="False" Click="BtnForceKill_Click"
+                            ToolTip="强制结束全部正在运行或退出托盘后残留的 Antigravity 相关进程（含 language_server 等后台进程）"/>
                 </Grid>
 
                 <!-- 分割线 -->
@@ -268,7 +275,6 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,6">
@@ -281,11 +287,7 @@
                         <TextBlock Grid.Row="1" Text="一键切换当前窗口语言，免重启且保留会话。永久安装的补丁在下次启动时仍可生效。"
                                    FontSize="12" Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,0,0,12" LineHeight="17" VerticalAlignment="Top"/>
 
-                        <CheckBox Grid.Row="2" x:Name="ChkStatsHud" Content="📊 显示统计状态条（轮/步/token/缓存/上下文）"
-                                  Margin="0,0,0,8" VerticalAlignment="Center" Checked="StatsHud_Toggled" Unchecked="StatsHud_Toggled"
-                                  ToolTip="读取本机会话日志 transcript.jsonl，在客户端底部显示 轮/步/tok/s/缓存命中/上下文占用；需要 Antigravity 正在运行，随时可关闭。"/>
-
-                        <Button Grid.Row="3" x:Name="BtnHotInject" Content="⚡ 开启汉化" 
+                        <Button Grid.Row="2" x:Name="BtnHotInject" Content="⚡ 开启汉化" 
                                 Style="{StaticResource SuccessButtonStyle}" Height="36" FontSize="13" VerticalAlignment="Bottom" Click="BtnHotInject_Click"/>
                     </Grid>
                 </Border>
@@ -335,7 +337,6 @@
                         <WrapPanel Grid.Row="2" Margin="0,0,0,10" VerticalAlignment="Center">
                             <CheckBox x:Name="ChkCloseToTray" Content="关闭客户端窗口时最小化到托盘" IsChecked="True" Checked="RepairOptions_Changed" Unchecked="RepairOptions_Changed"/>
                             <CheckBox x:Name="ChkTrayMenu" Content="客户端托盘双击唤醒与中文菜单" IsChecked="True" Checked="RepairOptions_Changed" Unchecked="RepairOptions_Changed"/>
-                            <CheckBox x:Name="ChkAzureBubble" Content="🎨 天青蓝对话气泡（外观）" IsChecked="False" Checked="AzureBubble_Changed" Unchecked="AzureBubble_Changed" ToolTip="纯外观补丁：把用户消息换成天青蓝气泡并优化排版。客户端运行时立即生效；永久安装后启动时自动应用。"/>
                         </WrapPanel>
 
                         <Button Grid.Row="3" x:Name="BtnInstallClean" Content="📦 一键嵌入汉化 (ASAR 内嵌封装)" 

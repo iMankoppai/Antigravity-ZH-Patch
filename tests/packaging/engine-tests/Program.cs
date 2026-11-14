@@ -6,6 +6,11 @@ using AntigravityZhManager.Services;
 // 引擎侧回归：
 //   A. 基线清单判定（安装允许/拒绝、还原允许/拒绝）
 //   B. ASAR 临时归档回读校验（合法通过、各类损坏拒绝）
+if (args.Contains("--sleep-worker"))
+{
+    Thread.Sleep(30000);
+    return 0;
+}
 if (args.Contains("--apply-installed"))
 {
     string localAsar = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "antigravity", "resources", "app.asar");
@@ -30,24 +35,6 @@ if (args.Contains("--hot-inject"))
     var r = await CdpHotPatcher.InjectAsync(Console.WriteLine);
     Console.WriteLine("热加载结果: " + r.Success + " " + r.Message);
     return r.Success ? 0 : 1;
-}
-int statsIdx = Array.IndexOf(args, "--stats");
-if (statsIdx >= 0 && statsIdx + 1 < args.Length)
-{
-    var m = StatsHudService.ComputeMetrics(args[statsIdx + 1]);
-    Console.WriteLine(m == null ? "null" : JsonSerializer.Serialize(m, new JsonSerializerOptions { WriteIndented = true }));
-    return m == null ? 1 : 0;
-}
-if (args.Contains("--stats-hud-start"))
-{
-    var ok = await StatsHudService.StartAsync(Console.WriteLine);
-    Console.WriteLine("统计状态条启动: " + ok);
-    return ok ? 0 : 1;
-}
-if (args.Contains("--stats-hud-stop"))
-{
-    await StatsHudService.StopAsync(Console.WriteLine);
-    return 0;
 }
 
 int failures = 0;
@@ -264,31 +251,6 @@ try { Directory.Delete(cleanRoot, true); } catch { }
     }
 }
 
-// ---------- C2. 统计状态条指标计算 ----------
-{
-    string statsTmp = Path.Combine(Path.GetTempPath(), "stats-" + Guid.NewGuid().ToString("N") + ".jsonl");
-    File.WriteAllLines(statsTmp, new[]
-    {
-        "{\"type\":\"USER_INPUT\"}",
-        "{\"type\":\"PLANNER_RESPONSE\",\"input_tokens\":100,\"cache_read_tokens\":900,\"output_tokens\":50,\"created_at\":\"2026-01-01T00:00:00Z\",\"status\":\"DONE\"}",
-        "{\"type\":\"PLANNER_RESPONSE\",\"input_tokens\":200,\"cache_read_tokens\":1800,\"output_tokens\":80,\"created_at\":\"2026-01-01T00:00:02Z\",\"status\":\"DONE\"}"
-    });
-    var sm = StatsHudService.ComputeMetrics(statsTmp);
-    Check("统计指标：轮/步", sm != null && sm.Turns == 1 && sm.Steps == 2);
-    Check("统计指标：token 求和", sm != null && sm.InputTokens == 300 && sm.CacheTokens == 2700 && sm.OutputTokens == 130 && sm.TotalTokens == 3130);
-    Check("统计指标：缓存命中/速度/上下文", sm != null && Math.Abs(sm.CacheHitPct - 90) < 0.01 && Math.Abs(sm.TokPerSec - 65) < 0.01 && sm.ContextTokens == 2000);
-    Check("统计指标：压缩上限映射(256k/160k/80k)",
-        StatsHudService.ModelCompactionLimit("Gemini 3.8 Flash (High)") == 256000 &&
-        StatsHudService.ModelCompactionLimit("Claude Sonnet 4.6 (Thinking)") == 160000 &&
-        StatsHudService.ModelCompactionLimit("GPT-OSS 120B (Medium)") == 80000);
-    Check("统计指标：平均每步增长/最后请求时间",
-        sm != null && Math.Abs(sm.AvgGrowthPerStep - 1000) < 0.01 && sm.LastRequestAt.Year == 2026);
-    var pmCost = new StatsMetrics(0, 0, 1_000_000, 1_000_000, 1_000_000, 0, 0, 0, "", default, 0);
-    var cost38 = StatsHudService.EstimateCost(pmCost, "Gemini 3.8 Flash (High)");
-    Check("统计指标：成本估算", cost38.HasValue && Math.Abs(cost38.Value - 4.575) < 0.001 && StatsHudService.EstimateCost(pmCost, "GPT-OSS 120B (Medium)") == null);
-    try { File.Delete(statsTmp); } catch { }
-}
-
 // ---------- D. 客户端检测：卸载记录 DisplayIcon 规范化 ----------
 // 官方更新器会把程序装到别的盘，并按卸载记录指向新位置。DisplayIcon 形如
 // "D:\Antigravity\Antigravity.exe,0"，若不去掉 “,0” 就会误判客户端不存在。
@@ -317,5 +279,7 @@ Check("应用内更新：空下载地址安全返回空列表", AppUpdater.Build
 
 Console.WriteLine();
 failures += await CompatibilityRepairTests.RunAsync();
+Console.WriteLine();
+failures += await ClientProcessGuardTests.RunAsync();
 Console.WriteLine(failures == 0 ? "engine tests: PASS" : $"engine tests: {failures} FAILED");
 return failures == 0 ? 0 : 1;

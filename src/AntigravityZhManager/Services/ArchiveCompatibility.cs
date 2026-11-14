@@ -79,7 +79,7 @@ public sealed record CompatibilityDecision(bool Allowed, string ReferenceVersion
 public static class ArchiveCompatibility
 {
     public static readonly string[] Targets = { "dist/ipcHandlers.js", "dist/main.js", "dist/utils.js", "dist/tray.js", "dist/ideInstall/wizard.js" };
-    public static readonly string[] OptionalTargets = { "dist/provisionSplash.js" };
+    public static readonly string[] OptionalTargets = { "dist/provisionSplash.js", "dist/remote/disconnectedPage.js" };
     private static readonly Lazy<List<CompatibilityReference>> References = new(LoadReferences);
 
     public static string PackageSignature(JsonObject package)

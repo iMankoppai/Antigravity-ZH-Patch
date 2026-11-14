@@ -1,5 +1,5 @@
 (() => {
-  const patchVersion = 80;
+  const patchVersion = 81;
   const skillDetails = window.__antigravityZhSkillDetails || { documents: [], translations: {} };
   const detailDocuments = [...skillDetails.documents, ...(skillDetails.additionalDocuments || []), ...(skillDetails.builtinDocuments || [])];
   const reviewedReadmeBlocks = new Map((skillDetails.readmeBlocks || []).map(b => [b.source, b]));
@@ -670,6 +670,41 @@
 
 
   regexTranslations.unshift(
+    // 2.32.1 新增：SSH 远程主机弹窗/切换器、多智能体预览面板、端口状态、模型选择数、连接器搜索与账号凭据拼接模板
+    [/^Thinking \((\d+)s\)…$/, m => `正在思考（${m[1]}s）…`],
+    [/^Working · (\d+)s$/, m => `运行中 · ${m[1]}s`],
+    [/^Hidden by policy \(([^)]+)\)\.$/, m => `已按策略隐藏（${m[1]}）。`],
+    [/^([^\n;]+) is paused in ([^\n;]+); its view keeps playing here\. Resume to let it continue\.$/, m => `${m[1] === 'The agent' ? '智能体' : m[1]}已在“${m[2]}”中暂停；此处将继续显示其画面。点击恢复可让其继续。`],
+    [/^(.+?) · (press|select|typing|scroll ↕|pointer|looking)( · waiting for the pointer)?$/, m => {
+      const intentMap = { press: '点击', select: '选择', typing: '输入中', 'scroll ↕': '滚动 ↕', pointer: '指针', looking: '查看中' };
+      return `${m[1]} · ${intentMap[m[2]] || m[2]}${m[3] ? ' · 正在等待接管指针' : ''}`;
+    }],
+    [/^(.+?) · waiting for the pointer$/, m => `${m[1]} · 正在等待接管指针`],
+    [/^SSH Config \(([^)]+)\)$/, m => `SSH 配置（${m[1]}）`],
+    [/^SSH config: (.+)$/, m => `SSH 配置：${m[1] === '~/.ssh/config (default)' ? '~/.ssh/config（默认）' : m[1]}`],
+    [/^Remove (.+) from Recent$/, m => `从最近记录中移除 ${m[1]}`],
+    [/^Removed (.+) from Recent$/, m => `已从最近记录中移除 ${m[1]}`],
+    [/^Couldn't remove (.+) from Recent$/, m => `无法从最近记录中移除 ${m[1]}`],
+    [/^Hide (.+) from this list$/, m => `从此列表中隐藏 ${m[1]}`],
+    [/^Hid (.+)$/, m => `已隐藏 ${m[1]}`],
+    [/^Show (.+) in the list again$/, m => `重新在列表中显示 ${m[1]}`],
+    [/^Showing (.+) again$/, m => `已重新显示 ${m[1]}`],
+    [/^(\d+) hidden hosts?$/, m => `${m[1]} 个已隐藏的主机`],
+    [/^No hosts in (.+) yet\. Type one above\.$/, m => `在 ${m[1]} 中暂无主机。请在上方输入一个。`],
+    [/^Connected to (.+)$/, m => `已连接到 ${m[1]}`],
+    [/^Connecting to (.+?)…$/, m => `正在连接到 ${m[1]}…`],
+    [/^Couldn't connect to ([^\n.]+)\. (.+)$/, m => `无法连接到 ${m[1]}。${translations.get(m[2]) || m[2]}`],
+    [/^Couldn't connect to (.+)$/, m => `无法连接到 ${m[1]}`],
+    [/^WSL: (.+)$/, m => `WSL：${m[1]}`],
+    [/^SSH: (.+)$/, m => `SSH：${m[1]}`],
+    [/^(\d+) models selected$/, m => `已选择 ${m[1]} 个模型`],
+    [/^Where the agent runs, current: (.+)$/, m => `智能体运行位置，当前：${m[1]}`],
+    [/^No connectors match “(.+)”$/, m => `没有匹配“${m[1]}”的连接器`],
+    [/^Nothing is running on port (\d+)$/, m => `端口 ${m[1]} 上未运行任何服务`],
+    [/^Resume the conversation to start its workspace again, then start the server on port (\d+) and retry\.$/, m => `恢复对话以重新启动其工作区，然后在端口 ${m[1]} 上启动服务器并重试。`],
+    [/^No server is listening on port (\d+) inside the remote workspace\. Start it, or ask the agent to, then retry\.$/, m => `远程工作区内端口 ${m[1]} 上没有正在监听的服务。请启动服务或让智能体启动后再重试。`],
+    [/^Sign-ins to (.+) are kept in the cloud with your account\. (Other credentials stay on this machine\. )?Credentials are only sent to the domains listed\.$/, m => `${m[1]} 的登录状态会随你的账号保存在云端。${m[2] ? '其他凭据保留在本机。' : ''}凭据仅会发送到所列域名。`],
+    [/^Sign-ins to (.+) are kept in the cloud with your account\.$/, m => `${m[1]} 的登录状态会随你的账号保存在云端。`],
     // 2.31.0 新增：登录授权代码与协调器相关动态模板；带用户名的问候语
     [/^Hey (.+), what should we build today\?$/, m => `你好 ${m[1]}，今天想构建什么？`],
     [/^Welcome back, (.+)\. Where should we pick up\?$/, m => `欢迎回来，${m[1]}。从哪里继续？`],
@@ -1134,6 +1169,14 @@
     translateOnboardingContainer(parent);
     if (translateArchivedNotification(parent)) return;
     if (translatePluginMarkdownContent(parent)) return;
+    if (parent.childNodes.length === 3 && !parent.childElementCount && parent.matches('[data-testid="ssh-connect-dialog"] p')) {
+      const nodes = Array.from(parent.childNodes).filter(n => n.nodeType === Node.TEXT_NODE);
+      if (nodes.length === 3 && originalText(nodes[0]) === 'No hosts in ' && originalText(nodes[2]) === ' yet. Type one above.') {
+        writeText(nodes[0], '在 ', 'No hosts in ');
+        writeText(nodes[2], ' 中暂无主机。请在上方输入一个。', ' yet. Type one above.');
+        return;
+      }
+    }
     if (parent.childNodes.length > 1 && translateSplitNoPhrase(parent)) return;
     const original = originalText(node);
     // A bare "No" inside a split sentence is not a yes/no response.

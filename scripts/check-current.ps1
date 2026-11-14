@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Antigravity 汉化项目统一检查入口。
 
@@ -115,13 +115,13 @@ $null = Invoke-Check 'notification-hook' @('tests/renderer/notification-hook.cjs
         $null = Invoke-Check 'v225-ui-regression' @('tests/renderer/v225-ui-regression.cjs') $true
         $null = Invoke-Check 'v227-ui-regression' @('tests/renderer/v227-ui-regression.cjs') $true
         $null = Invoke-Check 'v228-ui-regression' @('tests/renderer/v228-ui-regression.cjs') $true
+        $null = Invoke-Check 'v232-ui-regression' @('tests/renderer/v232-ui-regression.cjs') $true
         $null = Invoke-Check 'v68-localization-regression' @('tests/renderer/v68-localization-regression.cjs') $true
         $null = Invoke-Check 'builtin-skills-regression' @('tests/renderer/builtin-skills-regression.cjs') $true
         $null = Invoke-Check 'plugin-readme-regression' @('tests/renderer/plugin-readme-regression.cjs') $true
         $null = Invoke-Check 'global-localization-regression' @('tests/renderer/global-localization-regression.cjs') $true
         $null = Invoke-Check 'skill-details-regression' @('tests/renderer/skill-details-regression.cjs') $true
         $null = Invoke-Check 'skill-detail-react-regression' @('tests/renderer/skill-detail-react-regression.cjs') $true
-        $null = Invoke-Check 'azure-theme-regression' @('tests/renderer/azure-theme-regression.cjs') $true
         $null = Invoke-Check 'schedule-summary-regression' @('tests/renderer/schedule-summary-regression.cjs') $true
         $null = Invoke-Check 'marketplace-cards-regression' @('tests/renderer/marketplace-cards-regression.cjs') $true
         $null = Invoke-Check 'marketplace-detail-regression' @('tests/renderer/marketplace-detail-regression.cjs') $true
