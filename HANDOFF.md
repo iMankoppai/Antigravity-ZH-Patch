@@ -29,7 +29,7 @@ cd "C:\Users\24844\Desktop\Tool\Antigravity ZH"
 pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 ```
 
-预期：**36 项门禁全 PASS**（失败 0、跳过 0）。这跑通了，说明环境、词库、内核、打包一致性全部健康——之后任何改动都以"门禁仍然全绿"为底线。浏览器回归需要 Chrome；安装层比较默认指向本机客户端 `%LOCALAPPDATA%\Programs\antigravity\resources\app.asar`。
+预期：**37 项门禁全 PASS**（失败 0、跳过 0）。这跑通了，说明环境、词库、内核、打包一致性全部健康——之后任何改动都以"门禁仍然全绿"为底线。浏览器回归需要 Chrome；安装层比较默认指向本机客户端 `%LOCALAPPDATA%\Programs\antigravity\resources\app.asar`。
 
 ## 3. 架构速览
 
@@ -50,7 +50,7 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - **外观补丁（天青蓝气泡）**：CSS 在 `src/AntigravityZhManager/Assets/theme-azure-bubble.css`，由内核生成器内嵌进 `zh-bundle.js`（`const themeCss`）。运行时由 `CdpHotPatcher.SetThemeAsync` 通过 CDP 注入/移除；永久安装后由 `zh-bundle.js` 的 `attach()` 在每次加载时读取 `%APPDATA%\Antigravity\zh-theme.json` 决定是否应用。开关偏好保存在管理器设置里。
 - **词条增量**：每版一个 `localization/vXX-ui-additions.json`（含 evidence/skipped 说明）+ `scripts/sync-vXX-localization.cjs` 合入 `Assets/dictionaries.json`。术语与占位符由 `tests/localization/dictionary-quality.cjs` 把关。
 - **官方基线**：`localization/client-baselines.json` 每版一条：原版哈希/字节数、6 个注入目标模块哈希、5 个锚点（必须恰好命中 1 次）、已知补丁版哈希。门禁 `baseline-manifest` 会与本机客户端交叉核对。
-- **测试**：`tests/localization/`（词库质量、正则安全、深层覆盖）、`tests/renderer/`（12 个 Playwright 回归套件，无头 Chrome，不碰真实客户端）、`tests/packaging/`（一致性 + `engine-tests/` C# 引擎回归）。
+- **测试**：`tests/localization/`（词库质量、正则安全、深层覆盖）、`tests/renderer/`（Playwright 渲染回归套件，无头 Chrome，不碰真实客户端）、`tests/packaging/`（一致性 + `engine-tests/` C# 引擎回归）。
 
 ## 4. 核心任务 Playbook A：新版 Antigravity 适配
 
@@ -94,12 +94,12 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 9. **文档里的"尚未发布"会过期**：叙事性文档别写"当前/最新"，写发布时点 + 让 `当前状态.json` 当唯一事实源（v1.3.4 文档整理时清掉了多处这类失实陈述）。
 10. **渲染回归偶发 EBUSY**：`status-label-regression` 等无头 Chrome 用例偶发 `EBUSY ... DevToolsActivePort`（Chrome 临时 profile 句柄竞争）。单跑/复跑即过，不是代码问题；重跑全量即可。
 11. **Antigravity 无法从 agent 会话启动**：本环境 `Start-Process Antigravity.exe` 会立即退出（拿不到窗口），验证 UI 必须由用户手动启动。装内核关闭客户端时，优雅关闭常失败（超时/APP_NOT_FOUND），需 `taskkill /F /T /IM Antigravity.exe`（客户端空闲且已获授权时）。
-12. **短消息气泡折行是 max-width 逐级百分比叠加**：2.29 用户消息层级存在 80%（官方 `max-w-[80%]`）+ 82%（外层）+ 82%（气泡框）三级 `max-width`，再叠加外层 `width: fit-content`，短句可用宽度会被压到约 96px（≈4 汉字/行）而折成两行；长句因内容够宽看不出。修复见 `theme-azure-bubble.css` 第 8 节（最外层整列宽、只保留单一 53% 总上限、内层不再逐级收窄）。排查这类宽度问题，实机用 CDP 打印祖先链每一层的 `computed width / minWidth / maxWidth` 最快，不要只盯最终元素。回归：`tests/renderer/azure-theme-regression.cjs`（含 2.29 真实层级夹具）。
+12. **短消息气泡折行是 max-width 逐级百分比叠加（2.29 历史经验）**：2.29 用户消息层级存在 80%（官方 `max-w-[80%]`）+ 82%（外层）+ 82%（气泡框）三级 `max-width`，再叠加外层 `width: fit-content`，短句可用宽度会被压到约 96px（≈4 汉字/行）而折成两行；长句因内容够宽看不出。排查这类宽度问题，实机用 CDP 打印祖先链每一层的 `computed width / minWidth / maxWidth` 最快，不要只盯最终元素。**更新（2.32.1+）**：Antigravity 2.32.1 已重构气泡为原生胶囊与外框，自 v1.5.0 起已弃用复杂宽度规则，改为「轻量纯配色模式」（`theme-azure-bubble.css` 仅改色彩、保持零布局变更），`tests/renderer/azure-theme-regression.cjs`（12 项）负责回归配色与零尺寸变化。
 13. **官方会改注释措辞，锚点要留双份**：2.30.0 把 `dist/utils.js` 里 setAppDetails 的锚点注释从 `// Prevent the menu dropdown from being very wide due to long page titles` 改成 `// Truncation keeps the menu dropdown from being very wide.`。`AsarCleanPatcher` 现在先试新锚点、再回退旧锚点，避免旧版重装时静默跳过。新增/改锚点时，`tests/packaging/anchor-coverage.cjs` 的 needle 必须同步更新到当前装机的原版（该门禁用本机原版/备份交叉核对），否则会 0 命中失败。
 
 ## 7. 核心任务 Playbook C：发布
 
-> **现状**：v1.5.0（适配 Antigravity 2.32.1、内核 v81 / 7,349 条、移除天青蓝气泡并新增强制结束进程）发布至 GitHub Releases（<https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.5.0>）。
+> **现状**：v1.5.0（适配 Antigravity 2.32.1、内核 v81 / 7,349 条、接入轻量纯配色天青蓝气泡并新增强制结束进程）已完成发布与本地同步（Release：<https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.5.0>；纯配色天青蓝气泡仅同步本地构建与归档）。
 
 1. `csproj` 三处版本号（Version/FileVersion/AssemblyVersion）→ README（徽章、头部、下载名、版本记录条目）→ `当前状态.json`（version/patchVersion/哈希/verification 块）。
 2. `dotnet publish -c Release -r win-x64 --self-contained true` 到独立候选目录（首次需先 restore）。
@@ -120,6 +120,8 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 | `docs/汉化范围说明-哪些不翻译.md` | 所有人 | 什么故意不翻、为什么 |
 | `docs/新版汉化适配.md` | 用户 | 适配按钮的使用说明 |
 | `docs/现场验收清单.md` | 维护者 | 需人工在真实客户端验收的项 |
+| `docs/v82-2.32.1适配.md`、`docs/v81-2.31.2适配.md` | 维护者 | 近期版本主进程/前端差分与门禁核验记录 |
+| `docs/release-notes-v1.5.0.md` | 用户与维护者 | v1.5.0（及过往 `release-notes-*.md`）发版说明 |
 | `docs/history/` | 考古 | 逐版说明 + 状态台账归档（发布时点事实） |
 | `localization/partner-skill-docs/` | 维护者 | 44 个合作插件 494 篇技能正文的中文 markdown（受版本管理，见其 README） |
 | `维护工具/partner-skill-docs/` | 维护者 | 技能正文接入脚本：`integrate-plugin-docs.cjs`、`coverage.js`、`verify-plugin-doc.cjs`、`partner-urls.json` |
@@ -133,11 +135,16 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - `当前状态.json` 的历史块在 `docs/history/状态台账-归档-2026-10.json`；再过几个版本可以按同样方式把 v74 之前的块继续归档。
 - `work/` 是 git 忽略的本机证据目录，换电脑即失效；台账里引用的哈希是可复核的最小事实，原始 bundle/asar 不保证长期存在。
 - **技能正文边界**：弹窗正文按 SKILL.md 的 24KB 预览 fingerprint 匹配；官方改正文会导致失配、回退英文。bundle 因含 494 篇正文约 10.7MB，页面注入较重。`build-skill-detail-views.cjs` 重跑会清空 partner additionalDocuments，需用 `integrate-plugin-docs.cjs` 逐插件恢复；译文原文在 `localization/partner-skill-docs/`。
-- **天青蓝气泡宽度选择器依赖 2.29 用户消息 DOM**：短句单行修复基于 `user-input-step > div.w-full > div`（官方 `max-w-[80%]` 包裹层）等层级；官方若重构该结构，需同步更新 `theme-azure-bubble.css` 第 8 节，`azure-theme-regression.cjs` 会兜住这一层。
+- **天青蓝气泡纯配色补丁依赖用户消息选择器**：自 2.32.1 起补丁不再改动布局尺寸，仅针对 `body:not(.theme-dark)` / `body.theme-dark` 下的 `.agy-user-bubble-frame:has(> [data-testid="user-message-bubble"])`、`[data-testid="user-message-bubble"]` 与 `[data-testid="user-message-content"]` 覆写颜色；若官方后续调整对应属性或类名，需同步更新 `theme-azure-bubble.css`，`tests/renderer/azure-theme-regression.cjs`（12 项）负责守护配色与零尺寸变化。
 
 ## 10. 当前状态与技能正文（v1.5.0 / Antigravity 2.32.1）
 
 **2026-11-14（管理器 v1.5.0）：适配 Antigravity 2.32.1 + 轻量纯配色天青蓝气泡 + 新增强制结束残留进程。** 适配 2.32.1（v81 内核，7,349 条）：支持多智能体预览舞台面板、SSH 远程管理弹窗、`dist/remote/disconnectedPage.js` 与原生文件对话框；将天青蓝气泡重构为仅更换背景/边框/文字色的轻量补丁（保留官方原生圆角与排版）；顶部状态栏新增「🛑 强制结束进程」按钮，可一键安全清理滞留后台进程与安装目录 `language_server.exe`。详见 [`docs/v82-2.32.1适配.md`](docs/v82-2.32.1适配.md)。
+
+**当前交接注意事项（v1.5.0 / 2.32.1）**
+1. 本机实机验证与永久写入：退出 Antigravity 客户端（如托盘退出后仍有残留进程，可用管理器顶部【🛑 强制结束进程】清理），点击「一键嵌入汉化」完成 `2.32.1` 永久写入并启动客户端，按 [`docs/现场验收清单.md`](docs/现场验收清单.md) E 节验收舞台面板、SSH 远程弹窗及纯配色天青蓝气泡。
+2. `scripts/check-current.ps1` 含中文且无 BOM，**必须用 `pwsh` 7**（PowerShell 5.1 会按 ANSI 读成乱码并报解析错误）；技能正文再生与合作插件文档维护见 `localization/partner-skill-docs/README.md`。
+3. 当前纯配色版天青蓝气泡与本文档同步更新保持 **v1.5.0 仅同步本地 Git 主分支**，如需同步远端 Release 资产请先确认后再覆盖上传。
 
 **2026-11-12（管理器 v1.4.2，本地，未发布）：适配 Antigravity 2.31.2（纯版本号更新）。** 官方更新 2.31.0 → 2.31.2：逐文件差分 1112→1112（无增删），仅 `package.json` 版本号变化，**68 个 `dist/*.js` 与 2.31.0 逐字节一致**；渲染端 `main.js`（11,871,831 字节）**逐字节相同**，新增字面量 0；**347 个 chrome-devtools-mcp 解包模块 integrity 哈希也全部一致**；16 个注入锚点全部命中 1 次 → **内核/词库/规则零改动（保持 v80 / 7,218）**。登记 2.31.2 基线（原版 `94452cf0…`、已知补丁版 `5a6c9cc0…`）；统一门禁 36/36（隔离与本机安装后各一遍）、引擎 41/41；本机永久安装归档 == 隔离归档 `5a6c9cc0…`，内嵌 bundle == 源码 `db94927a…`。重建管理器 v1.4.2（`144be61c…`）与 `dist/Antigravity-ZH-1.4.2-Windows-x64.zip`（`533bb1a6…`），**未发布 GitHub**。官方 Changelog 最新公开条目仍为 v2.31.0（2026-11-09），查无 2.31.2 条目，判断为静默热修／渠道重打包。详见 [`docs/v81-2.31.2适配.md`](docs/v81-2.31.2适配.md)。
 
@@ -183,9 +190,9 @@ pwsh -ExecutionPolicy Bypass -File scripts/check-current.ps1
 - 验证：统一门禁 **36/36**（失败 0、跳过 0），引擎 41/41；本机当前安装归档 `7d6b2c74…`，内嵌 bundle == 源码 `0f29e10f…`（含短句单行修复）。已永久安装 v74 / 6,834 条 + 494 篇技能正文到本机客户端。
 - 交付：根目录 `Antigravity汉化管理器.exe` 已替换为本机构建（sha `2bec719b…`，含短句单行修复）；已发布 ZIP 仍为 v1.4.0（sha `bf3e6322…`）；Release：<https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/tag/v1.4.0>。
 
-**下一步（接手人）**
-1. 手动启动 Antigravity 2.29.0 实机验收：汉化、天青蓝气泡（**重点看短消息是否单行、长句是否仍安全折行**）、**命令/技能弹窗正文**（如 `/mongodb-connection`、`/figma-use`、harness/vercel 任意技能），以及新版自动化/语音/连接器/下载等界面。
-2. 若再发版：按 Playbook C 打包并 `gh release create`（EXE 约 79MB，按第 6 节第 6 条分步上传）。
+**2.29.0 阶段历史交接笔记（归档参考）**
+1. 手动启动 Antigravity 2.29.0 实机验收：汉化、天青蓝气泡（旧版短消息折行修复已于 2.32.1 重构为纯配色模式）、**命令/技能弹窗正文**（如 `/mongodb-connection`、`/figma-use`、harness/vercel 任意技能），以及新版自动化/语音/连接器/下载等界面。
+2. 若再发版：按 Playbook C 打包并 `gh release create`（EXE 约 79–80MB，按第 6 节第 6 条分步上传）。
 3. 注意：`scripts/check-current.ps1` 含中文且无 BOM，**必须用 pwsh 7**（5.1 会按 ANSI 读成乱码并报解析错误）。
 4. 技能正文再生/维护见上方"技能正文"小节与 `localization/partner-skill-docs/README.md`。
 
