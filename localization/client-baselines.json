@@ -1561,6 +1561,79 @@
           "recordedAt": "2026-11-14T12:34:05.000Z"
         }
       ]
+    },
+    {
+      "productVersion": "2.32.2",
+      "platform": "win32",
+      "arch": "x64",
+      "pristine": {
+        "sha256": "056ba838faf9b75c1382a6a0ae003c4b051a3c3e50060a9e5b34987313492d77",
+        "bytes": 5656861,
+        "productVersion": "2.32.2",
+        "source": "backup",
+        "path": "work/2-32-2-probe/isolated/app.asar.bak",
+        "recordedAt": "2026-11-18T04:37:01.777Z"
+      },
+      "compatibility": {
+        "packageSignatureSha256": "8ceef25e3a1bd928057c5907b5a057b99eedf0f6611fcbf5c9778171c1eea8a3",
+        "targetSha256": {
+          "dist/ipcHandlers.js": "6560bab35ffee59cacae6c24714b0817ced54c0c2940ab9ae460ee5daabf0820",
+          "dist/main.js": "b1d133d4aacd31170a23e277008f45b5d4bdc150ae44059a9d27059c8780cd62",
+          "dist/utils.js": "17879de917b8129ab7a4aa0c760d13f28c1afb1af44150f7f0950799e6af5d50",
+          "dist/tray.js": "6c6b0968b45a1c7088e459657d57a9efd72d3733614349095f17b6ee94b47135",
+          "dist/ideInstall/wizard.js": "20814ba365ceb5f386afe856277f5dc85bf9db994d1a77579430f100f3725666",
+          "dist/provisionSplash.js": "737f40f02130440a9ec9a3fed83c2e62290029aece6d0ad558136fa510c45f35",
+          "dist/remote/disconnectedPage.js": "01b291dabab1c50b0c11938f5a0b853a71db216a340e2e20a319a85d6ed5e251"
+        }
+      },
+      "requiredTargets": [
+        "dist/ipcHandlers.js",
+        "dist/main.js",
+        "dist/utils.js",
+        "dist/tray.js"
+      ],
+      "requiredEntries": {
+        "dist/ipcHandlers.js": true,
+        "dist/main.js": true,
+        "dist/tray.js": true,
+        "dist/utils.js": true
+      },
+      "requiredAnchors": [
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspace'",
+          "count": 1
+        },
+        {
+          "target": "dist/ipcHandlers.js",
+          "text": "title: 'Open workspaces'",
+          "count": 1
+        },
+        {
+          "target": "dist/main.js",
+          "text": "void win.loadURL(newUrl);",
+          "count": 1
+        },
+        {
+          "target": "dist/utils.js",
+          "text": "void win.loadURL(url);",
+          "count": 1
+        },
+        {
+          "target": "dist/tray.js",
+          "text": "Menu.buildFromTemplate(actions)",
+          "count": 1
+        }
+      ],
+      "missingTargets": [],
+      "knownPatchedSha256": [
+        {
+          "sha256": "f53520fab5f21ca55e17823ae72ff8dff2017076abef7e70a39da8b3cb3c7824",
+          "kernelSha256": "ed87c3d8a7290667ca4a4fd389e08adcd28fbbee087ca7661e0890da5f09de73",
+          "bytes": 17647467,
+          "recordedAt": "2026-11-18T04:37:01.860Z"
+        }
+      ]
     }
   ]
 }
