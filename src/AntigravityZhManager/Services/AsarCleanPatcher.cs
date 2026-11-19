@@ -305,10 +305,27 @@ namespace AntigravityZhManager.Services
                         "exports.showQuitConfirmation = false;\nexports.closeWindowToBackground = null;\n    exports.hideWindowOnClose = false;\nfunction setShowQuitConfirmation(value) {\n"
                     );
 
-                    utilsJs = utilsJs.Replace(
-                        "    }\n    void win.loadURL(url);\n",
-                        "    }\n    let closePending = false;\n    let allowNormalClose = false;\n    win.on('close', (event) => {\n        if (process.platform !== 'win32' || allowNormalClose || !exports.hideWindowOnClose || !exports.closeWindowToBackground) return;\n        event.preventDefault();\n        if (closePending) return;\n        closePending = true;\n        Promise.resolve().then(() => exports.closeWindowToBackground()).then((enabled) => {\n            if (win.isDestroyed()) return;\n            if (enabled) win.hide();\n            else { allowNormalClose = true; win.close(); }\n        }).catch((error) => {\n            console.error('Unable to read background setting for window close:', error);\n            if (!win.isDestroyed()) { allowNormalClose = true; win.close(); }\n        }).finally(() => { closePending = false; });\n    });\n    try { require('./zh-bundle.js').attach(win, url); } catch(e){ console.error('ZH attach error', e); }\n    void win.loadURL(url);\n"
-                    );
+                    // 2.33.0 在 createHubWindow 尾部新增 registerPreviewViewer 调用，
+                    // 旧锚点 "    }\n    void win.loadURL(url);\n" 不再命中。改为匹配
+                    // createHubWindow 的稳定尾部 "    void win.loadURL(url);\n    return win;\n"，
+                    // 同时保留旧锚点以兼容 2.32.x 及更早版本。
+                    const string oldUtilsLoadAnchor = "    }\n    void win.loadURL(url);\n";
+                    const string newUtilsLoadAnchor = "    void win.loadURL(url);\n    return win;\n";
+                    const string loadedCloseHandler = "    }\n    let closePending = false;\n    let allowNormalClose = false;\n    win.on('close', (event) => {\n        if (process.platform !== 'win32' || allowNormalClose || !exports.hideWindowOnClose || !exports.closeWindowToBackground) return;\n        event.preventDefault();\n        if (closePending) return;\n        closePending = true;\n        Promise.resolve().then(() => exports.closeWindowToBackground()).then((enabled) => {\n            if (win.isDestroyed()) return;\n            if (enabled) win.hide();\n            else { allowNormalClose = true; win.close(); }\n        }).catch((error) => {\n            console.error('Unable to read background setting for window close:', error);\n            if (!win.isDestroyed()) { allowNormalClose = true; win.close(); }\n        }).finally(() => { closePending = false; });\n    });\n    try { require('./zh-bundle.js').attach(win, url); } catch(e){ console.error('ZH attach error', e); }\n    void win.loadURL(url);\n";
+                    if (utilsJs.Contains(newUtilsLoadAnchor))
+                    {
+                        if (utilsJs.Split(newUtilsLoadAnchor).Length != 2)
+                            throw new InvalidDataException("工具窗口注入锚点数量异常，拒绝写入。");
+                        // loadedCloseHandler 以 "    }\n" 开头；新结构在 registerPreviewViewer
+                        // 调用之后直接跟 loadURL，故去掉前导 "    }"，并在末尾补回 "    return win;"。
+                        utilsJs = utilsJs.Replace(newUtilsLoadAnchor, loadedCloseHandler.Substring("    }\n".Length) + "    return win;\n");
+                    }
+                    else
+                    {
+                        if (utilsJs.Split(oldUtilsLoadAnchor).Length != 2)
+                            throw new InvalidDataException("工具窗口注入锚点（旧版）数量异常，拒绝写入。");
+                        utilsJs = utilsJs.Replace(oldUtilsLoadAnchor, loadedCloseHandler);
+                    }
                 }
                 else if (!utilsJs.Contains("zh-bundle.js"))
                 {
@@ -370,20 +387,44 @@ namespace AntigravityZhManager.Services
                 // 2.32.1 新增：SSH 断线/重连页面采用无脚本 CSP 的 data: URL，直接汉化静态文案。
                 if (disconnectedPageJs != null)
                 {
-                    const string disconnectedTitleAnchor = "const title = connecting ? 'Reconnecting…' : 'Disconnected';";
-                    const string disconnectedReconnectAnchor = "<a class=\"button primary\" href=\"${action('reconnect')}\">Reconnect</a>";
-                    if (disconnectedPageJs.Split(disconnectedTitleAnchor).Length != 2 ||
-                        disconnectedPageJs.Split(disconnectedReconnectAnchor).Length != 2)
-                        throw new InvalidDataException("SSH 断线页面注入锚点数量异常，拒绝写入。");
-                    disconnectedPageJs = disconnectedPageJs
-                        .Replace(disconnectedTitleAnchor, "const title = connecting ? '正在重新连接…' : '已断开连接';")
-                        .Replace("? `Reconnecting to ${host}…`", "? `正在重新连接到 ${host}…`")
-                        .Replace(": `Disconnected from ${host}`;", ": `已断开与 ${host} 的连接`;")
-                        .Replace("? `Agents keep running on ${host}.`", "? `智能体仍会在 ${host} 上继续运行。`")
-                        .Replace(": `Agents keep running on ${host} unless its server stopped.`;", ": `只要 ${host} 上的服务器未停止，智能体就会继续运行。`;")
-                        .Replace(disconnectedReconnectAnchor, "<a class=\"button primary\" href=\"${action('reconnect')}\">重新连接</a>")
-                        .Replace("<a class=\"button\" href=\"${action('close')}\">Close</a>", "<a class=\"button\" href=\"${action('close')}\">关闭</a>")
-                        .Replace("<html lang=\"en\">", "<html lang=\"zh-CN\">");
+                    if (disconnectedPageJs.Contains("stop: 'Stop Server'"))
+                    {
+                        // 2.33.0 结构：文案集中在 title / heading / body 三个表达式与 BUTTON_LABELS。
+                        disconnectedPageJs = disconnectedPageJs
+                            .Replace("reconnect: 'Reconnect',", "reconnect: '重新连接',")
+                            .Replace("stop: 'Stop Server',", "stop: '停止服务器',")
+                            .Replace("close: 'Close',", "close: '关闭',")
+                            .Replace("'Restarting…'", "'正在重启…'")
+                            .Replace("'Reconnecting…'", "'正在重新连接…'")
+                            .Replace("'Disconnected'", "'已断开连接'")
+                            .Replace("`Restarting the Antigravity server on ${host}…`", "`正在重启 ${host} 上的 Antigravity 服务器…`")
+                            .Replace("`Reconnecting to ${host}…`", "`正在重新连接到 ${host}…`")
+                            .Replace("`Disconnected from ${host}`", "`已断开与 ${host} 的连接`")
+                            .Replace("'This window opens it again once it has started.'", "'启动完成后此窗口会重新打开。'")
+                            .Replace("`Its server on ${host} stopped, and its agents with it.`", "`其在 ${host} 上的服务器已停止，智能体也随之停止。`")
+                            .Replace("`Agents keep running on ${host}.`", "`智能体仍会在 ${host} 上继续运行。`")
+                            .Replace("`Its agents on ${host} stopped with it.`", "`其在 ${host} 上的智能体已随之停止。`")
+                            .Replace("`Agents keep running on ${host} unless its server stopped.`", "`只要 ${host} 上的服务器未停止，智能体就会继续运行。`")
+                            .Replace("<html lang=\"en\">", "<html lang=\"zh-CN\">");
+                    }
+                    else
+                    {
+                        // 2.32.x 结构（保留旧注入）。
+                        const string disconnectedTitleAnchor = "const title = connecting ? 'Reconnecting…' : 'Disconnected';";
+                        const string disconnectedReconnectAnchor = "<a class=\"button primary\" href=\"${action('reconnect')}\">Reconnect</a>";
+                        if (disconnectedPageJs.Split(disconnectedTitleAnchor).Length != 2 ||
+                            disconnectedPageJs.Split(disconnectedReconnectAnchor).Length != 2)
+                            throw new InvalidDataException("SSH 断线页面注入锚点数量异常，拒绝写入。");
+                        disconnectedPageJs = disconnectedPageJs
+                            .Replace(disconnectedTitleAnchor, "const title = connecting ? '正在重新连接…' : '已断开连接';")
+                            .Replace("? `Reconnecting to ${host}…`", "? `正在重新连接到 ${host}…`")
+                            .Replace(": `Disconnected from ${host}`;", ": `已断开与 ${host} 的连接`;")
+                            .Replace("? `Agents keep running on ${host}.`", "? `智能体仍会在 ${host} 上继续运行。`")
+                            .Replace(": `Agents keep running on ${host} unless its server stopped.`;", ": `只要 ${host} 上的服务器未停止，智能体就会继续运行。`;")
+                            .Replace(disconnectedReconnectAnchor, "<a class=\"button primary\" href=\"${action('reconnect')}\">重新连接</a>")
+                            .Replace("<a class=\"button\" href=\"${action('close')}\">Close</a>", "<a class=\"button\" href=\"${action('close')}\">关闭</a>")
+                            .Replace("<html lang=\"en\">", "<html lang=\"zh-CN\">");
+                    }
                 }
 
                 // 写入前自检：确认每个注入点都真正命中。官方版本更新可能移除或改变

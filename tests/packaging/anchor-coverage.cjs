@@ -29,7 +29,7 @@ const anchors = [
   { file: 'dist/main.js', needle: '                        void win.loadURL(newUrl);', label: '主窗口注入挂点' },
   { file: 'dist/utils.js', needle: '    // Truncation keeps the menu dropdown from being very wide.', label: 'setAppDetails 挂点' },
   { file: 'dist/utils.js', needle: 'exports.showQuitConfirmation = false;\nfunction setShowQuitConfirmation(value) {\n', label: '关闭到托盘导出' },
-  { file: 'dist/utils.js', needle: '    }\n    void win.loadURL(url);\n', label: '关闭到托盘事件' },
+  { file: 'dist/utils.js', needle: '    void win.loadURL(url);\n    return win;\n', label: '关闭到托盘事件' },
   { file: 'dist/utils.js', needle: '    void win.loadURL(url);', label: '工具窗口注入挂点' },
   { file: 'dist/tray.js', needle: 'let contextMenu = null;\n/**', label: '托盘菜单本地化' },
   { file: 'dist/tray.js', needle: '    contextMenu = electron_1.Menu.buildFromTemplate(actions);', label: '托盘菜单构建' },

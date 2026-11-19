@@ -1,5 +1,5 @@
 (() => {
-  const patchVersion = 81;
+  const patchVersion = 82;
   const skillDetails = window.__antigravityZhSkillDetails || { documents: [], translations: {} };
   const detailDocuments = [...skillDetails.documents, ...(skillDetails.additionalDocuments || []), ...(skillDetails.builtinDocuments || [])];
   const reviewedReadmeBlocks = new Map((skillDetails.readmeBlocks || []).map(b => [b.source, b]));
@@ -234,6 +234,15 @@
     return rule;
   });
   const regexTranslations = [
+    // 2.33.0 新增：内置浏览器 Cookie 管理、浏览器操作步骤、插件包评审与远程浏览器提示。
+    [/^Deleted cookies for (.+)$/, m => `已删除 ${m[1]} 的 Cookie`],
+    [/^Delete cookies for (.+)$/, m => `删除 ${m[1]} 的 Cookie`],
+    [/^Showing latest (\d+) browser steps$/, m => `正在显示最近 ${m[1]} 步浏览器操作`],
+    [/^Using browser · (.+)$/, m => `正在使用浏览器 · ${m[1]}`],
+    [/^Browser tools run on (.+), the SSH host this window is connected to, and Chrome there isn't accepting remote debugging\. Complete these steps on \1, not on this computer:$/, m => `浏览器工具运行在此窗口所连接的 SSH 主机 ${m[1]} 上，而该主机上的 Chrome 未接受远程调试。请在 ${m[1]}（而非本机）上完成以下步骤：`],
+    [/^This plugin in (.+) may have looser code review\. Review its contents before adding the bundle\.$/, m => `位于 ${m[1]} 的此插件可能审核较宽松。添加插件包前请查看其内容。`],
+    [/^These plugins in (.+) may have looser code review\. Review their contents before adding the bundle\.$/, m => `位于 ${m[1]} 的这些插件可能审核较宽松。添加插件包前请查看其内容。`],
+    [/^Review (its|their) contents before adding the bundle\.$/, m => `添加插件包前请查看${m[1] === 'its' ? '其' : '它们'}的内容。`],
     [/^Resets in (<1m|\d+[dhms](?:\s+\d+[dhms])*)$/, m => m[1] === '<1m' ? '不到 1 分钟后重置' : `${m[1].replace(/(\d+)([dhms])/g, (_, n, u) => `${n} ${{d:'天',h:'小时',m:'分钟',s:'秒'}[u]}`)}后重置`],
     [/^Included by (.+)$/, m => `由 ${m[1]} 引入`],
     [/^Installed in (.+)$/, m => `安装于 ${m[1]}`],

@@ -1,14 +1,14 @@
 # Antigravity 中文汉化管理器
 
-[![Release](https://img.shields.io/badge/Release-v1.5.1-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
-[![Antigravity](https://img.shields.io/badge/Antigravity-2.32.2-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Release](https://img.shields.io/badge/Release-v1.6.0-blue.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
+[![Antigravity](https://img.shields.io/badge/Antigravity-2.33.0-4285F4.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20x64-0078D6.svg)](https://github.com/iMankoppai/Antigravity-ZH-Patch)
 [![Framework](https://img.shields.io/badge/.NET-8.0%20WPF-512BD4.svg)](https://dotnet.microsoft.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理工具。提供免重启热加载、纯净 ASAR 原生内嵌固化、全量工作状态深度汉化及托盘常驻交互增强。
 
-> **当前版本 v1.5.1（汉化内核 v81）适配 Google Antigravity 2.32.2（Windows x64）。** 界面词条 **7,349 条**，全面适配 2.32.2 多智能体预览舞台面板（`Stage` / `Desktop` / `Layout`）、SSH 远程主机连接弹窗与文件选择器原生对话框，并另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文、6 份规则／智能体详情、44 个合作插件 494 篇技能正文以及 6 插件 90 篇技能正文汉化。本次 2.32.2 为纯版本号更新（内核零改动）。官方更新导致汉化失效时，可运行管理器重新安装，或点击【新版汉化适配】热恢复，详见 [`docs/新版汉化适配.md`](docs/新版汉化适配.md)。
+> **当前版本 v1.6.0（汉化内核 v82）适配 Google Antigravity 2.33.0（Windows x64）。** 界面词条 **7,446 条**，全面适配 2.33.0 新增的桌面控制 / 远程主机 / 内置浏览器等模块（含内置浏览器 Cookie 与浏览数据管理、浏览器操作步骤、麦克风语音听写、插件包与初始化例程、SSH 断线页新结构），并另含 17 个官方插件、140 份完整插件技能正文、9 份内置技能正文、6 份规则／智能体详情、44 个合作插件 494 篇技能正文以及 6 插件 90 篇技能正文汉化。本次 2.33.0 为功能性大版本（新增 97 条词条 + 8 条动态规则，并适配了 2 处主进程注入锚点）。官方更新导致汉化失效时，可运行管理器重新安装，或点击【新版汉化适配】热恢复，详见 [`docs/新版汉化适配.md`](docs/新版汉化适配.md)。
 
 ---
 
@@ -56,7 +56,7 @@ Google Antigravity 官方 Windows 客户端的专属汉化与原生体验管理�
 
 ### 方式一：直接运行独立程序（推荐）
 1. 前往 [Releases](https://github.com/iMankoppai/Antigravity-ZH-Patch/releases/latest) 页面；
-2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.5.0-Windows-x64.zip`**（GitHub 上最新发布包；本地 v1.5.1 适配版见仓库根目录 EXE）；或直接使用仓库根目录的 `Antigravity汉化管理器.exe`；
+2. 下载 **`AntigravityZhManager.exe`** 或 **`Antigravity-ZH-1.6.0-Windows-x64.zip`**（GitHub 上最新发布包 v1.6.0）；或直接使用仓库根目录的 `Antigravity汉化管理器.exe`；
 3. 双击下载的 EXE，或解压 ZIP 后运行其中的 `Antigravity汉化管理器.exe`（单文件自包含，已内置 .NET 8 运行时，无需安装任何前置依赖）；
 4. 点击 **【⚡ 开启汉化】**（免重启实时生效）或 **【📦 永久安装汉化（洁癖模式）】** 即可。
 
@@ -84,7 +84,7 @@ Antigravity ZH/
 ```
 
 ### 技术规格
-- **适配软件**：**Google Antigravity 2.32.2**（Windows x64）
+- **适配软件**：**Google Antigravity 2.33.0**（Windows x64）
 - **汉化内核**：v81（词条 7,349 条）
 - **词库规模**：全量深度精校词库（涵盖核心 UI、系统菜单、原生文件对话框、SSH 远程管理、工作状态、插件市场与主题设置）
 - **技术实现**：C# .NET 8 WPF 现代化界面 + ASAR 虚拟模块字节级封包 + CDP WebSocket 动态管道注入 + 安装目录进程树守卫清理
@@ -97,6 +97,13 @@ Antigravity ZH/
 ---
 
 ## 📦 版本记录
+
+### v1.6.0 (内核 v82) — 适配 Antigravity 2.33.0（已发布 GitHub）
+
+- **适配新版客户端**：支持 Google Antigravity **2.33.0**（Windows x64）。这是一次**功能性大版本**：`app.asar` 1068→1156 文件（新增 90 / 删除 2 / 改动 114），新增桌面控制（`computer` / `computerActuator`）、桌面宿主（`desktopHost`）、远程（`remote` / `actuator`）等模块；渲染端 `main.js` 新增字面量 1,966 个。
+- **引擎锚点适配**：`utils.js` 关闭到托盘/attach 锚点因新增 `registerPreviewViewer` 调用改为匹配 `void win.loadURL(url);\n    return win;`（保留旧锚点兜底）；`remote/disconnectedPage.js` 的 SSH 断线页被重写为 `BUTTON_LABELS` + `title/heading/body`，已按新结构注入；其余 14 个锚点全部恰好命中 1 次。
+- **新增界面汉化**：内置浏览器（浏览数据、按站点 Cookie、搜索站点、清除历史与站点数据）、浏览器操作步骤、麦克风语音听写、插件包与初始化例程、附加问题、远程浏览器提示等，新增 **97 条**词条 + **8 条**动态规则（内核 v82、词条 **7,446**）。
+- **基线与安装**：登记 2.33.0 官方原版基线（原版 `b33c8160…`，6,473,373 字节）与已知补丁版归档（`fe110b0a…`，18,473,386 字节）；本机已永久安装，安装归档与隔离归档逐字节一致，内嵌内核 `ecc6737a…` 与源码一致，备份为官方原版 `b33c8160…`；统一门禁隔离/安装后各 **37/37**、引擎 **41/41**。详见 [`docs/v84-2.33.0适配.md`](docs/v84-2.33.0适配.md)。
 
 ### v1.5.1 (内核 v81) — 适配 Antigravity 2.32.2（本地构建，未发布）
 
